@@ -1,6 +1,7 @@
 package com.rexoit.cobra
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -73,9 +74,13 @@ class MainActivity : AppCompatActivity() {
         thisMonthButton.background = getDrawable(R.drawable.btn_unselect_bg)
         allTimeButton.background = getDrawable(R.drawable.btn_unselect_bg)
         //Button's Text Color
-        thisWeekButton.setTextColor(getColor(R.color.white))
-        allTimeButton.setTextColor(getColor(R.color.grey_color))
-        thisMonthButton.setTextColor(getColor(R.color.grey_color))
+        thisWeekButton.setTextColor(resources.getColor(R.color.white))
+        allTimeButton.setTextColor(resources.getColor(R.color.grey_color))
+        thisMonthButton.setTextColor(resources.getColor(R.color.grey_color))
+
+        //For opening Number Details Page (remove this code
+        startActivity(Intent(this,NumberDetailsPage::class.java))
+
     }
 
 
@@ -86,9 +91,9 @@ class MainActivity : AppCompatActivity() {
         thisWeekButton.background = getDrawable(R.drawable.btn_unselect_bg)
         allTimeButton.background = getDrawable(R.drawable.btn_unselect_bg)
         //Button's Text Color
-        thisMonthButton.setTextColor(getColor(R.color.white))
-        allTimeButton.setTextColor(getColor(R.color.grey_color))
-        thisWeekButton.setTextColor(getColor(R.color.grey_color))
+        thisMonthButton.setTextColor(resources.getColor(R.color.white))
+        allTimeButton.setTextColor(resources.getColor(R.color.grey_color))
+        thisWeekButton.setTextColor(resources.getColor(R.color.grey_color))
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
@@ -98,9 +103,9 @@ class MainActivity : AppCompatActivity() {
         thisMonthButton.background = getDrawable(R.drawable.btn_unselect_bg)
         thisWeekButton.background = getDrawable(R.drawable.btn_unselect_bg)
         //Button's Text Color
-        allTimeButton.setTextColor(getColor(R.color.white))
-        thisMonthButton.setTextColor(getColor(R.color.grey_color))
-        thisWeekButton.setTextColor(getColor(R.color.grey_color))
+        allTimeButton.setTextColor(resources.getColor(R.color.white))
+        thisMonthButton.setTextColor(resources.getColor(R.color.grey_color))
+        thisWeekButton.setTextColor(resources.getColor(R.color.grey_color))
     }
 
 }
