@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Cobra/app/src/main/res/drawable/btn_bg_home_page.xml" value="0.2158974358974359" />
+        <entry key="..\:/Cobra/app/src/main/res/drawable/btn_select_bg.xml" value="0.2158974358974359" />
+        <entry key="..\:/Cobra/app/src/main/res/drawable/home_page_view_bg.xml" value="0.2158974358974359" />
+        <entry key="..\:/Cobra/app/src/main/res/drawable/search_view_bg.xml" value="0.2158974358974359" />
+        <entry key="..\:/Cobra/app/src/main/res/font/montserrat_font.xml" value="0.22314814814814815" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/activity_app_loading_page.xml" value="0.22" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/custom_toolbar_home_page.xml" value="0.22" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/neav_header.xml" value="0.203125" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/single_row_call_list.xml" value="0.22" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/tool_bar_home_page.xml" value="0.18342391304347827" />
+        <entry key="..\:/Cobra/app/src/main/res/menu/home_page_menu.xml" value="0.203125" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

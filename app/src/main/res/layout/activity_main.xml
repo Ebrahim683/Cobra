@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayoutID"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBarID"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:background="@android:color/transparent"
+            app:buttonGravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/cobra911_logo"
+                tools:ignore="ContentDescription" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/Layout23"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/home_page_view_bg"
+            android:orientation="vertical"
+            android:padding="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/layout16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolBarID">
+
+            <TextView
+                android:id="@+id/textId23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="23"
+                android:textColor="@color/red_color"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textIdTitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="Total"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/textIdDes1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="Unknown Calls"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout16"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/home_page_view_bg"
+            android:orientation="vertical"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Layout23"
+            app:layout_constraintTop_toBottomOf="@+id/toolBarID">
+
+            <TextView
+                android:id="@+id/textId16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="16"
+                android:textColor="@color/red_color"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textIdTitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="Total Unknown Calls"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/textIdDes2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="Send to Cobra"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchViewID"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/search_view_bg"
+            android:fontFamily="@font/montserrat_medium"
+            android:paddingStart="15dp"
+            android:textAlignment="textStart"
+            app:layout_constraintEnd_toEndOf="@+id/layout16"
+            app:layout_constraintStart_toStartOf="@+id/Layout23"
+            app:layout_constraintTop_toBottomOf="@+id/Layout23"
+            app:queryHint="Search Number"
+            app:searchIcon="@drawable/ic_baseline_search_24"
+            tools:ignore="RtlSymmetry" />
+
+        <RelativeLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/searchViewID"
+            app:layout_constraintStart_toStartOf="@+id/searchViewID"
+            app:layout_constraintTop_toBottomOf="@+id/searchViewID">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/thisWeekButton"
+                android:layout_width="80dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/btn_unselect_bg"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="This Week"
+                android:textAllCaps="false"
+                android:textSize="10sp"
+                tools:ignore="SmallSp,TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/thisMonthButton"
+                android:layout_width="80dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_toEndOf="@id/thisWeekButton"
+                android:background="@drawable/btn_unselect_bg"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="This Month"
+                android:textAllCaps="false"
+                android:textSize="10sp"
+                tools:ignore="SmallSp,TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/allTimeButton"
+                android:layout_width="80dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:layout_toEndOf="@id/thisMonthButton"
+                android:background="@drawable/btn_unselect_bg"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="All Time"
+                android:textAllCaps="false"
+                android:textSize="10sp"
+                tools:ignore="SmallSp,TouchTargetSizeCheck" />
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewID"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonLayout"
+            tools:listitem="@layout/single_row_call_list" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navID"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nev_header" />
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
