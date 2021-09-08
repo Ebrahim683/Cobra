@@ -1,13 +1,17 @@
 package com.rexoit.cobra
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -34,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         drawer_layout_id.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
+        //
+        phoneCallStatePermission()
 
         //Button's Click Handler
         this_week_button.setOnClickListener {
@@ -69,44 +75,67 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     fun thisWeek() {
+
         //Button's Background
         this_week_button.background = getDrawable(R.drawable.btn_select_bg)
         this_month_button.background = getDrawable(R.drawable.btn_unselect_bg)
         all_time_button.background = getDrawable(R.drawable.btn_unselect_bg)
+
         //Button's Text Color
         this_week_button.setTextColor(resources.getColor(R.color.white))
         all_time_button.setTextColor(resources.getColor(R.color.grey_color))
         this_month_button.setTextColor(resources.getColor(R.color.grey_color))
 
         //For opening Number Details Page (remove this code
-        startActivity(Intent(this,NumberDetailsPage::class.java))
+        startActivity(Intent(this, NumberDetailsPage::class.java))
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     private fun thisMonth() {
+
         //Button's Background
         this_month_button.background = getDrawable(R.drawable.btn_select_bg)
         this_week_button.background = getDrawable(R.drawable.btn_unselect_bg)
         all_time_button.background = getDrawable(R.drawable.btn_unselect_bg)
+
         //Button's Text Color
         this_month_button.setTextColor(resources.getColor(R.color.white))
         all_time_button.setTextColor(resources.getColor(R.color.grey_color))
         this_week_button.setTextColor(resources.getColor(R.color.grey_color))
+
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     private fun allTime() {
+
         //Button's Background
         all_time_button.background = getDrawable(R.drawable.btn_select_bg)
         this_month_button.background = getDrawable(R.drawable.btn_unselect_bg)
         this_week_button.background = getDrawable(R.drawable.btn_unselect_bg)
+
         //Button's Text Color
         all_time_button.setTextColor(resources.getColor(R.color.white))
         this_month_button.setTextColor(resources.getColor(R.color.grey_color))
         this_week_button.setTextColor(resources.getColor(R.color.grey_color))
+
     }
+
+    private fun phoneCallStatePermission() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_PHONE_STATE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_PHONE_STATE),
+                1
+            )
+        }
+    }
+
 
 }
 
