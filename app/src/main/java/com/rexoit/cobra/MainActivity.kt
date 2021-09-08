@@ -15,11 +15,37 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
+private const val TAG = "MainActivity"
+private const val REQUEST_CODE = 8077
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: Toolbar
+
+    override fun onStart() {
+        super.onStart()
+
+        // request runtime permissions
+        phoneCallStatePermission()
+
+        // active this week when activity start
+        thisWeek()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home_page_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.setting_menu_id_home_page -> {
+                Snackbar.make(drawer_layout_id, "Setting", Snackbar.LENGTH_LONG).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         //NavigationView
         toolbar = findViewById(R.id.tool_bar_id)
         setSupportActionBar(toolbar)
+
         actionBarDrawerToggle = ActionBarDrawerToggle(
             this,
             drawer_layout_id,
@@ -35,11 +62,9 @@ class MainActivity : AppCompatActivity() {
             R.string.open,
             R.string.close
         )
+
         drawer_layout_id.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
-
-        //
-        phoneCallStatePermission()
 
         //Button's Click Handler
         this_week_button.setOnClickListener {
@@ -56,23 +81,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home_page_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.setting_menu_id_home_page -> {
-                Snackbar.make(drawer_layout_id, "Setting", Snackbar.LENGTH_LONG).show()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     fun thisWeek() {
 
@@ -86,11 +94,10 @@ class MainActivity : AppCompatActivity() {
         all_time_button.setTextColor(resources.getColor(R.color.grey_color))
         this_month_button.setTextColor(resources.getColor(R.color.grey_color))
 
-        //For opening Number Details Page (remove this code
-        startActivity(Intent(this, NumberDetailsPage::class.java))
+//        //For opening Number Details Page (remove this code
+//        startActivity(Intent(this, NumberDetailsPage::class.java))
 
     }
-
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     private fun thisMonth() {
@@ -123,20 +130,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun phoneCallStatePermission() {
+        val permissions = arrayListOf<String>()
+
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_PHONE_STATE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            permissions.add(Manifest.permission.READ_PHONE_STATE)
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CALL_LOG
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissions.add(Manifest.permission.READ_CALL_LOG)
+        }
+
+        if (permissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.READ_PHONE_STATE),
-                1
+                permissions.toTypedArray(),
+                REQUEST_CODE
             )
         }
     }
-
-
 }
 
 
