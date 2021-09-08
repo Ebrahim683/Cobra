@@ -8,7 +8,7 @@
     tools:context=".AppLoadingPage">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/loading_screen_logo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="50dp"

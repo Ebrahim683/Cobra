@@ -2,23 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/numberDetailsLayoutID"
+    android:id="@+id/number_details_layout_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
     tools:context=".NumberDetailsPage">
 
-<!--    appbar title wrapping issue-->
+    <!--    appbar title wrapping issue-->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/numberToolBarID"
+        android:id="@+id/number_tool_bar_id"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -58,17 +57,18 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/unKnownCard"
+        android:id="@+id/unknown_text_card_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/dial_button_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberToolBarID">
+        app:layout_constraintTop_toBottomOf="@+id/number_tool_bar_id">
 
         <TextView
-            android:id="@+id/unKnownText"
+            android:id="@+id/unknown_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -83,25 +83,25 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
-        android:id="@+id/smsButtonLayout"
+        android:id="@+id/sms_button_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/callButtonLayout"
-        app:layout_constraintEnd_toStartOf="@+id/callButtonLayout"
-        app:layout_constraintStart_toStartOf="@+id/unKnownCard"
-        app:layout_constraintTop_toTopOf="@+id/callButtonLayout">
+        app:layout_constraintBottom_toBottomOf="@+id/call_button_layout"
+        app:layout_constraintEnd_toStartOf="@+id/call_button_layout"
+        app:layout_constraintStart_toStartOf="@+id/unknown_text_card_layout"
+        app:layout_constraintTop_toTopOf="@+id/call_button_layout">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/smsButtonID"
+            android:id="@+id/sms_button_id"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/sms_"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         <TextView
-            android:id="@+id/smsTextID"
+            android:id="@+id/sms_text_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -114,7 +114,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/callButtonLayout"
+        android:id="@+id/call_button_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -122,19 +122,20 @@
         android:layout_marginEnd="15dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/dialButtonLayout"
-        app:layout_constraintStart_toEndOf="@+id/smsButtonLayout"
-        app:layout_constraintTop_toBottomOf="@+id/unKnownCard">
+        app:layout_constraintBottom_toTopOf="@+id/rec_id_call"
+        app:layout_constraintEnd_toStartOf="@+id/dial_button_layout"
+        app:layout_constraintStart_toEndOf="@+id/sms_button_layout"
+        app:layout_constraintTop_toBottomOf="@+id/unknown_text_card_layout">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/callButtonID"
+            android:id="@+id/call_button_id"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/dial_icon"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         <TextView
-            android:id="@+id/callTextID"
+            android:id="@+id/call_text_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -146,26 +147,26 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/dialButtonLayout"
+        android:id="@+id/dial_button_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/callButtonLayout"
-        app:layout_constraintEnd_toEndOf="@+id/unKnownCard"
-        app:layout_constraintStart_toEndOf="@+id/callButtonLayout"
-        app:layout_constraintTop_toTopOf="@+id/callButtonLayout">
+        app:layout_constraintBottom_toBottomOf="@+id/call_button_layout"
+        app:layout_constraintEnd_toEndOf="@+id/unknown_text_card_layout"
+        app:layout_constraintStart_toEndOf="@+id/call_button_layout"
+        app:layout_constraintTop_toTopOf="@+id/call_button_layout">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/dialButtonID"
+            android:id="@+id/dial_button_id"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/dial_pad_icon"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         <TextView
-            android:id="@+id/dialTextID"
+            android:id="@+id/dial_text_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -177,59 +178,64 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recIdCall"
+        android:id="@+id/rec_id_call"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/mobile_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/callButtonLayout"
-        tools:listitem="@layout/call_history_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/call_button_layout"
+        tools:listitem="@layout/single_row_call_history_layout" />
 
     <View
         android:id="@+id/view_1"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#979A9A"
-        app:layout_constraintTop_toBottomOf="@+id/recIdCall" />
+        app:layout_constraintBottom_toTopOf="@+id/mobile_layout"
+        app:layout_constraintTop_toBottomOf="@+id/rec_id_call" />
 
     <RelativeLayout
-        android:id="@+id/mobileLayout"
+        android:id="@+id/mobile_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/save_number_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:paddingStart="15dp"
         app:layout_constraintTop_toBottomOf="@+id/view_1">
 
         <TextView
             android:id="@+id/mobile_text"
-            android:text="mobile"
-            android:layout_alignParentStart="true"
-            android:textSize="15sp"
-            android:fontFamily="@font/montserrat_medium"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="mobile"
             android:textColor="@color/red_color"
-            android:layout_height="wrap_content"/>
+            android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/mobile_number"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="4dp"
             android:layout_marginStart="3dp"
-            android:gravity="center_vertical"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/mobile_text"
-            android:background="#6F938B8B">
+            android:background="#6F938B8B"
+            android:gravity="center_vertical">
 
             <TextView
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
                 android:id="@+id/recent_number_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:text="RECENT"
                 android:textColor="@color/white"
                 android:textSize="10sp" />
@@ -238,24 +244,78 @@
 
         <TextView
             android:id="@+id/mobile_number"
-            android:text="+0123456789"
-            android:layout_marginTop="3dp"
-            android:layout_below="@id/mobile_text"
-            android:textSize="20sp"
-            android:fontFamily="@font/montserrat_medium"
-            android:textColor="@color/red_color"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mobile_text"
+            android:layout_marginTop="3dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="+0123456789"
+            android:textColor="@color/red_color"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
     <View
         android:id="@+id/view_2"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="#979A9A"
+        app:layout_constraintBottom_toTopOf="@+id/save_number_button"
+        app:layout_constraintTop_toBottomOf="@+id/mobile_layout"
+        tools:layout_editor_absoluteX="15dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/save_number_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="15dp"
-        app:layout_constraintTop_toBottomOf="@+id/mobileLayout" />
+        android:background="@android:color/transparent"
+        android:drawableStart="@drawable/ic_baseline_save_24"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:gravity="center_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="Save This Number"
+        android:textAlignment="textStart"
+        android:textColor="@color/red_color"
+        app:layout_constraintBottom_toTopOf="@+id/block_number_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_2"
+        tools:ignore="RtlCompat" />
+
+    <View
+        android:id="@+id/view_3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#979A9A"
+        app:layout_constraintBottom_toTopOf="@+id/block_number_button"
+        app:layout_constraintTop_toBottomOf="@+id/save_number_button"
+        tools:layout_editor_absoluteX="15dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/block_number_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="15dp"
+        android:background="@android:color/transparent"
+        android:drawableStart="@drawable/ic_baseline_block_24"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/montserrat_semi_bold"
+        android:gravity="center_vertical"
+        android:text="Block This Number"
+        android:textAlignment="textStart"
+        android:textColor="@color/red_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_3"
+        tools:ignore="RtlCompat" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

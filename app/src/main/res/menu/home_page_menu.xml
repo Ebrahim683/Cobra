@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/settingMenuIdHomePage"
-        android:title="Setting"
+    <item
+        android:id="@+id/setting_menu_id_home_page"
         android:icon="@drawable/ic_baseline_settings_24"
-        app:showAsAction="always"/>
-
+        android:title="Setting"
+        app:showAsAction="always" />
 
 
 </menu>

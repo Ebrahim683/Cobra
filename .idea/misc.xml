@@ -3,19 +3,25 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Cobra/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21927083333333333" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/bg_unknown_text.xml" value="0.21927083333333333" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/btn_bg_home_page.xml" value="0.2158974358974359" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/btn_select_bg.xml" value="0.2158974358974359" />
+        <entry key="..\:/Cobra/app/src/main/res/drawable/btn_unselect_bg.xml" value="0.21927083333333333" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/home_page_view_bg.xml" value="0.2158974358974359" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml" value="0.21927083333333333" />
+        <entry key="..\:/Cobra/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.21927083333333333" />
+        <entry key="..\:/Cobra/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.21927083333333333" />
+        <entry key="..\:/Cobra/app/src/main/res/drawable/ic_launcher_background.xml" value="0.21927083333333333" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/search_view_bg.xml" value="0.2158974358974359" />
         <entry key="..\:/Cobra/app/src/main/res/font/montserrat_font.xml" value="0.22314814814814815" />
         <entry key="..\:/Cobra/app/src/main/res/layout/activity_app_loading_page.xml" value="0.22" />
-        <entry key="..\:/Cobra/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Cobra/app/src/main/res/layout/activity_number_details_page.xml" value="0.2" />
         <entry key="..\:/Cobra/app/src/main/res/layout/call_history_layout.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/custom_toolbar_home_page.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/neav_header.xml" value="0.203125" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/nev_header.xml" value="0.192481884057971" />
         <entry key="..\:/Cobra/app/src/main/res/layout/single_row_call_list.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/tool_bar_home_page.xml" value="0.18342391304347827" />
         <entry key="..\:/Cobra/app/src/main/res/menu/home_page_menu.xml" value="0.203125" />

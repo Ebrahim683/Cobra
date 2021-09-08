@@ -2,7 +2,7 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawerLayoutID"
+    android:id="@+id/drawer_layout_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
@@ -13,16 +13,18 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolBarID"
+            android:id="@+id/tool_bar_id"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:background="@android:color/transparent"
             app:buttonGravity="center_vertical"
+            app:layout_constraintBottom_toTopOf="@+id/layout_23"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/logo_tool_bar"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
@@ -32,7 +34,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
-            android:id="@+id/Layout23"
+            android:id="@+id/layout_23"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -42,12 +44,13 @@
             android:background="@drawable/home_page_view_bg"
             android:orientation="vertical"
             android:padding="5dp"
-            app:layout_constraintEnd_toStartOf="@+id/layout16"
+            app:layout_constraintBottom_toTopOf="@+id/search_view_id"
+            app:layout_constraintEnd_toStartOf="@+id/layout_16"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolBarID">
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_id">
 
             <TextView
-                android:id="@+id/textId23"
+                android:id="@+id/text_id_23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -57,7 +60,7 @@
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/textIdTitle1"
+                android:id="@+id/textI_title_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -69,7 +72,7 @@
                 tools:ignore="SmallSp" />
 
             <TextView
-                android:id="@+id/textIdDes1"
+                android:id="@+id/text_id_des_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -83,7 +86,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout16"
+            android:id="@+id/layout_16"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -93,12 +96,13 @@
             android:background="@drawable/home_page_view_bg"
             android:orientation="vertical"
             android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/search_view_id"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/Layout23"
-            app:layout_constraintTop_toBottomOf="@+id/toolBarID">
+            app:layout_constraintStart_toEndOf="@+id/layout_23"
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_id">
 
             <TextView
-                android:id="@+id/textId16"
+                android:id="@+id/text_id_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -108,7 +112,7 @@
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/textIdTitle2"
+                android:id="@+id/text_id_title_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -120,7 +124,7 @@
                 tools:ignore="SmallSp" />
 
             <TextView
-                android:id="@+id/textIdDes2"
+                android:id="@+id/text_id_des_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -134,7 +138,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchViewID"
+            android:id="@+id/search_view_id"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="15dp"
@@ -142,24 +146,26 @@
             android:fontFamily="@font/montserrat_medium"
             android:paddingStart="15dp"
             android:textAlignment="textStart"
-            app:layout_constraintEnd_toEndOf="@+id/layout16"
-            app:layout_constraintStart_toStartOf="@+id/Layout23"
-            app:layout_constraintTop_toBottomOf="@+id/Layout23"
+            app:layout_constraintBottom_toTopOf="@+id/button_layout"
+            app:layout_constraintEnd_toEndOf="@+id/layout_16"
+            app:layout_constraintStart_toStartOf="@+id/layout_23"
+            app:layout_constraintTop_toBottomOf="@+id/layout_23"
             app:queryHint="Search Number"
             app:searchIcon="@drawable/ic_baseline_search_24"
             tools:ignore="RtlSymmetry" />
 
         <RelativeLayout
-            android:id="@+id/buttonLayout"
+            android:id="@+id/button_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="@+id/searchViewID"
-            app:layout_constraintStart_toStartOf="@+id/searchViewID"
-            app:layout_constraintTop_toBottomOf="@+id/searchViewID">
+            app:layout_constraintBottom_toTopOf="@+id/recycler_view_id"
+            app:layout_constraintEnd_toEndOf="@+id/search_view_id"
+            app:layout_constraintStart_toStartOf="@+id/search_view_id"
+            app:layout_constraintTop_toBottomOf="@+id/search_view_id">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/thisWeekButton"
+                android:id="@+id/this_week_button"
                 android:layout_width="80dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
@@ -172,13 +178,13 @@
                 tools:ignore="SmallSp,TouchTargetSizeCheck" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/thisMonthButton"
+                android:id="@+id/this_month_button"
                 android:layout_width="80dp"
                 android:layout_height="20dp"
                 android:layout_centerInParent="true"
                 android:layout_margin="8dp"
                 android:layout_marginTop="12dp"
-                android:layout_toEndOf="@id/thisWeekButton"
+                android:layout_toEndOf="@id/this_week_button"
                 android:background="@drawable/btn_unselect_bg"
                 android:fontFamily="@font/montserrat_medium"
                 android:text="This Month"
@@ -187,12 +193,12 @@
                 tools:ignore="SmallSp,TouchTargetSizeCheck" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/allTimeButton"
+                android:id="@+id/all_time_button"
                 android:layout_width="80dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_margin="8dp"
-                android:layout_toEndOf="@id/thisMonthButton"
+                android:layout_toEndOf="@id/this_month_button"
                 android:background="@drawable/btn_unselect_bg"
                 android:fontFamily="@font/montserrat_medium"
                 android:text="All Time"
@@ -203,20 +209,20 @@
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewID"
+            android:id="@+id/recycler_view_id"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonLayout"
+            app:layout_constraintTop_toBottomOf="@+id/button_layout"
             tools:listitem="@layout/single_row_call_list" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navID"
+        android:id="@+id/nav_id"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

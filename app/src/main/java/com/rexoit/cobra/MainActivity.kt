@@ -22,29 +22,29 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //NavigationView
-        toolbar = findViewById(R.id.toolBarID)
+        toolbar = findViewById(R.id.tool_bar_id)
         setSupportActionBar(toolbar)
         actionBarDrawerToggle = ActionBarDrawerToggle(
             this,
-            drawerLayoutID,
+            drawer_layout_id,
             toolbar,
             R.string.open,
             R.string.close
         )
-        drawerLayoutID.addDrawerListener(actionBarDrawerToggle)
+        drawer_layout_id.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
 
         //Button's Click Handler
-        thisWeekButton.setOnClickListener {
+        this_week_button.setOnClickListener {
             thisWeek()
         }
 
-        thisMonthButton.setOnClickListener {
+        this_month_button.setOnClickListener {
             thisMonth()
         }
 
-        allTimeButton.setOnClickListener {
+        all_time_button.setOnClickListener {
             allTime()
         }
 
@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.settingMenuIdHomePage -> {
-                Snackbar.make(drawerLayoutID, "Setting", Snackbar.LENGTH_LONG).show()
+            R.id.setting_menu_id_home_page -> {
+                Snackbar.make(drawer_layout_id, "Setting", Snackbar.LENGTH_LONG).show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -70,13 +70,13 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     fun thisWeek() {
         //Button's Background
-        thisWeekButton.background = getDrawable(R.drawable.btn_select_bg)
-        thisMonthButton.background = getDrawable(R.drawable.btn_unselect_bg)
-        allTimeButton.background = getDrawable(R.drawable.btn_unselect_bg)
+        this_week_button.background = getDrawable(R.drawable.btn_select_bg)
+        this_month_button.background = getDrawable(R.drawable.btn_unselect_bg)
+        all_time_button.background = getDrawable(R.drawable.btn_unselect_bg)
         //Button's Text Color
-        thisWeekButton.setTextColor(resources.getColor(R.color.white))
-        allTimeButton.setTextColor(resources.getColor(R.color.grey_color))
-        thisMonthButton.setTextColor(resources.getColor(R.color.grey_color))
+        this_week_button.setTextColor(resources.getColor(R.color.white))
+        all_time_button.setTextColor(resources.getColor(R.color.grey_color))
+        this_month_button.setTextColor(resources.getColor(R.color.grey_color))
 
         //For opening Number Details Page (remove this code
         startActivity(Intent(this,NumberDetailsPage::class.java))
@@ -87,25 +87,25 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     private fun thisMonth() {
         //Button's Background
-        thisMonthButton.background = getDrawable(R.drawable.btn_select_bg)
-        thisWeekButton.background = getDrawable(R.drawable.btn_unselect_bg)
-        allTimeButton.background = getDrawable(R.drawable.btn_unselect_bg)
+        this_month_button.background = getDrawable(R.drawable.btn_select_bg)
+        this_week_button.background = getDrawable(R.drawable.btn_unselect_bg)
+        all_time_button.background = getDrawable(R.drawable.btn_unselect_bg)
         //Button's Text Color
-        thisMonthButton.setTextColor(resources.getColor(R.color.white))
-        allTimeButton.setTextColor(resources.getColor(R.color.grey_color))
-        thisWeekButton.setTextColor(resources.getColor(R.color.grey_color))
+        this_month_button.setTextColor(resources.getColor(R.color.white))
+        all_time_button.setTextColor(resources.getColor(R.color.grey_color))
+        this_week_button.setTextColor(resources.getColor(R.color.grey_color))
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     private fun allTime() {
         //Button's Background
-        allTimeButton.background = getDrawable(R.drawable.btn_select_bg)
-        thisMonthButton.background = getDrawable(R.drawable.btn_unselect_bg)
-        thisWeekButton.background = getDrawable(R.drawable.btn_unselect_bg)
+        all_time_button.background = getDrawable(R.drawable.btn_select_bg)
+        this_month_button.background = getDrawable(R.drawable.btn_unselect_bg)
+        this_week_button.background = getDrawable(R.drawable.btn_unselect_bg)
         //Button's Text Color
-        allTimeButton.setTextColor(resources.getColor(R.color.white))
-        thisMonthButton.setTextColor(resources.getColor(R.color.grey_color))
-        thisWeekButton.setTextColor(resources.getColor(R.color.grey_color))
+        all_time_button.setTextColor(resources.getColor(R.color.white))
+        this_month_button.setTextColor(resources.getColor(R.color.grey_color))
+        this_week_button.setTextColor(resources.getColor(R.color.grey_color))
     }
 
 }
