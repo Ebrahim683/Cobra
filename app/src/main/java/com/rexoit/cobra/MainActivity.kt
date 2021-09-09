@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import com.rexoit.cobra.utils.CallLogger
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
@@ -69,6 +71,8 @@ class MainActivity : AppCompatActivity() {
         //Button's Click Handler
         this_week_button.setOnClickListener {
             thisWeek()
+            //For opening Number Details Page (remove this code
+            startActivity(Intent(this, NumberDetailsPage::class.java))
         }
 
         this_month_button.setOnClickListener {
@@ -79,6 +83,8 @@ class MainActivity : AppCompatActivity() {
             allTime()
         }
 
+        val callLogs = CallLogger.getCallDetails(applicationContext)
+        Log.d(TAG, "onCreate: ${callLogs.toString()}")
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
@@ -93,10 +99,6 @@ class MainActivity : AppCompatActivity() {
         this_week_button.setTextColor(resources.getColor(R.color.white))
         all_time_button.setTextColor(resources.getColor(R.color.grey_color))
         this_month_button.setTextColor(resources.getColor(R.color.grey_color))
-
-//        //For opening Number Details Page (remove this code)
-//        startActivity(Intent(this, NumberDetailsPage::class.java))
-
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
@@ -148,6 +150,14 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.READ_CALL_LOG)
         }
 
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissions.add(Manifest.permission.READ_CONTACTS)
+        }
+
         if (permissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -157,3 +167,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+
