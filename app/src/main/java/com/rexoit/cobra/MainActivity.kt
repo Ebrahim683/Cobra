@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         all_time_button.setTextColor(resources.getColor(R.color.grey_color))
         this_month_button.setTextColor(resources.getColor(R.color.grey_color))
 
-//        //For opening Number Details Page (remove this code
+//        //For opening Number Details Page (remove this code)
 //        startActivity(Intent(this, NumberDetailsPage::class.java))
 
     }
@@ -157,6 +157,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-
-

@@ -9,7 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_number_details_page.*
 
 class NumberDetailsPage : AppCompatActivity() {
-    lateinit var toolbar: Toolbar
+    private lateinit var toolbar: Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_number_details_page)
@@ -34,9 +34,9 @@ class NumberDetailsPage : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            android.R.id.home ->{
-                finish()
-            }
+//            android.R.id.home ->{
+//                finish()
+//            }
             R.id.edit -> {
                 Snackbar.make(number_details_layout_id, "Edit", Snackbar.LENGTH_LONG).show()
             }
