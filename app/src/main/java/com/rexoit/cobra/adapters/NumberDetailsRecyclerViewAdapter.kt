@@ -8,6 +8,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.data.model.CallType
+import com.rexoit.cobra.utils.toFormattedDateString
+import com.rexoit.cobra.utils.toFormattedElapsedSecondsString
+import com.rexoit.cobra.utils.toFormattedElapsedTimeString
+import com.rexoit.cobra.utils.toFormattedTimeString
 
 class NumberDetailsRecyclerViewAdapter(
     private val context: Context,
@@ -39,9 +44,23 @@ class NumberDetailsRecyclerViewAdapter(
         val callLogInfo: CallLogInfo = list[position]
 
         //Get the Data
-        callTime = callLogInfo.time.toString()
-        callType = callLogInfo.callType.toString()
-        callDuration = callLogInfo.duration.toString()
+        callTime = callLogInfo.time?.toFormattedElapsedTimeString().toString()
+        callType = when (callLogInfo.callType) {
+            CallType.INCOMING -> {
+                "Incoming call"
+            }
+            CallType.MISSED -> {
+                "Missed call"
+            }
+            CallType.OUTGOING -> {
+                "Outgoing call"
+            }
+            else -> {
+                "Unknown"
+            }
+        }
+
+        callDuration = callLogInfo.time?.toFormattedElapsedSecondsString().toString()
 
         //Binding the item of the recycler view
         holder.sample_call_time.text = callTime

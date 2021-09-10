@@ -24,21 +24,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_back"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/ic_baseline_arrow_back_ios_24"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/btn_back"
                 android:fontFamily="@font/montserrat_medium"
                 android:text="Recent"
                 android:textColor="@color/grey_color"
@@ -46,7 +36,7 @@
 
             <ImageView
                 android:id="@+id/logo"
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:src="@drawable/cobra911_logo"
@@ -54,15 +44,17 @@
 
         </RelativeLayout>
 
-
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/unknown_text_card_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
         android:layout_marginTop="8dp"
         app:cardCornerRadius="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         app:layout_constraintBottom_toTopOf="@+id/dial_button_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +81,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/call_button_layout"
         app:layout_constraintEnd_toStartOf="@+id/call_button_layout"
         app:layout_constraintStart_toStartOf="@+id/unknown_text_card_layout"
         app:layout_constraintTop_toTopOf="@+id/call_button_layout">
@@ -123,7 +114,6 @@
         android:layout_marginEnd="15dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/rec_id_call"
         app:layout_constraintEnd_toStartOf="@+id/dial_button_layout"
         app:layout_constraintStart_toEndOf="@+id/sms_button_layout"
         app:layout_constraintTop_toBottomOf="@+id/unknown_text_card_layout">
@@ -172,156 +162,183 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/montserrat_medium"
-            android:text="Call Back"
+            android:text="New Dial"
+            android:textSize="10sp"
             android:textColor="@color/grey_color" />
 
     </LinearLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rec_id_call"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/today_text_hint"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        tools:itemCount="2"
+        android:text="Today"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="15dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sms_button_layout" />
+
+    <androidx.core.widget.NestedScrollView
+        android:paddingBottom="500dp"
+        android:clipToPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/call_button_layout"
-        tools:listitem="@layout/single_row_call_history_layout" />
-
-    <View
-        android:id="@+id/view_1"
+        app:layout_constraintTop_toBottomOf="@+id/today_text_hint"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#979A9A"
-        app:layout_constraintBottom_toTopOf="@+id/mobile_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rec_id_call" />
-
-    <RelativeLayout
-        android:id="@+id/mobile_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_1">
-
-        <TextView
-            android:id="@+id/mobile_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="mobile"
-            android:textColor="@color/red_color"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/mobile_number"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="4dp"
-            android:layout_toEndOf="@id/mobile_text"
-            android:background="#6F938B8B"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/recent_number_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:text="RECENT"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/mobile_number"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mobile_text"
-            android:layout_marginTop="3dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:textColor="@color/red_color"
-            android:textSize="18sp" />
+            android:layout_height="match_parent">
 
-    </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rec_id_call"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+               tools:itemCount="2"
+                android:overScrollMode="never"
+                tools:listitem="@layout/single_row_call_history_layout" />
 
-    <View
-        android:id="@+id/view_2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:background="#979A9A"
-        app:layout_constraintBottom_toTopOf="@+id/save_number_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mobile_layout" />
+            <View
+                android:id="@+id/view_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="#979A9A"
+                app:layout_constraintBottom_toTopOf="@+id/mobile_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rec_id_call" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/save_number_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="15dp"
-        android:background="@android:color/transparent"
-        android:drawableStart="@drawable/ic_baseline_save_24"
-        android:drawablePadding="8dp"
-        android:fontFamily="@font/montserrat_medium"
-        android:gravity="center_vertical"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="Save This Number"
-        android:textAlignment="textStart"
-        android:textColor="@color/red_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_2"
-        tools:ignore="RtlCompat" />
+            <RelativeLayout
+                android:layout_marginTop="10dp"
+                android:id="@+id/mobile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_1">
 
-    <View
-        android:id="@+id/view_3"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:background="#979A9A"
-        app:layout_constraintBottom_toTopOf="@+id/block_number_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_number_button" />
+                <TextView
+                    android:id="@+id/mobile_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="mobile"
+                    android:textSize="15sp" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/block_number_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="16dp"
-        android:background="@android:color/transparent"
-        android:drawableStart="@drawable/ic_baseline_block_24"
-        android:drawablePadding="8dp"
-        android:fontFamily="@font/montserrat_semi_bold"
-        android:gravity="center_vertical"
-        android:text="Block This Number"
-        android:textAlignment="textStart"
-        android:textColor="@color/red_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_3"
-        tools:ignore="RtlCompat" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/mobile_number"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@id/mobile_text"
+                    android:background="#6F938B8B"
+                    android:gravity="center_vertical">
 
+                    <TextView
+                        android:id="@+id/recent_number_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="RECENT"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/mobile_text"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="+8801"
+                    android:textColor="@color/red_color"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/view_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="#979A9A"
+                app:layout_constraintBottom_toTopOf="@+id/save_number_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mobile_layout" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/save_number_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="15dp"
+                android:background="@android:color/transparent"
+                android:drawableStart="@drawable/ic_baseline_save_24"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center_vertical"
+                android:text="Save This Number"
+                android:textAlignment="textStart"
+                android:textColor="@color/red_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_2"
+                tools:ignore="RtlCompat" />
+
+            <View
+                android:id="@+id/view_3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="#979A9A"
+                app:layout_constraintBottom_toTopOf="@+id/block_number_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/save_number_button" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/block_number_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="16dp"
+                android:background="@android:color/transparent"
+                android:drawableStart="@drawable/ic_baseline_block_24"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center_vertical"
+                android:text="Block This Number"
+                android:textAlignment="textStart"
+                android:textColor="@color/red_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_3"
+                tools:ignore="RtlCompat" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

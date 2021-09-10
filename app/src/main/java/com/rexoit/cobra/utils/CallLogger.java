@@ -58,10 +58,10 @@ public class CallLogger {
 
             callLogInfoList.add(
                     new CallLogInfo(
-                            username != null ? username : "Unknown Caller",
+                            username != null ? username.isEmpty() ? "Unknown Caller" : username : "Unknown Caller",
                             mobileNumber,
                             mCallType,
-                            callDayTime.toString(),
+                            callDayTime.getTime(),
                             callDuration
                     )
             );

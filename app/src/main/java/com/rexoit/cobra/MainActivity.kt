@@ -2,6 +2,7 @@ package com.rexoit.cobra
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +22,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 
 import android.os.Build
 import android.provider.Settings
-
+import androidx.recyclerview.widget.DividerItemDecoration
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE = 8077
@@ -31,11 +31,6 @@ private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
 class MainActivity : AppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
-    private lateinit var toolbar: Toolbar
-    private lateinit var recyclerViewAdapter: HomePageRecyclerViewAdapter
-    private lateinit var name: String
-    private lateinit var mobileNumber: String
-    private lateinit var time: String
 
     override fun onStart() {
         super.onStart()
@@ -45,7 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         // active this week when activity start
         thisWeek()
+    }
 
+    override fun onResume() {
+        super.onResume()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             //If the draw over permission is not available open the settings screen
             //to grant the permission.
@@ -75,8 +73,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.d(TAG, "onCreate: Created!")
+
         //NavigationView
-        toolbar = findViewById(R.id.tool_bar_id)
+        val toolbar = tool_bar_id
         setSupportActionBar(toolbar)
 
         actionBarDrawerToggle = ActionBarDrawerToggle(
@@ -93,8 +93,6 @@ class MainActivity : AppCompatActivity() {
         //Button's Click Handler
         this_week_button.setOnClickListener {
             thisWeek()
-            //For opening Number Details Page (remove this code
-//            startActivity(Intent(this, NumberDetailsPage::class.java))
         }
 
         this_month_button.setOnClickListener {
@@ -106,16 +104,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         val callLogs = CallLogger.getCallDetails(applicationContext)
-        Log.d(TAG, "onCreate: $callLogs")
+
+        // count total calls from unknown number using kotlin DSL
+        text_id_23.text = callLogs.count { current -> current.name == "Unknown Caller" }.toString()
 
         //RecyclerView Work
-        recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
-        recycler_view_id.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = recyclerViewAdapter
-        }
+        val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
 
+        val callLogRecyclerView = recycler_view_id
+        val layoutManager = LinearLayoutManager(this@MainActivity)
+
+        val dividerItemDecoration = DividerItemDecoration(
+            callLogRecyclerView.context,
+            layoutManager.orientation
+        )
+
+        callLogRecyclerView.addItemDecoration(dividerItemDecoration)
+
+        callLogRecyclerView.apply {
+            setHasFixedSize(true)
+            this.layoutManager = layoutManager
+            this.adapter = recyclerViewAdapter
+        }
     }
 
 
@@ -166,6 +176,7 @@ class MainActivity : AppCompatActivity() {
     private fun phoneCallStatePermission() {
         val permissions = arrayListOf<String>()
 
+        // check call state permission
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_PHONE_STATE
@@ -174,6 +185,7 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.READ_PHONE_STATE)
         }
 
+        // check call log permission
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_CALL_LOG
@@ -182,6 +194,7 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.READ_CALL_LOG)
         }
 
+        // check read contact permission
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_CONTACTS
@@ -198,9 +211,4 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
-
-
 }
-
-
-
