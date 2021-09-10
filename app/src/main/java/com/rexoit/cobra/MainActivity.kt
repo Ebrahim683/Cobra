@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import android.os.Build
 import android.provider.Settings
 import androidx.recyclerview.widget.DividerItemDecoration
+import java.lang.Exception
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE = 8077
@@ -103,28 +104,33 @@ class MainActivity : AppCompatActivity() {
             allTime()
         }
 
-        val callLogs = CallLogger.getCallDetails(applicationContext)
+        try {
+            val callLogs = CallLogger.getCallDetails(applicationContext)
 
-        // count total calls from unknown number using kotlin DSL
-        text_id_23.text = callLogs.count { current -> current.name == "Unknown Caller" }.toString()
+            // count total calls from unknown number using kotlin DSL
+            text_id_23.text =
+                callLogs.count { current -> current.name == "Unknown Caller" }.toString()
 
-        //RecyclerView Work
-        val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
+            //RecyclerView Work
+            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
 
-        val callLogRecyclerView = recycler_view_id
-        val layoutManager = LinearLayoutManager(this@MainActivity)
+            val callLogRecyclerView = recycler_view_id
+            val layoutManager = LinearLayoutManager(this@MainActivity)
 
-        val dividerItemDecoration = DividerItemDecoration(
-            callLogRecyclerView.context,
-            layoutManager.orientation
-        )
+            val dividerItemDecoration = DividerItemDecoration(
+                callLogRecyclerView.context,
+                layoutManager.orientation
+            )
 
-        callLogRecyclerView.addItemDecoration(dividerItemDecoration)
+            callLogRecyclerView.addItemDecoration(dividerItemDecoration)
 
-        callLogRecyclerView.apply {
-            setHasFixedSize(true)
-            this.layoutManager = layoutManager
-            this.adapter = recyclerViewAdapter
+            callLogRecyclerView.apply {
+                setHasFixedSize(true)
+                this.layoutManager = layoutManager
+                this.adapter = recyclerViewAdapter
+            }
+        } catch (e: SecurityException) {
+            Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
         }
     }
 

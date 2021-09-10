@@ -34,7 +34,7 @@ import android.view.MotionEvent;
  * url: https://www.androhub.com/android-floating-widget-like-facebook-messenger-chat-head/
  */
 public class FloatingWidgetService extends Service implements View.OnClickListener {
-    private static final String TAG="FloatingWidgetService";
+    private static final String TAG = "FloatingWidgetService";
 
     private WindowManager mWindowManager;
     private View mFloatingWidgetView, collapsedView, expandedView;
@@ -116,7 +116,7 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 LAYOUT_PARAMS,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 PixelFormat.TRANSLUCENT);
 
         //Specify the view position
@@ -150,7 +150,7 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 LAYOUT_PARAMS,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
         //Specify the view position

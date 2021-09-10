@@ -44,42 +44,44 @@ class CallReceiver : BroadcastReceiver() {
                         context?.startForegroundService(
                             serviceIntent
                         )
-                    }else{
+                    } else {
                         context?.startService(
                             serviceIntent
                         )
                     }
 
-                    Toast.makeText(
-                        context,
-                        "Incoming Call: $mobileNumber. Is Unknown number: $it",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        context,
+//                        "Incoming Call: $mobileNumber. Is Unknown number: $it",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
 
-                //Outgoing Call Detect
-                EXTRA_STATE_OFFHOOK -> {
-                    Log.d(TAG, "Outgoing Call")
-                    context?.stopService(serviceIntent)
-
-                    Toast.makeText(
-                        context,
-                        "Outgoing Call $mobileNumber. Is Unknown number: $it",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                //Call End Detect
-                EXTRA_STATE_IDLE -> {
+//                //Outgoing Call Detect
+//                EXTRA_STATE_OFFHOOK -> {
+//                    Log.d(TAG, "Outgoing Call")
+//                    context?.stopService(serviceIntent)
+//
+//                    Toast.makeText(
+//                        context,
+//                        "Outgoing Call $mobileNumber. Is Unknown number: $it",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//
+//                //Call End Detect
+//                EXTRA_STATE_IDLE -> {
+//                    Log.d(TAG, "Call Ended")
+//                    Toast.makeText(
+//                        context,
+//                        "Call Ended $mobileNumber. Is Unknown number: $it",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//
+                else -> {
                     // stop the service
                     context?.stopService(serviceIntent)
-
-                    Log.d(TAG, "Call Ended")
-                    Toast.makeText(
-                        context,
-                        "Call Ended $mobileNumber. Is Unknown number: $it",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         }
