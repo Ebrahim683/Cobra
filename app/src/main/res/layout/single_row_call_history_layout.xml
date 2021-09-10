@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     android:layout_height="wrap_content"
     android:padding="8dp">
 
@@ -13,35 +16,33 @@
         android:text="9.18 PM"
         android:textColor="@color/grey_color"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/sample_call_status"
+        app:layout_constraintBottom_toBottomOf="@+id/sample_call_type"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/sample_call_status" />
+        app:layout_constraintTop_toTopOf="@+id/sample_call_type" />
 
 
     <TextView
-        android:id="@+id/sample_call_status"
+        android:id="@+id/sample_call_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="93dp"
         android:text="OutGoing Call"
-        android:textColor="@color/grey_color"
+        android:textColor="@color/black"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/sample_call_time_2"
-        app:layout_constraintStart_toEndOf="@+id/sample_call_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/sample_call_time_2"
+        android:id="@+id/sample_call_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="45 Second"
         android:textColor="@color/grey_color"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/sample_call_status"
+        app:layout_constraintBottom_toBottomOf="@+id/sample_call_type"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/sample_call_status" />
+        app:layout_constraintTop_toTopOf="@+id/sample_call_type" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

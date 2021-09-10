@@ -2,7 +2,6 @@ package com.rexoit.cobra
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -14,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.rexoit.cobra.adapters.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.utils.CallLogger
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: Toolbar
+    private lateinit var recyclerViewAdapter: HomePageRecyclerViewAdapter
+    private lateinit var name: String
+    private lateinit var mobileNumber: String
+    private lateinit var time: String
 
     override fun onStart() {
         super.onStart()
@@ -89,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         this_week_button.setOnClickListener {
             thisWeek()
             //For opening Number Details Page (remove this code
-            startActivity(Intent(this, NumberDetailsPage::class.java))
+//            startActivity(Intent(this, NumberDetailsPage::class.java))
         }
 
         this_month_button.setOnClickListener {
@@ -101,8 +106,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         val callLogs = CallLogger.getCallDetails(applicationContext)
-        Log.d(TAG, "onCreate: ${callLogs.toString()}")
+        Log.d(TAG, "onCreate: $callLogs")
+
+        //RecyclerView Work
+        recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
+        recycler_view_id.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = recyclerViewAdapter
+        }
+
     }
+
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     fun thisWeek() {
@@ -183,6 +198,8 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
+
 }
 
 
