@@ -1,12 +1,17 @@
 package com.rexoit.cobra.data.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import java.util.*
+
+@Parcelize
 data class CallLogInfo(
-    val name:String?,
-    val mobileNumber:String?,
-    val callType:CallType?,
-    val time:String?,
-    val duration:String?
-){
+    val name: String?,
+    val mobileNumber: String?,
+    val callType: CallType?,
+    val time: Long?,
+    val duration: String?
+) : Parcelable {
     override fun toString(): String {
         return "{" +
                 "   name=$name, \n" +

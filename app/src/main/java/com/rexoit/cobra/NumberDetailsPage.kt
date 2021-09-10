@@ -1,6 +1,7 @@
 package com.rexoit.cobra
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -10,56 +11,40 @@ import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.adapters.NumberDetailsRecyclerViewAdapter
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.data.model.CallType
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_number_details_page.*
 
+private const val TAG = "NumberDetailsPage"
+ const val EXTRA_CALLER_NAME = "com.rexoit.cobra.EXTRA_CALLER_NAME"
+ const val EXTRA_CALLER_NUMBER = "com.rexoit.cobra.EXTRA_CALLER_NUMBER"
+ const val EXTRA_CALL_LOGS = "com.rexoit.cobra.EXTRA_CALL_LOGS"
+
 class NumberDetailsPage : AppCompatActivity() {
-
-    private lateinit var toolbar: Toolbar
-    private lateinit var name: String
-    private lateinit var number: String
-    private lateinit var numberAdapter: NumberDetailsRecyclerViewAdapter
-    private lateinit var arrayList: ArrayList<CallLogInfo>
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_number_details_page)
 
-        toolbar = findViewById(R.id.number_tool_bar_id)
+        Log.d(TAG, "onCreate: Created!")
+
+        val toolbar = number_tool_bar_id
         setSupportActionBar(toolbar)
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
-
-
-        btn_back.setOnClickListener {
-            finish()
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Receive and set name and number from HomePage
-        name = intent?.getStringExtra("name").toString()
-        number = intent?.getStringExtra("number").toString()
-        unknown_text.text = name
-        mobile_number.text = number
+        unknown_text.text = intent?.getStringExtra(EXTRA_CALLER_NAME)
+        mobile_number.text = intent?.getStringExtra(EXTRA_CALLER_NUMBER)
 
-        //RecyclerView Work
-        arrayList = ArrayList()
+        //get call logs for selected mobile number from intent that pass from parent intent
+        val callLogForToday = intent.getParcelableArrayListExtra<CallLogInfo>(EXTRA_CALL_LOGS)
 
-        val incoming: CallType = CallType.INCOMING
-        val outgoing: CallType = CallType.OUTGOING
-        val missed: CallType = CallType.MISSED
-        arrayList.add(CallLogInfo(null, null, incoming, "1 min ago", "45 second"))
-        arrayList.add(CallLogInfo(null, null, outgoing, "31 min ago", "1 hours"))
-        arrayList.add(CallLogInfo(null, null, missed, "1 hour ago", "30 second"))
-
-        numberAdapter = NumberDetailsRecyclerViewAdapter(this, arrayList)
-        rec_id_call.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@NumberDetailsPage)
-            adapter = numberAdapter
+        callLogForToday?.let { callLogs ->
+            val numberAdapter = NumberDetailsRecyclerViewAdapter(this, callLogs)
+            rec_id_call.apply {
+                setHasFixedSize(true)
+                layoutManager = LinearLayoutManager(this@NumberDetailsPage)
+                adapter = numberAdapter
+            }
         }
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -69,14 +54,13 @@ class NumberDetailsPage : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-//            android.R.id.home ->{
-//                finish()
-//            }
+            android.R.id.home -> {
+                finish()
+            }
             R.id.edit -> {
                 Snackbar.make(number_details_layout_id, "Edit", Snackbar.LENGTH_LONG).show()
             }
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

@@ -2,15 +2,19 @@ package com.rexoit.cobra.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.provider.CallLog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.rexoit.cobra.NumberDetailsPage
-import com.rexoit.cobra.R
+import com.rexoit.cobra.*
 import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.utils.toFormattedDateString
+import com.rexoit.cobra.utils.toFormattedDateTimeString
+import com.rexoit.cobra.utils.toFormattedElapsedTimeString
+import java.util.*
 
 class HomePageRecyclerViewAdapter(
     private val context: Context,
@@ -18,17 +22,12 @@ class HomePageRecyclerViewAdapter(
 ) :
     RecyclerView.Adapter<HomePageRecyclerViewAdapter.HomePageRecyclerViewHolder>() {
 
-    private lateinit var name: String
-    private lateinit var mobileNumber: String
-    private lateinit var time: String
-
-
     //HomePage Call List Item Reference
     class HomePageRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sample_call_image: ImageView = itemView.findViewById(R.id.sample_call_image)
-        val sample_number_text: TextView = itemView.findViewById(R.id.sample_number_text)
-        val sample_name_text: TextView = itemView.findViewById(R.id.sample_name_text)
-        val time: TextView = itemView.findViewById(R.id.time)
+        val mImage: ImageView = itemView.findViewById(R.id.sample_call_image)
+        val mCallerMobileNumber: TextView = itemView.findViewById(R.id.sample_number_text)
+        val mCallerName: TextView = itemView.findViewById(R.id.sample_name_text)
+        val mCallTime: TextView = itemView.findViewById(R.id.time)
     }
 
     // Wrapping The Layout Of RecyclerView
@@ -43,38 +42,46 @@ class HomePageRecyclerViewAdapter(
         //Get The Position Of RecyclerView Item
         val callLogInfo: CallLogInfo = list[position]
 
-        //Get the Data
-        name = callLogInfo.name.toString()
-        mobileNumber = callLogInfo.mobileNumber.toString()
-        time = callLogInfo.time.toString()
-
         //Binding the item of the recycler view
-        holder.sample_call_image.setImageResource(R.drawable.call_icon)
-        holder.sample_name_text.text = name
-        holder.sample_number_text.text = mobileNumber
-        holder.time.text = time
+        holder.mImage.setImageResource(R.drawable.call_icon)
+        holder.mCallerName.text = callLogInfo.name
+        holder.mCallerMobileNumber.text = callLogInfo.mobileNumber
+        holder.mCallTime.text = callLogInfo.time?.toFormattedElapsedTimeString()
 
         //Click Event Handler
-        onClickItem(holder, name, mobileNumber, time)
+        onClickItem(
+            holder,
+            callLogInfo.name,
+            callLogInfo.mobileNumber
+        )
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount() = list.size
 
     //Click Event Handler
     private fun onClickItem(
         holder: HomePageRecyclerViewHolder,
-        name: String,
-        number: String,
-        time: String
+        name: String?,
+        number: String?,
     ) {
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, NumberDetailsPage::class.java)
+//            val sortedCallListForNumber = list.sortedByDescending { current ->
+//                current.time?.toFormattedDateString() == Date().time.toFormattedDateString()
+//            }
+
+            val sortedCallListForNumber = list.filter { current ->
+                current.mobileNumber == number &&
+                current.time?.toFormattedDateString() == Date().time.toFormattedDateString()
+            }
+
+            val sortedCallLogArrayList = arrayListOf<CallLogInfo>()
+            sortedCallLogArrayList.addAll(sortedCallListForNumber)
+
             intent.apply {
-                putExtra("name", name)
-                putExtra("number", number)
-                putExtra("time", time)
+                putExtra(EXTRA_CALLER_NAME, name)
+                putExtra(EXTRA_CALLER_NUMBER, number)
+                putParcelableArrayListExtra(EXTRA_CALL_LOGS, sortedCallLogArrayList)
             }
             it.context.startActivity(intent)
         }
