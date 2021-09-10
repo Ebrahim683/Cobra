@@ -1,9 +1,9 @@
 package com.rexoit.cobra
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -11,6 +11,11 @@ import android.provider.ContactsContract.Data.DISPLAY_NAME
 import android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI
 import android.telephony.TelephonyManager.*
 import java.lang.Exception
+import kotlin.system.exitProcess
+import com.rexoit.cobra.service.FloatingWidgetService
+
+import android.content.Intent
+import android.os.Build
 
 
 private const val TAG = "CallReceiver"
@@ -22,11 +27,29 @@ class CallReceiver : BroadcastReceiver() {
         val isUnknownNumber: Boolean? = isUnknownCaller(context, mobileNumber)
 
         isUnknownNumber?.let {
+            val serviceIntent = Intent(
+                context,
+                FloatingWidgetService::class.java
+            )
+
             when (intent?.getStringExtra(EXTRA_STATE)) {
 
                 //Incoming Call Detect
                 EXTRA_STATE_RINGING -> {
                     Log.d(TAG, "Incoming Call")
+
+                    // open floating button when call is ringing
+                    // start a service
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        context?.startForegroundService(
+                            serviceIntent
+                        )
+                    }else{
+                        context?.startService(
+                            serviceIntent
+                        )
+                    }
+
                     Toast.makeText(
                         context,
                         "Incoming Call: $mobileNumber. Is Unknown number: $it",
@@ -37,6 +60,8 @@ class CallReceiver : BroadcastReceiver() {
                 //Outgoing Call Detect
                 EXTRA_STATE_OFFHOOK -> {
                     Log.d(TAG, "Outgoing Call")
+                    context?.stopService(serviceIntent)
+
                     Toast.makeText(
                         context,
                         "Outgoing Call $mobileNumber. Is Unknown number: $it",
@@ -46,6 +71,9 @@ class CallReceiver : BroadcastReceiver() {
 
                 //Call End Detect
                 EXTRA_STATE_IDLE -> {
+                    // stop the service
+                    context?.stopService(serviceIntent)
+
                     Log.d(TAG, "Call Ended")
                     Toast.makeText(
                         context,

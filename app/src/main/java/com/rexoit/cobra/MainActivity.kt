@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -16,9 +17,15 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.utils.CallLogger
 import kotlinx.android.synthetic.main.activity_main.*
+import androidx.core.app.ActivityCompat.startActivityForResult
+
+import android.os.Build
+import android.provider.Settings
+
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE = 8077
+private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +40,16 @@ class MainActivity : AppCompatActivity() {
 
         // active this week when activity start
         thisWeek()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
+            )
+            startActivityForResult(this, intent, DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE, null)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
