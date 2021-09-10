@@ -251,7 +251,6 @@
             android:layout_below="@id/mobile_text"
             android:layout_marginTop="3dp"
             android:fontFamily="@font/montserrat_medium"
-            android:text="+0123456789"
             android:textColor="@color/red_color"
             android:textSize="18sp" />
 
