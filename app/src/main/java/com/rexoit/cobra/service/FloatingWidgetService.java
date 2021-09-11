@@ -35,6 +35,7 @@ import android.view.MotionEvent;
  */
 public class FloatingWidgetService extends Service implements View.OnClickListener {
     private static final String TAG = "FloatingWidgetService";
+    private static final int NOTIFICATION_ID = 127;
 
     private WindowManager mWindowManager;
     private View mFloatingWidgetView, collapsedView, expandedView;
@@ -79,7 +80,7 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
                     .setContentText("Cobra is running")
                     .build();
 
-            startForeground(127, notification);
+            startForeground(NOTIFICATION_ID, notification);
         }
 
         //init WindowManager

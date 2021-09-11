@@ -53,7 +53,7 @@ fun Long.toFormattedElapsedTimeString(): String {
 
     Log.d(TAG, "toFormattedElapsedTimeString: $elapsedDays Days, $elapsedHours Hour, $elapsedMinutes Min, $elapsedSeconds sec")
 
-    if (elapsedDays > 0 && elapsedHours > 0) {
+    if (elapsedDays > 0) {
         return this.toFormattedDateString()
 //        stringBuilder.append("$elapsedDays Days")
     } else {

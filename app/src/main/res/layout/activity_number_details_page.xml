@@ -20,9 +20,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
-            android:layout_marginRight="16dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginRight="16dp">
 
             <TextView
                 android:id="@+id/title"
@@ -50,12 +50,11 @@
         android:id="@+id/unknown_text_card_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
         android:layout_marginTop="8dp"
-        app:cardCornerRadius="15dp"
+        android:minWidth="100dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/dial_button_layout"
+        app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/number_tool_bar_id">
@@ -75,133 +74,117 @@
 
     </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:id="@+id/sms_button_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/call_button_layout"
-        app:layout_constraintStart_toStartOf="@+id/unknown_text_card_layout"
-        app:layout_constraintTop_toTopOf="@+id/call_button_layout">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/sms_button_id"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/sms_"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-        <TextView
-            android:id="@+id/sms_text_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:gravity="center"
-            android:text="Send Message"
-            android:textColor="@color/grey_color"
-            android:textSize="10sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/call_button_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/sms_button_id"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="15dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/dial_button_layout"
-        app:layout_constraintStart_toEndOf="@+id/sms_button_layout"
-        app:layout_constraintTop_toBottomOf="@+id/unknown_text_card_layout">
+        android:background="@drawable/sms_"
+        app:layout_constraintEnd_toStartOf="@+id/call_button_id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unknown_text_card_layout"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/call_button_id"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/dial_icon"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-        <TextView
-            android:id="@+id/call_text_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="Call Back"
-            android:textColor="@color/grey_color"
-            android:textSize="10sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dial_button_layout"
+    <TextView
+        android:id="@+id/sms_text_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_medium"
         android:gravity="center"
-        android:orientation="vertical"
+        android:text="Send Message"
+        android:textColor="@color/grey_color"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/call_button_layout"
-        app:layout_constraintEnd_toEndOf="@+id/unknown_text_card_layout"
-        app:layout_constraintStart_toEndOf="@+id/call_button_layout"
-        app:layout_constraintTop_toTopOf="@+id/call_button_layout">
+        app:layout_constraintEnd_toEndOf="@id/sms_button_id"
+        app:layout_constraintStart_toStartOf="@+id/sms_button_id"
+        app:layout_constraintTop_toBottomOf="@id/sms_button_id" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/dial_button_id"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/dial_pad_icon"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-        <TextView
-            android:id="@+id/dial_text_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="New Dial"
-            android:textSize="10sp"
-            android:textColor="@color/grey_color" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/call_button_id"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/dial_icon"
+        app:layout_constraintEnd_toStartOf="@+id/dial_button_id"
+        app:layout_constraintStart_toEndOf="@id/sms_button_id"
+        app:layout_constraintTop_toBottomOf="@+id/unknown_text_card_layout"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/call_text_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Call Back"
+        android:textColor="@color/grey_color"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/call_button_id"
+        app:layout_constraintStart_toStartOf="@+id/call_button_id"
+        app:layout_constraintTop_toBottomOf="@id/call_button_id" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dial_button_id"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/dial_pad_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/call_button_id"
+        app:layout_constraintTop_toBottomOf="@id/unknown_text_card_layout"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/dial_button_id"
+        app:layout_constraintStart_toStartOf="@+id/dial_button_id"
+        app:layout_constraintEnd_toEndOf="@+id/dial_button_id"
+        android:id="@+id/dial_text_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="New Dial"
+        android:textColor="@color/grey_color"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/today_text_hint"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Today"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="15dp"
-        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:text="Today"
         android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sms_button_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/sms_text_id" />
 
     <androidx.core.widget.NestedScrollView
-        android:paddingBottom="500dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
+        android:paddingBottom="500dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/today_text_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@+id/today_text_hint">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rec_id_call"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-               tools:itemCount="2"
                 android:overScrollMode="never"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:itemCount="2"
                 tools:listitem="@layout/single_row_call_history_layout" />
 
             <View
@@ -216,10 +199,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/rec_id_call" />
 
             <RelativeLayout
-                android:layout_marginTop="10dp"
                 android:id="@+id/mobile_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:paddingStart="15dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"

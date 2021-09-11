@@ -2,6 +2,7 @@ package com.rexoit.cobra
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -22,6 +23,8 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
 import java.lang.Exception
 
@@ -32,78 +35,21 @@ private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
 class MainActivity : AppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private var dialogInterface: DialogInterface? = null
+    private var systemAlertDialog: AlertDialog? = null
 
     override fun onStart() {
         super.onStart()
-
-        // request runtime permissions
-        phoneCallStatePermission()
-
         // active this week when activity start
         thisWeek()
     }
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            //If the draw over permission is not available open the settings screen
-            //to grant the permission.
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
-            )
-            startActivityForResult(this, intent, DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE, null)
-        }
-    }
+        // take permission for cobra bubble when call ringing
+        checkPermissionForCobraBubble()
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home_page_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.setting_menu_id_home_page -> {
-                Snackbar.make(drawer_layout_id, "Setting", Snackbar.LENGTH_LONG).show()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        Log.d(TAG, "onCreate: Created!")
-
-        //NavigationView
-        val toolbar = tool_bar_id
-        setSupportActionBar(toolbar)
-
-        actionBarDrawerToggle = ActionBarDrawerToggle(
-            this,
-            drawer_layout_id,
-            toolbar,
-            R.string.open,
-            R.string.close
-        )
-
-        drawer_layout_id.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-
-        //Button's Click Handler
-        this_week_button.setOnClickListener {
-            thisWeek()
-        }
-
-        this_month_button.setOnClickListener {
-            thisMonth()
-        }
-
-        all_time_button.setOnClickListener {
-            allTime()
-        }
-
+        // get call logs and show on recyclerview
         try {
             val callLogs = CallLogger.getCallDetails(applicationContext)
 
@@ -131,6 +77,58 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: SecurityException) {
             Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home_page_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.setting_menu_id_home_page -> {
+                Snackbar.make(drawer_layout_id, "Setting", Snackbar.LENGTH_LONG).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        Log.d(TAG, "onCreate: Created!")
+
+        //NavigationView
+        val toolbar = tool_bar_id
+        setSupportActionBar(toolbar)
+
+        // request runtime permissions
+        phoneCallStatePermission()
+
+        actionBarDrawerToggle = ActionBarDrawerToggle(
+            this,
+            drawer_layout_id,
+            toolbar,
+            R.string.open,
+            R.string.close
+        )
+
+        drawer_layout_id.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+
+        //Button's Click Handler
+        this_week_button.setOnClickListener {
+            thisWeek()
+        }
+
+        this_month_button.setOnClickListener {
+            thisMonth()
+        }
+
+        all_time_button.setOnClickListener {
+            allTime()
         }
     }
 
@@ -179,6 +177,42 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun checkPermissionForCobraBubble(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Log.d(TAG, "checkPermissionForCobraBubble: requesting permission!")
+
+            val alertDialog = AlertDialog.Builder(this)
+                .setTitle("Alert!")
+                .setMessage("Display over apps permission is required. Please allow from settings.")
+                .setCancelable(false)
+                .setPositiveButton(
+                    "Open Settings"
+                ) { dialog, _ ->
+                    dialogInterface = dialog
+
+                    val settingIntent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:$packageName")
+                    )
+
+                    startActivityForResult(
+                        this,
+                        settingIntent,
+                        DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE,
+                        null
+                    )
+                }
+
+            Log.d(TAG, "checkPermissionForCobraBubble: Show alert dialog: ${systemAlertDialog == null}")
+            if (systemAlertDialog == null) {
+                systemAlertDialog = alertDialog.create()
+                systemAlertDialog?.show()
+            }
+        }
+    }
+
     private fun phoneCallStatePermission() {
         val permissions = arrayListOf<String>()
 
@@ -217,4 +251,19 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE) {
+            Log.d(TAG, "onActivityResult: Result received!")
+            dialogInterface?.cancel()
+
+            // recheck if not permitted!
+            systemAlertDialog = null
+            checkPermissionForCobraBubble()
+        } else {
+            Log.d(TAG, "onActivityResult: Permission denied!")
+        }
+    }
+
 }
