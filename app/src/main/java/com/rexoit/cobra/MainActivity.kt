@@ -22,8 +22,11 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 
 import android.os.Build
 import android.provider.Settings
+import android.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
-import java.lang.Exception
+import com.rexoit.cobra.data.model.CallLogInfo
+import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE = 8077
@@ -32,6 +35,7 @@ private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
 class MainActivity : AppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private lateinit var filterNumber:ArrayList<CallLogInfo>
 
     override fun onStart() {
         super.onStart()
@@ -105,14 +109,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         try {
+
             val callLogs = CallLogger.getCallDetails(applicationContext)
+
+            //For Filtering search number
+            filterNumber = ArrayList()
+            filterNumber.addAll(callLogs)
 
             // count total calls from unknown number using kotlin DSL
             text_id_23.text =
                 callLogs.count { current -> current.name == "Unknown Caller" }.toString()
 
             //RecyclerView Work
-            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
+            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, filterNumber)//Return filterNumber
 
             val callLogRecyclerView = recycler_view_id
             val layoutManager = LinearLayoutManager(this@MainActivity)
@@ -129,9 +138,39 @@ class MainActivity : AppCompatActivity() {
                 this.layoutManager = layoutManager
                 this.adapter = recyclerViewAdapter
             }
+
+            //Search Number (SearchView)
+            search_view_id.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(s: String?): Boolean {
+                    return false
+                }
+
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onQueryTextChange(s: String?): Boolean {
+                    filterNumber.clear()
+                    val searchNumber = s!!.lowercase(Locale.getDefault())
+                    if (searchNumber.isNotEmpty()){
+                        callLogs.forEach {
+                            if (it.mobileNumber!!.lowercase(Locale.getDefault()).contains(searchNumber)){
+                                filterNumber.add(it)
+                            }
+                            recyclerViewAdapter.notifyDataSetChanged()
+                        }
+                    }else{
+                        filterNumber.clear()
+                        filterNumber.addAll(callLogs)
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }
+                    return false
+                }
+            })
+
         } catch (e: SecurityException) {
             Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
         }
+
+
     }
 
 

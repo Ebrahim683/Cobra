@@ -14,7 +14,7 @@ class AppLoadingPage : AppCompatActivity() {
 
         Handler().postDelayed({
             try {
-                val intent = Intent(this,MainActivity::class.java)
+                val intent = Intent(this,OnBoardScreen::class.java)
                 startActivity(intent)
                 finish()
             }catch (e:Exception){
