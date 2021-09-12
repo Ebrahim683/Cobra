@@ -44,7 +44,7 @@ class NumberDetailsRecyclerViewAdapter(
         val callLogInfo: CallLogInfo = list[position]
 
         //Get the Data
-        callTime = callLogInfo.time?.toFormattedElapsedTimeString().toString()
+        callTime = callLogInfo.time?.toFormattedTimeString().toString()
         callType = when (callLogInfo.callType) {
             CallType.INCOMING -> {
                 "Incoming call"

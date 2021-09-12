@@ -1,15 +1,20 @@
 package com.rexoit.cobra.service;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.telecom.Connection;
+import android.telecom.DisconnectCause;
+import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.rexoit.cobra.R;
@@ -29,12 +35,18 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.MotionEvent;
 
+import java.lang.reflect.Method;
+
+//import telephony.ITelephony;
+import com.android.internal.telephony.ITelephony;
+
 /**
  * Created by sonu on 28/03/17.
  * url: https://www.androhub.com/android-floating-widget-like-facebook-messenger-chat-head/
  */
 public class FloatingWidgetService extends Service implements View.OnClickListener {
     private static final String TAG = "FloatingWidgetService";
+    private static final int NOTIFICATION_ID = 127;
 
     private WindowManager mWindowManager;
     private View mFloatingWidgetView, collapsedView, expandedView;
@@ -79,7 +91,7 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
                     .setContentText("Cobra is running")
                     .build();
 
-            startForeground(127, notification);
+            startForeground(NOTIFICATION_ID, notification);
         }
 
         //init WindowManager
@@ -183,6 +195,7 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
     /*  Implement Touch Listener to Floating Widget Root View  */
     private void implementTouchListenerToFloatingWidgetView() {
         //Drag and move floating view using user's touch action.
+
         mFloatingWidgetView.findViewById(R.id.root_container).setOnTouchListener(new View.OnTouchListener() {
 
             long time_start = 0, time_end = 0;
@@ -220,125 +233,127 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
 
                 int x_cord_Destination, y_cord_Destination;
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        time_start = System.currentTimeMillis();
+                onFloatingWidgetClick();
 
-                        handler_longClick.postDelayed(runnable_longClick, 600);
-
-                        remove_img_width = remove_image_view.getLayoutParams().width;
-                        remove_img_height = remove_image_view.getLayoutParams().height;
-
-                        x_init_cord = x_cord;
-                        y_init_cord = y_cord;
-
-                        //remember the initial position.
-                        x_init_margin = layoutParams.x;
-                        y_init_margin = layoutParams.y;
-
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        isLongClick = false;
-                        removeFloatingWidgetView.setVisibility(View.GONE);
-                        remove_image_view.getLayoutParams().height = remove_img_height;
-                        remove_image_view.getLayoutParams().width = remove_img_width;
-                        handler_longClick.removeCallbacks(runnable_longClick);
-
-                        //If user drag and drop the floating widget view into remove view then stop the service
-                        if (inBounded) {
-                            stopSelf();
-                            inBounded = false;
-                            break;
-                        }
-
-
-                        //Get the difference between initial coordinate and current coordinate
-                        int x_diff = x_cord - x_init_cord;
-                        int y_diff = y_cord - y_init_cord;
-
-                        //The check for x_diff <5 && y_diff< 5 because sometime elements moves a little while clicking.
-                        //So that is click event.
-                        if (Math.abs(x_diff) < 5 && Math.abs(y_diff) < 5) {
-                            time_end = System.currentTimeMillis();
-
-                            //Also check the difference between start time and end time should be less than 300ms
-                            if ((time_end - time_start) < 300)
-                                onFloatingWidgetClick();
-
-                        }
-
-                        y_cord_Destination = y_init_margin + y_diff;
-
-                        int barHeight = getStatusBarHeight();
-                        if (y_cord_Destination < 0) {
-                            y_cord_Destination = 0;
-                        } else if (y_cord_Destination + (mFloatingWidgetView.getHeight() + barHeight) > szWindow.y) {
-                            y_cord_Destination = szWindow.y - (mFloatingWidgetView.getHeight() + barHeight);
-                        }
-
-                        layoutParams.y = y_cord_Destination;
-
-                        inBounded = false;
-
-                        //reset position if user drags the floating view
-                        resetPosition(x_cord);
-
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        int x_diff_move = x_cord - x_init_cord;
-                        int y_diff_move = y_cord - y_init_cord;
-
-                        x_cord_Destination = x_init_margin + x_diff_move;
-                        y_cord_Destination = y_init_margin + y_diff_move;
-
-                        //If user long click the floating view, update remove view
-                        if (isLongClick) {
-                            int x_bound_left = szWindow.x / 2 - (int) (remove_img_width * 1.5);
-                            int x_bound_right = szWindow.x / 2 + (int) (remove_img_width * 1.5);
-                            int y_bound_top = szWindow.y - (int) (remove_img_height * 1.5);
-
-                            //If Floating view comes under Remove View update Window Manager
-                            if ((x_cord >= x_bound_left && x_cord <= x_bound_right) && y_cord >= y_bound_top) {
-                                inBounded = true;
-
-                                int x_cord_remove = (int) ((szWindow.x - (remove_img_height * 1.5)) / 2);
-                                int y_cord_remove = (int) (szWindow.y - ((remove_img_width * 1.5) + getStatusBarHeight()));
-
-                                if (remove_image_view.getLayoutParams().height == remove_img_height) {
-                                    remove_image_view.getLayoutParams().height = (int) (remove_img_height * 1.5);
-                                    remove_image_view.getLayoutParams().width = (int) (remove_img_width * 1.5);
-
-                                    WindowManager.LayoutParams param_remove = (WindowManager.LayoutParams) removeFloatingWidgetView.getLayoutParams();
-                                    param_remove.x = x_cord_remove;
-                                    param_remove.y = y_cord_remove;
-
-                                    mWindowManager.updateViewLayout(removeFloatingWidgetView, param_remove);
-                                }
-
-                                layoutParams.x = x_cord_remove + (Math.abs(removeFloatingWidgetView.getWidth() - mFloatingWidgetView.getWidth())) / 2;
-                                layoutParams.y = y_cord_remove + (Math.abs(removeFloatingWidgetView.getHeight() - mFloatingWidgetView.getHeight())) / 2;
-
-                                //Update the layout with new X & Y coordinate
-                                mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
-                                break;
-                            } else {
-                                //If Floating window gets out of the Remove view update Remove view again
-                                inBounded = false;
-                                remove_image_view.getLayoutParams().height = remove_img_height;
-                                remove_image_view.getLayoutParams().width = remove_img_width;
-                                onFloatingWidgetClick();
-                            }
-
-                        }
-
-
-                        layoutParams.x = x_cord_Destination;
-                        layoutParams.y = y_cord_Destination;
-
-                        //Update the layout with new X & Y coordinate
-                        mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
-                        return true;
-                }
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        time_start = System.currentTimeMillis();
+//
+//                        handler_longClick.postDelayed(runnable_longClick, 600);
+//
+//                        remove_img_width = remove_image_view.getLayoutParams().width;
+//                        remove_img_height = remove_image_view.getLayoutParams().height;
+//
+//                        x_init_cord = x_cord;
+//                        y_init_cord = y_cord;
+//
+//                        //remember the initial position.
+//                        x_init_margin = layoutParams.x;
+//                        y_init_margin = layoutParams.y;
+//
+//                        return true;
+//                    case MotionEvent.ACTION_UP:
+//                        isLongClick = false;
+//                        removeFloatingWidgetView.setVisibility(View.GONE);
+//                        remove_image_view.getLayoutParams().height = remove_img_height;
+//                        remove_image_view.getLayoutParams().width = remove_img_width;
+//                        handler_longClick.removeCallbacks(runnable_longClick);
+//
+//                        //If user drag and drop the floating widget view into remove view then stop the service
+//                        if (inBounded) {
+//                            stopSelf();
+//                            inBounded = false;
+//                            break;
+//                        }
+//
+//
+//                        //Get the difference between initial coordinate and current coordinate
+//                        int x_diff = x_cord - x_init_cord;
+//                        int y_diff = y_cord - y_init_cord;
+//
+//                        //The check for x_diff <5 && y_diff< 5 because sometime elements moves a little while clicking.
+//                        //So that is click event.
+//                        if (Math.abs(x_diff) < 5 && Math.abs(y_diff) < 5) {
+//                            time_end = System.currentTimeMillis();
+//
+//                            //Also check the difference between start time and end time should be less than 300ms
+//                            if ((time_end - time_start) < 300)
+//                                onFloatingWidgetClick();
+//
+//                        }
+//
+//                        y_cord_Destination = y_init_margin + y_diff;
+//
+//                        int barHeight = getStatusBarHeight();
+//                        if (y_cord_Destination < 0) {
+//                            y_cord_Destination = 0;
+//                        } else if (y_cord_Destination + (mFloatingWidgetView.getHeight() + barHeight) > szWindow.y) {
+//                            y_cord_Destination = szWindow.y - (mFloatingWidgetView.getHeight() + barHeight);
+//                        }
+//
+//                        layoutParams.y = y_cord_Destination;
+//
+//                        inBounded = false;
+//
+//                        //reset position if user drags the floating view
+//                        resetPosition(x_cord);
+//
+//                        return true;
+//                    case MotionEvent.ACTION_MOVE:
+//                        int x_diff_move = x_cord - x_init_cord;
+//                        int y_diff_move = y_cord - y_init_cord;
+//
+//                        x_cord_Destination = x_init_margin + x_diff_move;
+//                        y_cord_Destination = y_init_margin + y_diff_move;
+//
+//                        //If user long click the floating view, update remove view
+//                        if (isLongClick) {
+//                            int x_bound_left = szWindow.x / 2 - (int) (remove_img_width * 1.5);
+//                            int x_bound_right = szWindow.x / 2 + (int) (remove_img_width * 1.5);
+//                            int y_bound_top = szWindow.y - (int) (remove_img_height * 1.5);
+//
+//                            //If Floating view comes under Remove View update Window Manager
+//                            if ((x_cord >= x_bound_left && x_cord <= x_bound_right) && y_cord >= y_bound_top) {
+//                                inBounded = true;
+//
+//                                int x_cord_remove = (int) ((szWindow.x - (remove_img_height * 1.5)) / 2);
+//                                int y_cord_remove = (int) (szWindow.y - ((remove_img_width * 1.5) + getStatusBarHeight()));
+//
+//                                if (remove_image_view.getLayoutParams().height == remove_img_height) {
+//                                    remove_image_view.getLayoutParams().height = (int) (remove_img_height * 1.5);
+//                                    remove_image_view.getLayoutParams().width = (int) (remove_img_width * 1.5);
+//
+//                                    WindowManager.LayoutParams param_remove = (WindowManager.LayoutParams) removeFloatingWidgetView.getLayoutParams();
+//                                    param_remove.x = x_cord_remove;
+//                                    param_remove.y = y_cord_remove;
+//
+//                                    mWindowManager.updateViewLayout(removeFloatingWidgetView, param_remove);
+//                                }
+//
+//                                layoutParams.x = x_cord_remove + (Math.abs(removeFloatingWidgetView.getWidth() - mFloatingWidgetView.getWidth())) / 2;
+//                                layoutParams.y = y_cord_remove + (Math.abs(removeFloatingWidgetView.getHeight() - mFloatingWidgetView.getHeight())) / 2;
+//
+//                                //Update the layout with new X & Y coordinate
+//                                mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+//                                break;
+//                            } else {
+//                                //If Floating window gets out of the Remove view update Remove view again
+//                                inBounded = false;
+//                                remove_image_view.getLayoutParams().height = remove_img_height;
+//                                remove_image_view.getLayoutParams().width = remove_img_width;
+//                                onFloatingWidgetClick();
+//                            }
+//
+//                        }
+//
+//
+//                        layoutParams.x = x_cord_Destination;
+//                        layoutParams.y = y_cord_Destination;
+//
+//                        //Update the layout with new X & Y coordinate
+//                        mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -516,16 +531,48 @@ public class FloatingWidgetService extends Service implements View.OnClickListen
     /*  on Floating widget click show expanded view  */
     private void onFloatingWidgetClick() {
         if (isViewCollapsed()) {
-            //When user clicks on the image view of the collapsed layout,
-            //visibility of the collapsed layout will be changed to "View.GONE"
-            //and expanded view will become visible.
-
-//            collapsedView.setVisibility(View.GONE);
-//            expandedView.setVisibility(View.VISIBLE);
-
             // todo: add number to blocklist
             Log.d(TAG, "onFloatingWidgetClick: Pressed!");
+
+            ITelephony telephonyService = getTeleService(this);
+            if (telephonyService != null) {
+                try {
+                    telephonyService.silenceRinger();
+                    telephonyService.endCall();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i("TAG", "CATCH CALL");
+                }
+            } else {
+                // handle call disconnect api level 28+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    TelecomManager mgr = (TelecomManager) getSystemService(TELECOM_SERVICE);
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    mgr.endCall();
+                }
+            }
         }
+    }
+
+    private ITelephony getTeleService(Context context) {
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+            Method telephonyMethod = Class.forName(tm.getClass().getName()).getDeclaredMethod("getITelephony");
+            telephonyMethod.setAccessible(true);
+            return (ITelephony) telephonyMethod.invoke(tm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

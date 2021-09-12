@@ -2,61 +2,81 @@ package com.rexoit.cobra
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.role.RoleManager
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.adapters.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.utils.CallLogger
 import kotlinx.android.synthetic.main.activity_main.*
-import androidx.core.app.ActivityCompat.startActivityForResult
 
-import android.os.Build
-import android.provider.Settings
-import android.widget.SearchView
-import androidx.recyclerview.widget.DividerItemDecoration
-import com.rexoit.cobra.data.model.CallLogInfo
-import java.util.*
-import kotlin.collections.ArrayList
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE = 8077
 private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
+private const val REQUEST_ID = 1
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
-    private lateinit var filterNumber:ArrayList<CallLogInfo>
+    private var dialogInterface: DialogInterface? = null
+    private var systemAlertDialog: AlertDialog? = null
 
     override fun onStart() {
         super.onStart()
-
-        // request runtime permissions
-        phoneCallStatePermission()
-
         // active this week when activity start
         thisWeek()
     }
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            //If the draw over permission is not available open the settings screen
-            //to grant the permission.
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
+        // take permission for cobra bubble when call ringing
+        checkPermissionForCobraBubble()
+
+        // get call logs and show on recyclerview
+        try {
+            val callLogs = CallLogger.getCallDetails(applicationContext)
+
+            // count total calls from unknown number using kotlin DSL
+            text_id_23.text =
+                callLogs.count { current -> current.name == "Unknown Caller" }.toString()
+
+            //RecyclerView Work
+            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
+
+            val callLogRecyclerView = recycler_view_id
+            val layoutManager = LinearLayoutManager(this@MainActivity)
+
+            val dividerItemDecoration = DividerItemDecoration(
+                callLogRecyclerView.context,
+                layoutManager.orientation
             )
-            startActivityForResult(this, intent, DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE, null)
+
+            callLogRecyclerView.addItemDecoration(dividerItemDecoration)
+
+            callLogRecyclerView.apply {
+                setHasFixedSize(true)
+                this.layoutManager = layoutManager
+                this.adapter = recyclerViewAdapter
+            }
+        } catch (e: SecurityException) {
+            Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
         }
     }
 
@@ -84,6 +104,9 @@ class MainActivity : AppCompatActivity() {
         val toolbar = tool_bar_id
         setSupportActionBar(toolbar)
 
+        // request runtime permissions
+        phoneCallStatePermission()
+
         actionBarDrawerToggle = ActionBarDrawerToggle(
             this,
             drawer_layout_id,
@@ -107,70 +130,6 @@ class MainActivity : AppCompatActivity() {
         all_time_button.setOnClickListener {
             allTime()
         }
-
-        try {
-
-            val callLogs = CallLogger.getCallDetails(applicationContext)
-
-            //For Filtering search number
-            filterNumber = ArrayList()
-            filterNumber.addAll(callLogs)
-
-            // count total calls from unknown number using kotlin DSL
-            text_id_23.text =
-                callLogs.count { current -> current.name == "Unknown Caller" }.toString()
-
-            //RecyclerView Work
-            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, filterNumber)//Return filterNumber
-
-            val callLogRecyclerView = recycler_view_id
-            val layoutManager = LinearLayoutManager(this@MainActivity)
-
-            val dividerItemDecoration = DividerItemDecoration(
-                callLogRecyclerView.context,
-                layoutManager.orientation
-            )
-
-            callLogRecyclerView.addItemDecoration(dividerItemDecoration)
-
-            callLogRecyclerView.apply {
-                setHasFixedSize(true)
-                this.layoutManager = layoutManager
-                this.adapter = recyclerViewAdapter
-            }
-
-            //Search Number (SearchView)
-            search_view_id.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-                androidx.appcompat.widget.SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(s: String?): Boolean {
-                    return false
-                }
-
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onQueryTextChange(s: String?): Boolean {
-                    filterNumber.clear()
-                    val searchNumber = s!!.lowercase(Locale.getDefault())
-                    if (searchNumber.isNotEmpty()){
-                        callLogs.forEach {
-                            if (it.mobileNumber!!.lowercase(Locale.getDefault()).contains(searchNumber)){
-                                filterNumber.add(it)
-                            }
-                            recyclerViewAdapter.notifyDataSetChanged()
-                        }
-                    }else{
-                        filterNumber.clear()
-                        filterNumber.addAll(callLogs)
-                        recyclerViewAdapter.notifyDataSetChanged()
-                    }
-                    return false
-                }
-            })
-
-        } catch (e: SecurityException) {
-            Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
-        }
-
-
     }
 
 
@@ -218,6 +177,45 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun checkPermissionForCobraBubble() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Log.d(TAG, "checkPermissionForCobraBubble: requesting permission!")
+
+            val alertDialog = AlertDialog.Builder(this)
+                .setTitle("Alert!")
+                .setMessage("Display over apps permission is required. Please allow from settings.")
+                .setCancelable(false)
+                .setPositiveButton(
+                    "Open Settings"
+                ) { dialog, _ ->
+                    dialogInterface = dialog
+
+                    val settingIntent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:$packageName")
+                    )
+
+                    startActivityForResult(
+                        this,
+                        settingIntent,
+                        DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE,
+                        null
+                    )
+                }
+
+            Log.d(
+                TAG,
+                "checkPermissionForCobraBubble: Show alert dialog: ${systemAlertDialog == null}"
+            )
+            if (systemAlertDialog == null) {
+                systemAlertDialog = alertDialog.create()
+                systemAlertDialog?.show()
+            }
+        }
+    }
+
     private fun phoneCallStatePermission() {
         val permissions = arrayListOf<String>()
 
@@ -239,6 +237,17 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.READ_CALL_LOG)
         }
 
+        // check call log permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.MANAGE_OWN_CALLS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissions.add(Manifest.permission.MANAGE_OWN_CALLS)
+            }
+        }
+
         // check read contact permission
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -248,6 +257,18 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.READ_CONTACTS)
         }
 
+        // check read contact permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ANSWER_PHONE_CALLS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                permissions.add(Manifest.permission.ANSWER_PHONE_CALLS)
+            }
+        }
+
         if (permissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -255,5 +276,32 @@ class MainActivity : AppCompatActivity() {
                 REQUEST_CODE
             )
         }
+
+        requestRole()
     }
+
+    private fun requestRole() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val roleManager = getSystemService(ROLE_SERVICE) as RoleManager
+            val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
+            startActivityForResult(this, intent, REQUEST_ID, null)
+        } else {
+            Log.d(TAG, "requestRole: role manager not required!")
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE) {
+            Log.d(TAG, "onActivityResult: Result received!")
+            dialogInterface?.cancel()
+
+            // recheck if not permitted!
+            systemAlertDialog = null
+            checkPermissionForCobraBubble()
+        } else {
+            Log.d(TAG, "onActivityResult: Permission denied!")
+        }
+    }
+
 }

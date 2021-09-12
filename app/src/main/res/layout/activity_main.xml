@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="23"
+                android:text="0"
                 android:textColor="@color/red_color"
                 android:textSize="30sp" />
 
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="16"
+                android:text="0"
                 android:textColor="@color/red_color"
                 android:textSize="30sp" />
 
