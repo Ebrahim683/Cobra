@@ -2,35 +2,35 @@ package com.rexoit.cobra
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.role.RoleManager
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.adapters.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.utils.CallLogger
 import kotlinx.android.synthetic.main.activity_main.*
-import androidx.core.app.ActivityCompat.startActivityForResult
 
-import android.os.Build
-import android.provider.Settings
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.DividerItemDecoration
-import java.lang.Exception
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE = 8077
 private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
+private const val REQUEST_ID = 1
 
 class MainActivity : AppCompatActivity() {
 
@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun checkPermissionForCobraBubble(){
+    private fun checkPermissionForCobraBubble() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             //If the draw over permission is not available open the settings screen
             //to grant the permission.
@@ -205,7 +205,10 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
 
-            Log.d(TAG, "checkPermissionForCobraBubble: Show alert dialog: ${systemAlertDialog == null}")
+            Log.d(
+                TAG,
+                "checkPermissionForCobraBubble: Show alert dialog: ${systemAlertDialog == null}"
+            )
             if (systemAlertDialog == null) {
                 systemAlertDialog = alertDialog.create()
                 systemAlertDialog?.show()
@@ -234,6 +237,17 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.READ_CALL_LOG)
         }
 
+        // check call log permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.MANAGE_OWN_CALLS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissions.add(Manifest.permission.MANAGE_OWN_CALLS)
+            }
+        }
+
         // check read contact permission
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -243,12 +257,36 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.READ_CONTACTS)
         }
 
+        // check read contact permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ANSWER_PHONE_CALLS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                permissions.add(Manifest.permission.ANSWER_PHONE_CALLS)
+            }
+        }
+
         if (permissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
                 permissions.toTypedArray(),
                 REQUEST_CODE
             )
+        }
+
+        requestRole()
+    }
+
+    private fun requestRole() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val roleManager = getSystemService(ROLE_SERVICE) as RoleManager
+            val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
+            startActivityForResult(this, intent, REQUEST_ID, null)
+        } else {
+            Log.d(TAG, "requestRole: role manager not required!")
         }
     }
 

@@ -16,6 +16,10 @@ import com.rexoit.cobra.service.FloatingWidgetService
 
 import android.content.Intent
 import android.os.Build
+import android.telecom.CallScreeningService
+import android.telecom.InCallService
+import android.telephony.TelephonyManager
+import com.android.internal.telephony.ITelephony
 
 
 private const val TAG = "CallReceiver"
@@ -25,6 +29,10 @@ class CallReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val mobileNumber = intent?.getStringExtra(EXTRA_INCOMING_NUMBER)
         val isUnknownNumber: Boolean? = isUnknownCaller(context, mobileNumber)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+        }
 
         isUnknownNumber?.let {
             val serviceIntent = Intent(
