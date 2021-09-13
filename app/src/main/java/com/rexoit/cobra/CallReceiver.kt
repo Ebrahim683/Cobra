@@ -1,25 +1,16 @@
 package com.rexoit.cobra
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
+import android.os.Build
 import android.provider.ContactsContract.Data.DISPLAY_NAME
 import android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI
 import android.telephony.TelephonyManager.*
-import java.lang.Exception
-import kotlin.system.exitProcess
+import android.util.Log
 import com.rexoit.cobra.service.FloatingWidgetService
-
-import android.content.Intent
-import android.os.Build
-import android.telecom.CallScreeningService
-import android.telecom.InCallService
-import android.telephony.TelephonyManager
-import com.android.internal.telephony.ITelephony
 
 
 private const val TAG = "CallReceiver"

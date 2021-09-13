@@ -9,15 +9,19 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.os.Build;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
-import android.telecom.Connection;
-import android.telecom.DisconnectCause;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -26,19 +30,12 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
+import com.android.internal.telephony.ITelephony;
 import com.rexoit.cobra.R;
-
-import android.content.res.Configuration;
-import android.graphics.Point;
-import android.os.Build;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.view.MotionEvent;
 
 import java.lang.reflect.Method;
 
 //import telephony.ITelephony;
-import com.android.internal.telephony.ITelephony;
 
 /**
  * Created by sonu on 28/03/17.
