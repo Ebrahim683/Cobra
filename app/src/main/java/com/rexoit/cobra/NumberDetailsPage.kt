@@ -1,10 +1,16 @@
 package com.rexoit.cobra
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.adapters.NumberDetailsRecyclerViewAdapter
@@ -23,6 +29,7 @@ const val EXTRA_CALL_LOGS = "com.rexoit.cobra.EXTRA_CALL_LOGS"
 class NumberDetailsPage : AppCompatActivity() {
 
     private lateinit var database: BlockListDatabase
+    private lateinit var numberForCall: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +66,30 @@ class NumberDetailsPage : AppCompatActivity() {
         GlobalScope.launch {
             database.getDao().getData().forEach {
                 Log.d(TAG, "Name: ${it.name}, Number: ${it.mobileNumber}")
+            }
+        }
+
+
+        //CallBack
+        val CALL_BACK_REQUEST_CODE = 2021
+        call_button_id.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CALL_PHONE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CALL_PHONE),
+                    CALL_BACK_REQUEST_CODE
+                )
+            } else {
+                numberForCall = mobile_number.text.toString()
+                val callIntent = Intent(Intent.ACTION_CALL)
+                callIntent.apply {
+                    data = Uri.parse("tel:$numberForCall")
+                }
+                startActivity(callIntent)
             }
         }
 
