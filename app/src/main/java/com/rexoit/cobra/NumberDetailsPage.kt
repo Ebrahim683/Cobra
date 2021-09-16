@@ -29,7 +29,7 @@ const val EXTRA_CALL_LOGS = "com.rexoit.cobra.EXTRA_CALL_LOGS"
 class NumberDetailsPage : AppCompatActivity() {
 
     private lateinit var database: BlockListDatabase
-    private lateinit var numberForCall: String
+    private lateinit var mobileNumber: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +69,6 @@ class NumberDetailsPage : AppCompatActivity() {
             }
         }
 
-
         //CallBack
         val CALL_BACK_REQUEST_CODE = 2021
         call_button_id.setOnClickListener {
@@ -84,13 +83,23 @@ class NumberDetailsPage : AppCompatActivity() {
                     CALL_BACK_REQUEST_CODE
                 )
             } else {
-                numberForCall = mobile_number.text.toString()
+                mobileNumber = mobile_number.text.toString()
                 val callIntent = Intent(Intent.ACTION_CALL)
                 callIntent.apply {
-                    data = Uri.parse("tel:$numberForCall")
+                    data = Uri.parse("tel:$mobileNumber")
                 }
                 startActivity(callIntent)
             }
+        }
+
+        //Send Message
+        sms_button_id.setOnClickListener {
+            mobileNumber = mobile_number.text.toString()
+            val smsIntent = Intent(Intent.ACTION_SENDTO)
+            smsIntent.apply {
+                data = Uri.parse("sms:$mobileNumber")
+            }
+            startActivity(smsIntent)
         }
 
     }
