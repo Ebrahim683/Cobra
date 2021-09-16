@@ -1,30 +1,28 @@
 package com.rexoit.cobra.adapters
 
-import android.content.Context
 import android.content.Intent
-import android.provider.CallLog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rexoit.cobra.*
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.utils.getCurrentDayDiff
 import com.rexoit.cobra.utils.toFormattedDateString
-import com.rexoit.cobra.utils.toFormattedDateTimeString
 import com.rexoit.cobra.utils.toFormattedElapsedTimeString
 import java.util.*
 
 private const val TAG = "HomePageRecyclerViewAda"
 
-class HomePageRecyclerViewAdapter(
-    private val context: Context,
-    private val list: List<CallLogInfo>
-) :
-    RecyclerView.Adapter<HomePageRecyclerViewAdapter.HomePageRecyclerViewHolder>() {
+class HomePageRecyclerViewAdapter() :
+    ListAdapter<CallLogInfo, HomePageRecyclerViewAdapter.HomePageRecyclerViewHolder>(
+        DIFF_UTIL_CALLBACK
+    ) {
 
     //HomePage Call List Item Reference
     class HomePageRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,14 +35,15 @@ class HomePageRecyclerViewAdapter(
     // Wrapping The Layout Of RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomePageRecyclerViewHolder {
         val view: View =
-            LayoutInflater.from(context).inflate(R.layout.single_row_call_list, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.single_row_call_list, parent, false)
         return HomePageRecyclerViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: HomePageRecyclerViewHolder, position: Int) {
 
         //Get The Position Of RecyclerView Item
-        val callLogInfo: CallLogInfo = list[position]
+        val callLogInfo: CallLogInfo = getItem(position)
 
         //Binding the item of the recycler view
         holder.mImage.setImageResource(R.drawable.call_icon)
@@ -62,8 +61,6 @@ class HomePageRecyclerViewAdapter(
         )
     }
 
-    override fun getItemCount() = list.size
-
     //Click Event Handler
     private fun onClickItem(
         holder: HomePageRecyclerViewHolder,
@@ -72,13 +69,10 @@ class HomePageRecyclerViewAdapter(
     ) {
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, NumberDetailsPage::class.java)
-//            val sortedCallListForNumber = list.sortedByDescending { current ->
-//                current.time?.toFormattedDateString() == Date().time.toFormattedDateString()
-//            }
 
-            val sortedCallListForNumber = list.filter { current ->
+            val sortedCallListForNumber = currentList.filter { current ->
                 current.mobileNumber == number &&
-                current.time?.toFormattedDateString() == Date().time.toFormattedDateString()
+                        current.time?.toFormattedDateString() == Date().time.toFormattedDateString()
             }
 
             val sortedCallLogArrayList = arrayListOf<CallLogInfo>()
@@ -93,4 +87,16 @@ class HomePageRecyclerViewAdapter(
         }
     }
 
+    companion object {
+        val DIFF_UTIL_CALLBACK = object : DiffUtil.ItemCallback<CallLogInfo>() {
+            override fun areItemsTheSame(oldItem: CallLogInfo, newItem: CallLogInfo): Boolean {
+                return oldItem.mobileNumber == newItem.mobileNumber && oldItem.time == newItem.time && oldItem.name == newItem.name && oldItem.callType == newItem.callType && oldItem.duration == newItem.duration
+            }
+
+            override fun areContentsTheSame(oldItem: CallLogInfo, newItem: CallLogInfo): Boolean {
+                return oldItem.mobileNumber == newItem.mobileNumber && oldItem.time == newItem.time && oldItem.name == newItem.name && oldItem.callType == newItem.callType && oldItem.duration == newItem.duration
+            }
+
+        }
+    }
 }

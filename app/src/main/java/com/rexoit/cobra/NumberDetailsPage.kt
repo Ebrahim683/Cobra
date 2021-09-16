@@ -90,6 +90,16 @@ class NumberDetailsPage : AppCompatActivity() {
             startActivity(smsIntent)
         }
 
+        //New Dial
+        dial_button_id.setOnClickListener {
+            mobileNumber = mobile_number.text.toString()
+            val dialIntent = Intent()
+            dialIntent.apply {
+                action = Intent.ACTION_DIAL
+//                data = Uri.parse("tel:$mobileNumber")
+            }
+            startActivity(dialIntent)
+        }
     }
 
     private fun blockNumber() {
