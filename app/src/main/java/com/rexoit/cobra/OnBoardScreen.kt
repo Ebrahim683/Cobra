@@ -1,14 +1,15 @@
 package com.rexoit.cobra
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.rexoit.cobra.R
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.rexoit.cobra.adapters.LiquidPagerAdapter
 import kotlinx.android.synthetic.main.activity_on_board_screen.*
 
 class OnBoardScreen : AppCompatActivity() {
 
     private lateinit var liquidPagerAdapter: LiquidPagerAdapter
+    private val TAG = "onBoardScreen"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,7 +17,15 @@ class OnBoardScreen : AppCompatActivity() {
 
         liquidPagerAdapter = LiquidPagerAdapter(supportFragmentManager)
 
-//        liquid_pager_id.adapter = liquidPagerAdapter
+
+        try {
+            liquid_pager_id.apply {
+                adapter = liquidPagerAdapter
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error = $e")
+        }
+
 
     }
 }
