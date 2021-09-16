@@ -14,10 +14,11 @@ class CobraCallScreeningService : CallScreeningService() {
         Log.d(TAG, "onScreenCall: Build")
         Log.d(TAG, "onScreenCall: Caller Name: ${call.callerDisplayName}")
 
-       val callResponseBuilder = CallResponse.Builder().build()
+        // todo: check the incoming number is blocked
+        val callResponseBuilder = CallResponse.Builder()
 //            .setDisallowCall(true)
 //            .setRejectCall(true)
-//            .build()
+            .build()
 
         respondToCall(call, callResponseBuilder)
     }
