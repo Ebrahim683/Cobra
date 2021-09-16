@@ -3,10 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Cobra/app/src/main/res/drawable-mdpi/blank.xml" value="0.2158974358974359" />
-        <entry key="..\:/Cobra/app/src/main/res/drawable-mdpi/fill.xml" value="0.2158974358974359" />
         <entry key="..\:/Cobra/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21927083333333333" />
-        <entry key="..\:/Cobra/app/src/main/res/drawable/bg_frg.xml" value="0.2158974358974359" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/bg_unknown_text.xml" value="0.21927083333333333" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/btn_bg_home_page.xml" value="0.2158974358974359" />
         <entry key="..\:/Cobra/app/src/main/res/drawable/btn_select_bg.xml" value="0.2158974358974359" />
@@ -21,14 +18,8 @@
         <entry key="..\:/Cobra/app/src/main/res/layout/activity_app_loading_page.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Cobra/app/src/main/res/layout/activity_number_details_page.xml" value="0.203125" />
-        <entry key="..\:/Cobra/app/src/main/res/layout/activity_on_board_screen.xml" value="0.18115942028985507" />
         <entry key="..\:/Cobra/app/src/main/res/layout/call_history_layout.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/custom_toolbar_home_page.xml" value="0.22" />
-        <entry key="..\:/Cobra/app/src/main/res/layout/floating_widget_layout.xml" value="0.17617753623188406" />
-        <entry key="..\:/Cobra/app/src/main/res/layout/fragment_first.xml" value="0.22" />
-        <entry key="..\:/Cobra/app/src/main/res/layout/fragment_fourth.xml" value="0.18115942028985507" />
-        <entry key="..\:/Cobra/app/src/main/res/layout/fragment_second.xml" value="0.18115942028985507" />
-        <entry key="..\:/Cobra/app/src/main/res/layout/fragment_third.xml" value="0.18115942028985507" />
         <entry key="..\:/Cobra/app/src/main/res/layout/neav_header.xml" value="0.203125" />
         <entry key="..\:/Cobra/app/src/main/res/layout/nev_header.xml" value="0.192481884057971" />
         <entry key="..\:/Cobra/app/src/main/res/layout/single_row_call_list.xml" value="0.22" />
@@ -40,6 +31,7 @@
         <entry key="app/src/main/res/layout/activity_block_call.xml" value="0.23177083333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.39366138448707255" />
         <entry key="app/src/main/res/layout/activity_number_details_page.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_on_board_screen.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/floating_widget_layout.xml" value="0.12552083333333333" />
         <entry key="app/src/main/res/layout/remove_floating_widget_layout.xml" value="0.1712962962962963" />
         <entry key="app/src/main/res/layout/single_row_call_history_layout.xml" value="0.24583333333333332" />

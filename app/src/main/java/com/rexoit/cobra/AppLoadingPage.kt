@@ -1,10 +1,10 @@
 package com.rexoit.cobra
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 
 class AppLoadingPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,13 +14,13 @@ class AppLoadingPage : AppCompatActivity() {
 
         Handler().postDelayed({
             try {
-                val intent = Intent(this,OnBoardScreen::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-            }catch (e:Exception){
-                Log.d("AppLoading Exception","Error = $e")
+            } catch (e: Exception) {
+                Log.d("AppLoading Exception", "Error = $e")
             }
-        },2000)
+        }, 2000)
 
     }
 }

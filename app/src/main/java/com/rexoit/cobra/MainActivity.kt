@@ -24,7 +24,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.adapters.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.utils.CallLogger
+import com.rexoit.cobra.utils.FilterState
+import com.rexoit.cobra.utils.getCurrentDayDiff
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 
 private const val TAG = "MainActivity"
@@ -38,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     private var dialogInterface: DialogInterface? = null
     private var systemAlertDialog: AlertDialog? = null
 
+    private var filterState: FilterState = FilterState.WEEKLY
+
     override fun onStart() {
         super.onStart()
         // active this week when activity start
@@ -48,37 +53,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         // take permission for cobra bubble when call ringing
         checkPermissionForCobraBubble()
-
-        // get call logs and show on recyclerview
-        try {
-            val callLogs = CallLogger.getCallDetails(applicationContext)
-
-            val unknownCallLogs =
-                callLogs.filter { current -> current.name == "Unknown Caller" }
-
-            text_id_23.text = unknownCallLogs.size.toString()
-
-            //RecyclerView Work
-            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
-
-            val callLogRecyclerView = recycler_view_id
-            val layoutManager = LinearLayoutManager(this@MainActivity)
-
-            val dividerItemDecoration = DividerItemDecoration(
-                callLogRecyclerView.context,
-                layoutManager.orientation
-            )
-
-            callLogRecyclerView.addItemDecoration(dividerItemDecoration)
-
-            callLogRecyclerView.apply {
-                setHasFixedSize(true)
-                this.layoutManager = layoutManager
-                this.adapter = recyclerViewAdapter
-            }
-        } catch (e: SecurityException) {
-            Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -133,9 +107,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     fun thisWeek() {
+        filterState = FilterState.WEEKLY
+        getCallLogs()
 
         //Button's Background
         this_week_button.background = getDrawable(R.drawable.btn_select_bg)
@@ -150,6 +125,8 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     private fun thisMonth() {
+        filterState = FilterState.MONTHLY
+        getCallLogs()
 
         //Button's Background
         this_month_button.background = getDrawable(R.drawable.btn_select_bg)
@@ -165,7 +142,8 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     private fun allTime() {
-
+        filterState = FilterState.ALL
+        getCallLogs()
         //Button's Background
         all_time_button.background = getDrawable(R.drawable.btn_select_bg)
         this_month_button.background = getDrawable(R.drawable.btn_unselect_bg)
@@ -176,6 +154,116 @@ class MainActivity : AppCompatActivity() {
         this_month_button.setTextColor(resources.getColor(R.color.grey_color))
         this_week_button.setTextColor(resources.getColor(R.color.grey_color))
 
+    }
+
+    private fun getCallLogs() {
+        when (filterState) {
+            FilterState.ALL -> {
+                // get call logs and show on recyclerview
+                try {
+                    val callLogs = CallLogger.getCallDetails(applicationContext)
+
+                    val unknownCallLogs =
+                        callLogs.filter { current -> current.name == "Unknown Caller" }
+                    Log.d(TAG, "getCallLogs: All: ${unknownCallLogs.size}")
+
+                    text_id_23.text = unknownCallLogs.size.toString()
+
+                    //RecyclerView Work
+                    val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
+
+                    val callLogRecyclerView = recycler_view_id
+                    val layoutManager = LinearLayoutManager(this@MainActivity)
+
+                    val dividerItemDecoration = DividerItemDecoration(
+                        callLogRecyclerView.context,
+                        layoutManager.orientation
+                    )
+
+                    callLogRecyclerView.addItemDecoration(dividerItemDecoration)
+
+                    callLogRecyclerView.apply {
+                        setHasFixedSize(true)
+                        this.layoutManager = layoutManager
+                        this.adapter = recyclerViewAdapter
+                    }
+                } catch (e: SecurityException) {
+                    Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
+                }
+            }
+            FilterState.WEEKLY -> {
+                // get call logs and show on recyclerview
+                try {
+                    val callLogs = CallLogger.getCallDetails(applicationContext)
+
+                    val unknownCallLogs =
+                        callLogs.filter { current ->
+                            current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
+                        }
+                    Log.d(TAG, "getCallLogs:  Weekly: ${unknownCallLogs.size}")
+
+                    text_id_23.text = unknownCallLogs.size.toString()
+
+                    //RecyclerView Work
+                    val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
+
+                    val callLogRecyclerView = recycler_view_id
+                    val layoutManager = LinearLayoutManager(this@MainActivity)
+
+                    val dividerItemDecoration = DividerItemDecoration(
+                        callLogRecyclerView.context,
+                        layoutManager.orientation
+                    )
+
+                    callLogRecyclerView.addItemDecoration(dividerItemDecoration)
+
+                    callLogRecyclerView.apply {
+                        setHasFixedSize(true)
+                        this.layoutManager = layoutManager
+                        this.adapter = recyclerViewAdapter
+                    }
+                } catch (e: SecurityException) {
+                    Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
+                }
+            }
+            FilterState.MONTHLY -> {
+                // get call logs and show on recyclerview
+                try {
+                    val callLogs = CallLogger.getCallDetails(applicationContext)
+
+                    // todo: get current month length and set the value.
+                    val currentMonthLength = 31
+                    val unknownCallLogs =
+                        callLogs.filter { current ->
+                            current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= currentMonthLength
+                        }
+                    Log.d(TAG, "getCallLogs: Monthly: ${unknownCallLogs.size}")
+
+                    text_id_23.text = unknownCallLogs.size.toString()
+
+                    //RecyclerView Work
+                    val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
+
+                    val callLogRecyclerView = recycler_view_id
+                    val layoutManager = LinearLayoutManager(this@MainActivity)
+
+                    val dividerItemDecoration = DividerItemDecoration(
+                        callLogRecyclerView.context,
+                        layoutManager.orientation
+                    )
+
+                    callLogRecyclerView.addItemDecoration(dividerItemDecoration)
+
+                    callLogRecyclerView.apply {
+                        setHasFixedSize(true)
+                        this.layoutManager = layoutManager
+                        this.adapter = recyclerViewAdapter
+                    }
+                } catch (e: SecurityException) {
+                    Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
+                }
+            }
+        }
     }
 
     private fun checkPermissionForCobraBubble() {

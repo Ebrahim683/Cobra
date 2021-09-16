@@ -12,7 +12,7 @@
 
         <!--  View while view is collapsed  -->
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/collapse_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,17 +28,24 @@
                 android:src="@mipmap/ic_launcher"
                 tools:ignore="ContentDescription" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Decline and send the number to cobra 911" />
+
             <!--   Close button to close Floating Widget View  -->
-<!--            <ImageView-->
-<!--                android:id="@+id/close_floating_view"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="50dp"-->
-<!--                android:layout_marginTop="5dp"-->
-<!--                android:background="@drawable/circle_shape"-->
-<!--                android:src="@drawable/ic_baseline_close_24"-->
-<!--                tools:ignore="ContentDescription" />-->
-        </RelativeLayout>
+            <!--            <ImageView-->
+            <!--                android:id="@+id/close_floating_view"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginLeft="50dp"-->
+            <!--                android:layout_marginTop="5dp"-->
+            <!--                android:background="@drawable/circle_shape"-->
+            <!--                android:src="@drawable/ic_baseline_close_24"-->
+            <!--                tools:ignore="ContentDescription" />-->
+        </LinearLayout>
 
         <!--   View while view is expanded   -->
         <LinearLayout
