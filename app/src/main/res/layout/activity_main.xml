@@ -143,6 +143,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/search_view_bg"
             android:fontFamily="@font/montserrat_medium"
+            android:inputType="phone"
             android:paddingStart="15dp"
             android:textAlignment="textStart"
             app:layout_constraintBottom_toTopOf="@+id/button_layout"

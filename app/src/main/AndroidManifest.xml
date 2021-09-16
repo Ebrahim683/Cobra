@@ -25,6 +25,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cobra">
         <activity
+            android:name=".OnBoardScreen"
+            android:exported="true" >
+
+        </activity>
+        <activity
             android:name=".NumberDetailsPage"
             android:exported="true"
             android:label="" />
