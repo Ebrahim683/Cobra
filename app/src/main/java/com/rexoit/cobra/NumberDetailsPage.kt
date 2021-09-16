@@ -32,7 +32,6 @@ class NumberDetailsPage : AppCompatActivity() {
 
         Log.d(TAG, "onCreate: Created!")
 
-
         val toolbar = number_tool_bar_id
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -97,10 +96,10 @@ class NumberDetailsPage : AppCompatActivity() {
             val dialIntent = Intent()
             dialIntent.apply {
                 action = Intent.ACTION_DIAL
+//                data = Uri.parse("tel:$mobileNumber")
             }
             startActivity(dialIntent)
         }
-
     }
 
     private fun blockNumber() {

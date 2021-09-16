@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.adapters.HomePageRecyclerViewAdapter
+import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.FilterState
 import com.rexoit.cobra.utils.getCurrentDayDiff
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity() {
     private var systemAlertDialog: AlertDialog? = null
 
     private var filterState: FilterState = FilterState.WEEKLY
+
+    private lateinit var homePageRecyclerViewAdapter: HomePageRecyclerViewAdapter
+    private var callLogs = mutableListOf<CallLogInfo>()
+    private var queryMobileNumber: String? = null
 
     override fun onStart() {
         super.onStart()
@@ -82,6 +88,13 @@ class MainActivity : AppCompatActivity() {
         // request runtime permissions
         phoneCallStatePermission()
 
+
+        try {
+            callLogs = CallLogger.getCallDetails(applicationContext)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         actionBarDrawerToggle = ActionBarDrawerToggle(
             this,
             drawer_layout_id,
@@ -92,6 +105,25 @@ class MainActivity : AppCompatActivity() {
 
         drawer_layout_id.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
+
+        //RecyclerView Work
+        homePageRecyclerViewAdapter = HomePageRecyclerViewAdapter()
+
+        val callLogRecyclerView = recycler_view_id
+        val layoutManager = LinearLayoutManager(this@MainActivity)
+
+        val dividerItemDecoration = DividerItemDecoration(
+            callLogRecyclerView.context,
+            layoutManager.orientation
+        )
+
+        callLogRecyclerView.addItemDecoration(dividerItemDecoration)
+
+        callLogRecyclerView.apply {
+            setHasFixedSize(true)
+            this.layoutManager = layoutManager
+            this.adapter = homePageRecyclerViewAdapter
+        }
 
         //Button's Click Handler
         this_week_button.setOnClickListener {
@@ -105,6 +137,28 @@ class MainActivity : AppCompatActivity() {
         all_time_button.setOnClickListener {
             allTime()
         }
+
+        //Search Number (SearchView)
+        search_view_id.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String?): Boolean {
+                return false
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onQueryTextChange(s: String?): Boolean {
+                queryMobileNumber = s!!.lowercase(Locale.getDefault())
+                if (queryMobileNumber!!.isNotEmpty()) {
+                    getCallLogs()
+                } else {
+                    // get call logs based on filter
+                    queryMobileNumber = null
+                    getCallLogs()
+                }
+
+                return false
+            }
+        })
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
@@ -161,32 +215,23 @@ class MainActivity : AppCompatActivity() {
             FilterState.ALL -> {
                 // get call logs and show on recyclerview
                 try {
-                    val callLogs = CallLogger.getCallDetails(applicationContext)
-
-                    val unknownCallLogs =
+                    val unknownCallLogs = if (queryMobileNumber != null) {
+                        callLogs.filter { current ->
+                            current.name == "Unknown Caller" && current.mobileNumber!!.contains(
+                                queryMobileNumber!!
+                            )
+                        }
+                    } else {
                         callLogs.filter { current -> current.name == "Unknown Caller" }
+                    }
+
                     Log.d(TAG, "getCallLogs: All: ${unknownCallLogs.size}")
 
                     text_id_23.text = unknownCallLogs.size.toString()
 
-                    //RecyclerView Work
-                    val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
-
-                    val callLogRecyclerView = recycler_view_id
-                    val layoutManager = LinearLayoutManager(this@MainActivity)
-
-                    val dividerItemDecoration = DividerItemDecoration(
-                        callLogRecyclerView.context,
-                        layoutManager.orientation
-                    )
-
-                    callLogRecyclerView.addItemDecoration(dividerItemDecoration)
-
-                    callLogRecyclerView.apply {
-                        setHasFixedSize(true)
-                        this.layoutManager = layoutManager
-                        this.adapter = recyclerViewAdapter
-                    }
+                    // set data into recyclerview
+                    homePageRecyclerViewAdapter.submitList(unknownCallLogs)
+                    homePageRecyclerViewAdapter.notifyDataSetChanged()
                 } catch (e: SecurityException) {
                     Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
                 }
@@ -194,34 +239,26 @@ class MainActivity : AppCompatActivity() {
             FilterState.WEEKLY -> {
                 // get call logs and show on recyclerview
                 try {
-                    val callLogs = CallLogger.getCallDetails(applicationContext)
 
-                    val unknownCallLogs =
+                    val unknownCallLogs = if (queryMobileNumber != null) {
+                        callLogs.filter { current ->
+                            current.name == "Unknown Caller" && current.mobileNumber!!.contains(
+                                queryMobileNumber!!
+                            ) && current.time?.getCurrentDayDiff()!! <= 7
+                        }
+                    } else {
                         callLogs.filter { current ->
                             current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
                         }
+                    }
+
                     Log.d(TAG, "getCallLogs:  Weekly: ${unknownCallLogs.size}")
 
                     text_id_23.text = unknownCallLogs.size.toString()
 
-                    //RecyclerView Work
-                    val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
-
-                    val callLogRecyclerView = recycler_view_id
-                    val layoutManager = LinearLayoutManager(this@MainActivity)
-
-                    val dividerItemDecoration = DividerItemDecoration(
-                        callLogRecyclerView.context,
-                        layoutManager.orientation
-                    )
-
-                    callLogRecyclerView.addItemDecoration(dividerItemDecoration)
-
-                    callLogRecyclerView.apply {
-                        setHasFixedSize(true)
-                        this.layoutManager = layoutManager
-                        this.adapter = recyclerViewAdapter
-                    }
+                    // set data into recyclerview
+                    homePageRecyclerViewAdapter.submitList(unknownCallLogs)
+                    homePageRecyclerViewAdapter.notifyDataSetChanged()
                 } catch (e: SecurityException) {
                     Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
                 }
@@ -229,36 +266,31 @@ class MainActivity : AppCompatActivity() {
             FilterState.MONTHLY -> {
                 // get call logs and show on recyclerview
                 try {
-                    val callLogs = CallLogger.getCallDetails(applicationContext)
-
                     // todo: get current month length and set the value.
                     val currentMonthLength = 31
-                    val unknownCallLogs =
+
+                    val unknownCallLogs = if (queryMobileNumber != null) {
+                        callLogs.filter { current ->
+                            current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
+                        }
+                        callLogs.filter { current ->
+                            current.name == "Unknown Caller" && current.mobileNumber!!.contains(
+                                queryMobileNumber!!
+                            ) && current.time?.getCurrentDayDiff()!! <= currentMonthLength
+                        }
+                    } else {
                         callLogs.filter { current ->
                             current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= currentMonthLength
                         }
+                    }
+
                     Log.d(TAG, "getCallLogs: Monthly: ${unknownCallLogs.size}")
 
                     text_id_23.text = unknownCallLogs.size.toString()
 
-                    //RecyclerView Work
-                    val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
-
-                    val callLogRecyclerView = recycler_view_id
-                    val layoutManager = LinearLayoutManager(this@MainActivity)
-
-                    val dividerItemDecoration = DividerItemDecoration(
-                        callLogRecyclerView.context,
-                        layoutManager.orientation
-                    )
-
-                    callLogRecyclerView.addItemDecoration(dividerItemDecoration)
-
-                    callLogRecyclerView.apply {
-                        setHasFixedSize(true)
-                        this.layoutManager = layoutManager
-                        this.adapter = recyclerViewAdapter
-                    }
+                    // set data into recyclerview
+                    homePageRecyclerViewAdapter.submitList(unknownCallLogs)
+                    homePageRecyclerViewAdapter.notifyDataSetChanged()
                 } catch (e: SecurityException) {
                     Log.d(TAG, "onCreate: Permissions are not allowed to perform this operation")
                 }
