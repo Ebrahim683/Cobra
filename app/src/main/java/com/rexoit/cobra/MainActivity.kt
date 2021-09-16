@@ -229,8 +229,7 @@ class MainActivity : AppCompatActivity() {
 
                     text_id_23.text = unknownCallLogs.size.toString()
 
-
-
+                    // set data into recyclerview
                     homePageRecyclerViewAdapter.submitList(unknownCallLogs)
                     homePageRecyclerViewAdapter.notifyDataSetChanged()
                 } catch (e: SecurityException) {
@@ -257,6 +256,7 @@ class MainActivity : AppCompatActivity() {
 
                     text_id_23.text = unknownCallLogs.size.toString()
 
+                    // set data into recyclerview
                     homePageRecyclerViewAdapter.submitList(unknownCallLogs)
                     homePageRecyclerViewAdapter.notifyDataSetChanged()
                 } catch (e: SecurityException) {
@@ -288,6 +288,7 @@ class MainActivity : AppCompatActivity() {
 
                     text_id_23.text = unknownCallLogs.size.toString()
 
+                    // set data into recyclerview
                     homePageRecyclerViewAdapter.submitList(unknownCallLogs)
                     homePageRecyclerViewAdapter.notifyDataSetChanged()
                 } catch (e: SecurityException) {
