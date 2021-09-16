@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.ContactsContract.Data.DISPLAY_NAME
@@ -21,11 +22,7 @@ class CallReceiver : BroadcastReceiver() {
         val mobileNumber = intent?.getStringExtra(EXTRA_INCOMING_NUMBER)
         val isUnknownNumber: Boolean? = isUnknownCaller(context, mobileNumber)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-        }
-
-        isUnknownNumber?.let {
+        isUnknownNumber?.let { unknownNumber ->
             val serviceIntent = Intent(
                 context,
                 FloatingWidgetService::class.java
@@ -36,6 +33,11 @@ class CallReceiver : BroadcastReceiver() {
                 //Incoming Call Detect
                 EXTRA_STATE_RINGING -> {
                     Log.d(TAG, "Incoming Call")
+
+                    // check the number is known
+                    // if known return
+                    // otherwise show cobra button
+//                    if (!unknownNumber) return
 
                     // open floating button when call is ringing
                     // start a service
@@ -48,36 +50,7 @@ class CallReceiver : BroadcastReceiver() {
                             serviceIntent
                         )
                     }
-
-//                    Toast.makeText(
-//                        context,
-//                        "Incoming Call: $mobileNumber. Is Unknown number: $it",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
                 }
-
-//                //Outgoing Call Detect
-//                EXTRA_STATE_OFFHOOK -> {
-//                    Log.d(TAG, "Outgoing Call")
-//                    context?.stopService(serviceIntent)
-//
-//                    Toast.makeText(
-//                        context,
-//                        "Outgoing Call $mobileNumber. Is Unknown number: $it",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//                //Call End Detect
-//                EXTRA_STATE_IDLE -> {
-//                    Log.d(TAG, "Call Ended")
-//                    Toast.makeText(
-//                        context,
-//                        "Call Ended $mobileNumber. Is Unknown number: $it",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
                 else -> {
                     // stop the service
                     context?.stopService(serviceIntent)

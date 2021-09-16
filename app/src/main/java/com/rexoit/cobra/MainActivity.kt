@@ -53,12 +53,13 @@ class MainActivity : AppCompatActivity() {
         try {
             val callLogs = CallLogger.getCallDetails(applicationContext)
 
-            // count total calls from unknown number using kotlin DSL
-            text_id_23.text =
-                callLogs.count { current -> current.name == "Unknown Caller" }.toString()
+            val unknownCallLogs =
+                callLogs.filter { current -> current.name == "Unknown Caller" }
+
+            text_id_23.text = unknownCallLogs.size.toString()
 
             //RecyclerView Work
-            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, callLogs)
+            val recyclerViewAdapter = HomePageRecyclerViewAdapter(this, unknownCallLogs)
 
             val callLogRecyclerView = recycler_view_id
             val layoutManager = LinearLayoutManager(this@MainActivity)
@@ -264,7 +265,6 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.ANSWER_PHONE_CALLS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-
                 permissions.add(Manifest.permission.ANSWER_PHONE_CALLS)
             }
         }

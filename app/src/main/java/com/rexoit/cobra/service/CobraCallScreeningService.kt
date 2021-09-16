@@ -12,12 +12,13 @@ private const val TAG = "CobraCallScreening"
 class CobraCallScreeningService : CallScreeningService() {
     override fun onScreenCall(call: Call.Details) {
         Log.d(TAG, "onScreenCall: Build")
-        Log.d(TAG, "onScreenCall: Caller Name: ${call.callerDisplayName}")
+        Log.d(TAG, "onScreenCall: Caller Number: ${call.handle.schemeSpecificPart}")
 
-       val callResponseBuilder = CallResponse.Builder().build()
+        // todo: check the incoming number is blocked
+        val callResponseBuilder = CallResponse.Builder()
 //            .setDisallowCall(true)
 //            .setRejectCall(true)
-//            .build()
+            .build()
 
         respondToCall(call, callResponseBuilder)
     }
