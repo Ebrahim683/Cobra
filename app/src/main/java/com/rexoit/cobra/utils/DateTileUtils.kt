@@ -2,10 +2,8 @@ package com.rexoit.cobra.utils
 
 import android.annotation.SuppressLint
 import android.util.Log
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 private const val TAG = "DateTileUtils"
 
@@ -25,6 +23,23 @@ fun Long.toFormattedDateString(): String {
 fun Long.toFormattedTimeString(): String {
     val simpleDateFormat = SimpleDateFormat("hh:mm aa")
     return simpleDateFormat.format(Date(this))
+}
+
+fun Long.getCurrentDayDiff(): Long {
+    var different: Long = Date().time - this
+
+    Log.d(TAG, "toFormattedElapsedTimeString: ${this.toFormattedDateTimeString()}")
+    Log.d(TAG, "toFormattedElapsedTimeString: ${Date().time.toFormattedDateTimeString()}")
+
+    val secondsInMilli: Long = 1000
+    val minutesInMilli = secondsInMilli * 60
+    val hoursInMilli = minutesInMilli * 60
+    val daysInMilli = hoursInMilli * 24
+
+    val elapsedDays = different / daysInMilli;
+    different %= daysInMilli;
+
+    return elapsedDays
 }
 
 fun Long.toFormattedElapsedTimeString(): String {
@@ -51,7 +66,10 @@ fun Long.toFormattedElapsedTimeString(): String {
 
     val stringBuilder = StringBuilder()
 
-    Log.d(TAG, "toFormattedElapsedTimeString: $elapsedDays Days, $elapsedHours Hour, $elapsedMinutes Min, $elapsedSeconds sec")
+    Log.d(
+        TAG,
+        "toFormattedElapsedTimeString: $elapsedDays Days, $elapsedHours Hour, $elapsedMinutes Min, $elapsedSeconds sec"
+    )
 
     if (elapsedDays > 0) {
         return this.toFormattedDateString()
@@ -59,10 +77,10 @@ fun Long.toFormattedElapsedTimeString(): String {
     } else {
         if (elapsedHours > 0) {
             when {
-                elapsedHours>24 -> {
+                elapsedHours > 24 -> {
                     return this.toFormattedDateString()
                 }
-                elapsedHours>1 -> {
+                elapsedHours > 1 -> {
                     return this.toFormattedTimeString()
                 }
                 else -> {
@@ -71,9 +89,9 @@ fun Long.toFormattedElapsedTimeString(): String {
             }
         } else {
             if (elapsedMinutes > 0 && elapsedSeconds > 0) {
-                if(elapsedHours>1){
+                if (elapsedHours > 1) {
                     return this.toFormattedTimeString()
-                }else {
+                } else {
                     stringBuilder.append("$elapsedMinutes Min, $elapsedSeconds sec")
                 }
             } else if (elapsedMinutes > 0) {
@@ -112,9 +130,12 @@ fun Long.toFormattedElapsedSecondsString(): String {
 
     val stringBuilder = StringBuilder()
 
-    Log.d(TAG, "toFormattedElapsedTimeString: $elapsedDays Days, $elapsedHours Hour, $elapsedMinutes Min, $elapsedSeconds sec")
+    Log.d(
+        TAG,
+        "toFormattedElapsedTimeString: $elapsedDays Days, $elapsedHours Hour, $elapsedMinutes Min, $elapsedSeconds sec"
+    )
 
-    if (elapsedHours > 0 ) {
+    if (elapsedHours > 0) {
         stringBuilder.append("$elapsedHours Hour, $elapsedMinutes Min")
     } else {
         if (elapsedMinutes > 0 && elapsedSeconds > 0) {

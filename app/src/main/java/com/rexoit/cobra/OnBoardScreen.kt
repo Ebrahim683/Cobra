@@ -16,7 +16,7 @@ class OnBoardScreen : AppCompatActivity() {
 
         liquidPagerAdapter = LiquidPagerAdapter(supportFragmentManager)
 
-        liquid_pager_id.adapter = liquidPagerAdapter
+//        liquid_pager_id.adapter = liquidPagerAdapter
 
     }
 }

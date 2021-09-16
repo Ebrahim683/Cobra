@@ -3,6 +3,7 @@ package com.rexoit.cobra.adapters
 import android.content.Context
 import android.content.Intent
 import android.provider.CallLog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +12,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rexoit.cobra.*
 import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.utils.getCurrentDayDiff
 import com.rexoit.cobra.utils.toFormattedDateString
 import com.rexoit.cobra.utils.toFormattedDateTimeString
 import com.rexoit.cobra.utils.toFormattedElapsedTimeString
 import java.util.*
+
+private const val TAG = "HomePageRecyclerViewAda"
 
 class HomePageRecyclerViewAdapter(
     private val context: Context,
@@ -47,6 +51,8 @@ class HomePageRecyclerViewAdapter(
         holder.mCallerName.text = callLogInfo.name
         holder.mCallerMobileNumber.text = callLogInfo.mobileNumber
         holder.mCallTime.text = callLogInfo.time?.toFormattedElapsedTimeString()
+
+        Log.d(TAG, "onBindViewHolder: ${callLogInfo.time?.getCurrentDayDiff()}")
 
         //Click Event Handler
         onClickItem(
