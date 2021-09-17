@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -99,6 +100,17 @@ class NumberDetailsPage : AppCompatActivity() {
 //                data = Uri.parse("tel:$mobileNumber")
             }
             startActivity(dialIntent)
+        }
+
+        //Save Number
+        save_number_button.setOnClickListener {
+            mobileNumber = mobile_number.text.toString()
+            val saveIntent = Intent(Intent.ACTION_INSERT)
+            saveIntent.apply {
+                type = ContactsContract.RawContacts.CONTENT_TYPE
+                putExtra(ContactsContract.Intents.Insert.PHONE, mobileNumber)
+            }
+            startActivity(saveIntent)
         }
     }
 
