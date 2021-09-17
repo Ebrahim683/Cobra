@@ -16,6 +16,7 @@
             android:id="@+id/collapse_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -32,8 +33,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:breakStrategy="balanced"
                 android:gravity="center"
-                android:text="Decline and send the number to cobra 911" />
+                android:text="Decline and send the number to cobra 911"
+                android:textColor="@color/red_color" />
 
             <!--   Close button to close Floating Widget View  -->
             <!--            <ImageView-->

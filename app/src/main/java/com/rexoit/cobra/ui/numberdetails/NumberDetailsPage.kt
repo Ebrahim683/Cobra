@@ -1,4 +1,4 @@
-package com.rexoit.cobra
+package com.rexoit.cobra.ui.numberdetails
 
 import android.Manifest
 import android.content.Intent
@@ -13,15 +13,21 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.rexoit.cobra.adapters.NumberDetailsRecyclerViewAdapter
+import com.rexoit.cobra.CobraApplication
+import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.data.model.CallType
+import com.rexoit.cobra.ui.numberdetails.adapter.NumberDetailsRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_number_details_page.*
+import kotlinx.coroutines.runBlocking
+import java.util.*
 
 private const val TAG = "NumberDetailsPage"
 const val EXTRA_CALLER_NAME = "com.rexoit.cobra.EXTRA_CALLER_NAME"
 const val EXTRA_CALLER_NUMBER = "com.rexoit.cobra.EXTRA_CALLER_NUMBER"
 const val EXTRA_CALL_LOGS = "com.rexoit.cobra.EXTRA_CALL_LOGS"
+private const val CALL_BACK_REQUEST_CODE = 2021
 
 class NumberDetailsPage : AppCompatActivity() {
     private lateinit var mobileNumber: String
@@ -52,13 +58,11 @@ class NumberDetailsPage : AppCompatActivity() {
             }
         }
 
-
         block_number_button.setOnClickListener {
             blockNumber()
         }
 
         //CallBack
-        val CALL_BACK_REQUEST_CODE = 2021
         call_button_id.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -103,9 +107,28 @@ class NumberDetailsPage : AppCompatActivity() {
     }
 
     private fun blockNumber() {
-        if (mobile_number != null) {
-            val name = unknown_text.text.toString()
-            val number = mobile_number.text.toString()
+        if (intent?.getStringExtra(EXTRA_CALLER_NUMBER) != null) {
+            runBlocking {
+                // add to cobra blocklist database
+                val repository = (application as CobraApplication).repository
+                repository.getBlockedNumbers().let {
+                    Log.d(TAG, "blockNumber: $it")
+                }
+
+                Log.d(
+                    TAG,
+                    "blockNumber: ${intent?.getStringExtra(EXTRA_CALLER_NUMBER)} added to blocked list."
+                )
+                repository.addBlockedNumber(
+                    CallLogInfo(
+                        intent?.getStringExtra(EXTRA_CALLER_NUMBER)!!,
+                        intent?.getStringExtra(EXTRA_CALLER_NAME),
+                        CallType.BLOCKED,
+                        Date().time,
+                        "0"
+                    )
+                )
+            }
         }
     }
 

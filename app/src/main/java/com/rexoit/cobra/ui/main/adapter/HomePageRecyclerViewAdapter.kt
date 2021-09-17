@@ -1,4 +1,4 @@
-package com.rexoit.cobra.adapters
+package com.rexoit.cobra.ui.main.adapter
 
 import android.content.Intent
 import android.util.Log
@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rexoit.cobra.*
 import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.ui.numberdetails.EXTRA_CALLER_NAME
+import com.rexoit.cobra.ui.numberdetails.EXTRA_CALLER_NUMBER
+import com.rexoit.cobra.ui.numberdetails.EXTRA_CALL_LOGS
+import com.rexoit.cobra.ui.numberdetails.NumberDetailsPage
 import com.rexoit.cobra.utils.getCurrentDayDiff
 import com.rexoit.cobra.utils.toFormattedDateString
 import com.rexoit.cobra.utils.toFormattedElapsedTimeString
@@ -47,7 +51,7 @@ class HomePageRecyclerViewAdapter() :
 
         //Binding the item of the recycler view
         holder.mImage.setImageResource(R.drawable.call_icon)
-        holder.mCallerName.text = callLogInfo.name
+        holder.mCallerName.text = callLogInfo.callerName
         holder.mCallerMobileNumber.text = callLogInfo.mobileNumber
         holder.mCallTime.text = callLogInfo.time?.toFormattedElapsedTimeString()
 
@@ -56,7 +60,7 @@ class HomePageRecyclerViewAdapter() :
         //Click Event Handler
         onClickItem(
             holder,
-            callLogInfo.name,
+            callLogInfo.callerName,
             callLogInfo.mobileNumber
         )
     }
@@ -90,11 +94,11 @@ class HomePageRecyclerViewAdapter() :
     companion object {
         val DIFF_UTIL_CALLBACK = object : DiffUtil.ItemCallback<CallLogInfo>() {
             override fun areItemsTheSame(oldItem: CallLogInfo, newItem: CallLogInfo): Boolean {
-                return oldItem.mobileNumber == newItem.mobileNumber && oldItem.time == newItem.time && oldItem.name == newItem.name && oldItem.callType == newItem.callType && oldItem.duration == newItem.duration
+                return oldItem.mobileNumber == newItem.mobileNumber && oldItem.time == newItem.time && oldItem.callerName == newItem.callerName && oldItem.callType == newItem.callType && oldItem.duration == newItem.duration
             }
 
             override fun areContentsTheSame(oldItem: CallLogInfo, newItem: CallLogInfo): Boolean {
-                return oldItem.mobileNumber == newItem.mobileNumber && oldItem.time == newItem.time && oldItem.name == newItem.name && oldItem.callType == newItem.callType && oldItem.duration == newItem.duration
+                return oldItem.mobileNumber == newItem.mobileNumber && oldItem.time == newItem.time && oldItem.callerName == newItem.callerName && oldItem.callType == newItem.callType && oldItem.duration == newItem.duration
             }
 
         }

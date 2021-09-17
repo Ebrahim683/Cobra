@@ -1,7 +1,23 @@
 package com.rexoit.cobra.data.model
 
-enum class CallType{
+import androidx.room.TypeConverter
+
+enum class CallType {
     INCOMING,
     MISSED,
-    OUTGOING
+    OUTGOING,
+    BLOCKED
+}
+
+class Converter {
+    @TypeConverter
+    fun fromCallType(type: CallType): String {
+        return type.name
+    }
+
+    @TypeConverter
+    fun toPriority(type: String): CallType {
+        return CallType.valueOf(type)
+    }
+
 }

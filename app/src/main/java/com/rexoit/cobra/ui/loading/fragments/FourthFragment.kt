@@ -1,4 +1,4 @@
-package com.rexoit.cobra.fragments
+package com.rexoit.cobra.ui.loading.fragments
 
 import android.content.Context
 import android.content.Intent
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.rexoit.cobra.MainActivity
 import com.rexoit.cobra.R
+import com.rexoit.cobra.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_fourth.view.*
 
 class FourthFragment : Fragment() {

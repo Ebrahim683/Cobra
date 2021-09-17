@@ -5,6 +5,9 @@ import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.rexoit.cobra.CobraApplication
+import com.rexoit.cobra.utils.SharedPrefUtil
+import kotlinx.coroutines.runBlocking
 
 private const val TAG = "CobraCallScreening"
 
@@ -12,12 +15,32 @@ private const val TAG = "CobraCallScreening"
 class CobraCallScreeningService : CallScreeningService() {
     override fun onScreenCall(call: Call.Details) {
         Log.d(TAG, "onScreenCall: Build")
-        Log.d(TAG, "onScreenCall: Caller Number: ${call.handle.schemeSpecificPart}")
 
-        // todo: check the incoming number is blocked
+        val repository = (this.application as CobraApplication).repository
+        var isBlockedNumber = false
+
+        Log.d(
+            TAG,
+            "onScreenCall: Current Shared Pref Number: ${SharedPrefUtil(this).getIncomingNumber()}"
+        )
+
+        SharedPrefUtil(this).setIncomingNumber(call.handle.schemeSpecificPart)
+
+        runBlocking {
+            val blockedList = repository
+                .getBlockedNumberFromNumber(call.handle.schemeSpecificPart)
+
+            blockedList?.let {
+                isBlockedNumber = true
+            }
+            Log.d(TAG, "onScreenCall: Blocked Numbers: $blockedList")
+        }
+
         val callResponseBuilder = CallResponse.Builder()
-//            .setDisallowCall(true)
-//            .setRejectCall(true)
+            .setDisallowCall(isBlockedNumber)
+            .setRejectCall(isBlockedNumber)
+            .setSkipCallLog(isBlockedNumber)
+            .setSkipNotification(isBlockedNumber)
             .build()
 
         respondToCall(call, callResponseBuilder)

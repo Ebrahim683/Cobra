@@ -1,10 +1,12 @@
-package com.rexoit.cobra
+package com.rexoit.cobra.ui.loading
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.rexoit.cobra.R
+import com.rexoit.cobra.ui.main.MainActivity
 
 class AppLoadingPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

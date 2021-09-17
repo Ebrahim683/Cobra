@@ -1,4 +1,4 @@
-package com.rexoit.cobra
+package com.rexoit.cobra.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -23,8 +23,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.rexoit.cobra.adapters.HomePageRecyclerViewAdapter
+import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.ui.main.adapter.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.FilterState
 import com.rexoit.cobra.utils.getCurrentDayDiff
@@ -88,9 +89,10 @@ class MainActivity : AppCompatActivity() {
         // request runtime permissions
         phoneCallStatePermission()
 
-
         try {
             callLogs = CallLogger.getCallDetails(applicationContext)
+            // todo: add these all logs to cobra database
+            // manage logs from app database
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -217,12 +219,12 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val unknownCallLogs = if (queryMobileNumber != null) {
                         callLogs.filter { current ->
-                            current.name == "Unknown Caller" && current.mobileNumber!!.contains(
+                            current.callerName == "Unknown Caller" && current.mobileNumber!!.contains(
                                 queryMobileNumber!!
                             )
                         }
                     } else {
-                        callLogs.filter { current -> current.name == "Unknown Caller" }
+                        callLogs.filter { current -> current.callerName == "Unknown Caller" }
                     }
 
                     Log.d(TAG, "getCallLogs: All: ${unknownCallLogs.size}")
@@ -242,13 +244,13 @@ class MainActivity : AppCompatActivity() {
 
                     val unknownCallLogs = if (queryMobileNumber != null) {
                         callLogs.filter { current ->
-                            current.name == "Unknown Caller" && current.mobileNumber!!.contains(
+                            current.callerName == "Unknown Caller" && current.mobileNumber!!.contains(
                                 queryMobileNumber!!
                             ) && current.time?.getCurrentDayDiff()!! <= 7
                         }
                     } else {
                         callLogs.filter { current ->
-                            current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
+                            current.callerName == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
                         }
                     }
 
@@ -271,16 +273,16 @@ class MainActivity : AppCompatActivity() {
 
                     val unknownCallLogs = if (queryMobileNumber != null) {
                         callLogs.filter { current ->
-                            current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
+                            current.callerName == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
                         }
                         callLogs.filter { current ->
-                            current.name == "Unknown Caller" && current.mobileNumber!!.contains(
+                            current.callerName == "Unknown Caller" && current.mobileNumber!!.contains(
                                 queryMobileNumber!!
                             ) && current.time?.getCurrentDayDiff()!! <= currentMonthLength
                         }
                     } else {
                         callLogs.filter { current ->
-                            current.name == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= currentMonthLength
+                            current.callerName == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= currentMonthLength
                         }
                     }
 

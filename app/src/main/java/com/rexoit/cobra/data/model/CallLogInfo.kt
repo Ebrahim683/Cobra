@@ -1,19 +1,25 @@
 package com.rexoit.cobra.data.model
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@Entity(tableName = "call_logs")
 data class CallLogInfo(
-    val name: String?,
-    val mobileNumber: String?,
+    @PrimaryKey
+    val mobileNumber: String,
+    val callerName: String?,
     val callType: CallType?,
     val time: Long?,
     val duration: String?
 ) : Parcelable {
+    constructor() : this("", null, null, null, null)
+
     override fun toString(): String {
         return "{" +
-                "   name=$name, \n" +
+                "   name=$callerName, \n" +
                 "   mobileNumber=$mobileNumber, \n" +
                 "   callType=$callType, \n" +
                 "   time=$time, \n" +

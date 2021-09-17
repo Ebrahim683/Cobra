@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OnBoardScreen">
+    tools:context=".ui.loading.OnBoardScreen">
 
 <!--    <com.cuberto.liquid_swipe.LiquidPager-->
 <!--        android:id="@+id/liquid_pager_id"-->

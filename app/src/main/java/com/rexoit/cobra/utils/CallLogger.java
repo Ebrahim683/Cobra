@@ -24,6 +24,7 @@ public class CallLogger {
                 CallLog.Calls.DATE + " DESC"
         );
 
+        int id = managedCursor.getColumnIndex(CallLog.Calls._ID);
         int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
         int name = managedCursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
         int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
@@ -31,6 +32,7 @@ public class CallLogger {
         int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
 
         while (managedCursor.moveToNext()) {
+            int rowId = managedCursor.getInt(id);
             String mobileNumber = managedCursor.getString(number);
             String username = managedCursor.getString(name);
             String callType = managedCursor.getString(type);
@@ -58,8 +60,8 @@ public class CallLogger {
 
             callLogInfoList.add(
                     new CallLogInfo(
-                            username != null ? username.isEmpty() ? "Unknown Caller" : username : "Unknown Caller",
                             mobileNumber,
+                            username != null ? username.isEmpty() ? "Unknown Caller" : username : "Unknown Caller",
                             mCallType,
                             callDayTime.getTime(),
                             callDuration

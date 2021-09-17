@@ -1,376 +1,330 @@
-package com.rexoit.cobra.service;
+package com.rexoit.cobra.service
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.PixelFormat;
-import android.graphics.Point;
-import android.os.Build;
-import android.os.CountDownTimer;
-import android.os.IBinder;
-import android.telecom.TelecomManager;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-
-import com.android.internal.telephony.ITelephony;
-import com.rexoit.cobra.R;
-
-import java.lang.reflect.Method;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.graphics.PixelFormat
+import android.graphics.Point
+import android.os.Build
+import android.os.CountDownTimer
+import android.os.IBinder
+import android.telecom.TelecomManager
+import android.telephony.TelephonyManager
+import android.util.Log
+import android.view.*
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import com.android.internal.telephony.ITelephony
+import com.rexoit.cobra.CobraApplication
+import com.rexoit.cobra.R
+import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.data.model.CallType
+import com.rexoit.cobra.utils.SharedPrefUtil
+import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.math.ceil
 
 /**
  * Created by sonu on 28/03/17.
  * url: https://www.androhub.com/android-floating-widget-like-facebook-messenger-chat-head/
  */
-public class FloatingWidgetService extends Service implements View.OnClickListener {
-    private static final String TAG = "FloatingWidgetService";
-    private static final int NOTIFICATION_ID = 127;
+private const val CHANNEL_ID = "cobra_channel_001"
 
-    private WindowManager mWindowManager;
-    private View mFloatingWidgetView;
-    private final Point szWindow = new Point();
-    private View removeFloatingWidgetView;
+class FloatingWidgetService : Service(), View.OnClickListener {
+    private var mWindowManager: WindowManager? = null
+    private var mFloatingWidgetView: View? = null
+    private val szWindow = Point()
+    private var removeFloatingWidgetView: View? = null
 
-    public FloatingWidgetService() {
+    override fun onBind(intent: Intent): IBinder? {
+        Log.d(TAG, "onBind: Created")
+        return null
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind: Created");
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        Log.d(TAG, "onCreate: FloatingWidgetService");
-
-        String CHANNEL_ID = "cobra_channel_001";
-        NotificationChannel channel;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            channel = new NotificationChannel(CHANNEL_ID,
-                    "Notification from cobra",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("Cobra")
-                    .setContentText("Cobra is running")
-                    .build();
-
-            startForeground(NOTIFICATION_ID, notification);
+    override fun onCreate() {
+        super.onCreate()
+        Log.d(TAG, "onCreate: FloatingWidgetService")
+        val channel: NotificationChannel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = NotificationChannel(
+                CHANNEL_ID,
+                "Notification from cobra",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+                channel
+            )
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Cobra")
+                .setContentText("Cobra is running")
+                .build()
+            startForeground(NOTIFICATION_ID, notification)
         }
 
         //init WindowManager
-        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        getWindowManagerDefaultDisplay();
+        mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        windowManagerDefaultDisplay
 
         //Init LayoutInflater
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-//        addRemoveView(inflater);
-        addFloatingWidgetView(inflater);
-        implementClickListeners();
-        implementTouchListenerToFloatingWidgetView();
-    }
-
-    /*  Add Remove View to Window Manager  */
-    @SuppressLint("InflateParams")
-    private void addRemoveView(LayoutInflater inflater) {
-        //Inflate the removing view layout we created
-        removeFloatingWidgetView = inflater.inflate(R.layout.remove_floating_widget_layout, null);
-
-        int LAYOUT_PARAMS;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LAYOUT_PARAMS = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-
-        } else {
-            LAYOUT_PARAMS = WindowManager.LayoutParams.TYPE_PHONE;
-        }
-
-        //Add the view to the window.
-        WindowManager.LayoutParams paramRemove = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                LAYOUT_PARAMS,
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                PixelFormat.TRANSLUCENT);
-
-        //Specify the view position
-        paramRemove.gravity = Gravity.CENTER | Gravity.CENTER_VERTICAL;
-
-        //Initially the Removing widget view is not visible, so set visibility to GONE
-        removeFloatingWidgetView.setVisibility(View.GONE);
-
-        //Add the view to the window
-        mWindowManager.addView(removeFloatingWidgetView, paramRemove);
+        addFloatingWidgetView(inflater)
+        implementTouchListenerToFloatingWidgetView()
     }
 
     /*  Add Floating Widget View to Window Manager  */
     @SuppressLint("InflateParams")
-    private void addFloatingWidgetView(LayoutInflater inflater) {
+    private fun addFloatingWidgetView(inflater: LayoutInflater) {
         //Inflate the floating view layout we created
-        mFloatingWidgetView = inflater.inflate(R.layout.floating_widget_layout, null);
-
-        int LAYOUT_PARAMS;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LAYOUT_PARAMS = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-
+        mFloatingWidgetView = inflater.inflate(R.layout.floating_widget_layout, null)
+        val layoutParams: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
-            LAYOUT_PARAMS = WindowManager.LayoutParams.TYPE_PHONE;
+            WindowManager.LayoutParams.TYPE_PHONE
         }
 
         //Add the view to the window.
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                LAYOUT_PARAMS,
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            layoutParams,
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
+        )
 
         //Specify the view position
-        params.gravity = Gravity.CENTER | Gravity.CENTER_VERTICAL;
+        params.gravity = Gravity.CENTER or Gravity.CENTER_VERTICAL
 
         //Initially view will be added to top-left corner, you change x-y coordinates according to your need
-        params.x = 0;
-        params.y = 100;
+        params.x = 0
+        params.y = 100
 
         //Add the view to the window
-        mWindowManager.addView(mFloatingWidgetView, params);
+        mWindowManager!!.addView(mFloatingWidgetView, params)
     }
 
-    private void getWindowManagerDefaultDisplay() {
-        mWindowManager.getDefaultDisplay().getSize(szWindow);
-    }
+    private val windowManagerDefaultDisplay: Unit
+        get() {
+            mWindowManager!!.defaultDisplay.getSize(szWindow)
+        }
 
     /*  Implement Touch Listener to Floating Widget Root View  */
     @SuppressLint("ClickableViewAccessibility")
-    private void implementTouchListenerToFloatingWidgetView() {
+    private fun implementTouchListenerToFloatingWidgetView() {
         //Drag and move floating view using user's touch action.
-
-        mFloatingWidgetView.findViewById(R.id.root_container).setOnTouchListener((v, event) -> {
-            onFloatingWidgetClick();
-            return false;
-        });
+        mFloatingWidgetView!!.findViewById<View>(R.id.root_container)
+            .setOnTouchListener { v: View?, event: MotionEvent? ->
+                onFloatingWidgetClick()
+                false
+            }
     }
-
-    private void implementClickListeners() {
-        mFloatingWidgetView.findViewById(R.id.close_expanded_view).setOnClickListener(this);
-        mFloatingWidgetView.findViewById(R.id.open_activity_button).setOnClickListener(this);
-    }
-
 
     @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(View v) {
+    override fun onClick(v: View) {
 //        if (v.getId() == R.id.close_floating_view) {//close the service and remove the from from the window
 //            stopSelf();
 //        }
     }
 
     /*  Reset position of Floating Widget view on dragging  */
-    private void resetPosition(int x_cord_now) {
+    private fun resetPosition(x_cord_now: Int) {
         //Variable to check if the Floating widget view is on left side or in right side
         // initially we are displaying Floating widget view to Left side so set it to true
-        boolean isLeft = true;
+        var isLeft = true
         if (x_cord_now <= szWindow.x / 2) {
-            isLeft = true;
-            moveToLeft(x_cord_now);
+            isLeft = true
+            moveToLeft(x_cord_now)
         } else {
-            isLeft = false;
-            moveToRight(x_cord_now);
+            isLeft = false
+            moveToRight(x_cord_now)
         }
-
     }
 
-
     /*  Method to move the Floating widget view to Left  */
-    private void moveToLeft(final int current_x_cord) {
-        final int x = szWindow.x - current_x_cord;
-
-        new CountDownTimer(500, 5) {
+    private fun moveToLeft(current_x_cord: Int) {
+        val x = szWindow.x - current_x_cord
+        object : CountDownTimer(500, 5) {
             //get params of Floating Widget view
-            final WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
-
-            public void onTick(long t) {
-                long step = (500 - t) / 5;
-
-                mParams.x = -(int) (current_x_cord * current_x_cord * step);
+            val mParams = mFloatingWidgetView!!.layoutParams as WindowManager.LayoutParams
+            override fun onTick(t: Long) {
+                val step = (500 - t) / 5
+                mParams.x = (-(current_x_cord * current_x_cord * step)).toInt()
 
                 //If you want bounce effect uncomment below line and comment above line
                 // mParams.x = 0 - (int) (double) bounceValue(step, x);
 
 
                 //Update window manager for Floating Widget
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+                mWindowManager!!.updateViewLayout(mFloatingWidgetView, mParams)
             }
 
-            public void onFinish() {
-                mParams.x = 0;
+            override fun onFinish() {
+                mParams.x = 0
 
                 //Update window manager for Floating Widget
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+                mWindowManager!!.updateViewLayout(mFloatingWidgetView, mParams)
             }
-        }.start();
+        }.start()
     }
 
     /*  Method to move the Floating widget view to Right  */
-    private void moveToRight(final int current_x_cord) {
-
-        new CountDownTimer(500, 5) {
+    private fun moveToRight(current_x_cord: Int) {
+        object : CountDownTimer(500, 5) {
             //get params of Floating Widget view
-            final WindowManager.LayoutParams mParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
-
-            public void onTick(long t) {
-                long step = (500 - t) / 5;
-
-                mParams.x = (int) (szWindow.x + (current_x_cord * current_x_cord * step) - mFloatingWidgetView.getWidth());
+            val mParams = mFloatingWidgetView!!.layoutParams as WindowManager.LayoutParams
+            override fun onTick(t: Long) {
+                val step = (500 - t) / 5
+                mParams.x =
+                    (szWindow.x + current_x_cord * current_x_cord * step - mFloatingWidgetView!!.width).toInt()
 
                 //If you want bounce effect uncomment below line and comment above line
                 //  mParams.x = szWindow.x + (int) (double) bounceValue(step, x_cord_now) - mFloatingWidgetView.getWidth();
 
                 //Update window manager for Floating Widget
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+                mWindowManager!!.updateViewLayout(mFloatingWidgetView, mParams)
             }
 
-            public void onFinish() {
-                mParams.x = szWindow.x - mFloatingWidgetView.getWidth();
+            override fun onFinish() {
+                mParams.x = szWindow.x - mFloatingWidgetView!!.width
 
                 //Update window manager for Floating Widget
-                mWindowManager.updateViewLayout(mFloatingWidgetView, mParams);
+                mWindowManager!!.updateViewLayout(mFloatingWidgetView, mParams)
             }
-        }.start();
+        }.start()
     }
-
-    /*  Get Bounce value if you want to make bounce effect to your Floating Widget */
-    private double bounceValue(long step, long scale) {
-        return scale * Math.exp(-0.055 * step) * Math.cos(0.08 * step);
-    }
-
 
     /*  Detect if the floating view is collapsed or expanded */
-    private boolean isViewCollapsed() {
-        return mFloatingWidgetView == null || mFloatingWidgetView.findViewById(R.id.collapse_view).getVisibility() == View.VISIBLE;
-    }
-
+    private val isViewCollapsed: Boolean
+        get() = mFloatingWidgetView == null || mFloatingWidgetView!!.findViewById<View>(R.id.collapse_view).visibility == View.VISIBLE
 
     /*  return status bar height on basis of device display metrics  */
-    private int getStatusBarHeight() {
-        return (int) Math.ceil(25 * getApplicationContext().getResources().getDisplayMetrics().density);
-    }
-
+    private val statusBarHeight: Int
+        get() = ceil(
+            (25 * applicationContext.resources.displayMetrics.density).toDouble()
+        ).toInt()
 
     /*  Update Floating Widget view coordinates on Configuration change  */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        getWindowManagerDefaultDisplay();
-
-        WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) mFloatingWidgetView.getLayoutParams();
-
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        windowManagerDefaultDisplay
+        val layoutParams = mFloatingWidgetView!!.layoutParams as WindowManager.LayoutParams
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-
-            if (layoutParams.y + (mFloatingWidgetView.getHeight() + getStatusBarHeight()) > szWindow.y) {
-                layoutParams.y = szWindow.y - (mFloatingWidgetView.getHeight() + getStatusBarHeight());
-                mWindowManager.updateViewLayout(mFloatingWidgetView, layoutParams);
+            if (layoutParams.y + (mFloatingWidgetView!!.height + statusBarHeight) > szWindow.y) {
+                layoutParams.y = szWindow.y - (mFloatingWidgetView!!.height + statusBarHeight)
+                mWindowManager!!.updateViewLayout(mFloatingWidgetView, layoutParams)
             }
-
             if (layoutParams.x != 0 && layoutParams.x < szWindow.x) {
-                resetPosition(szWindow.x);
+                resetPosition(szWindow.x)
             }
-
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
             if (layoutParams.x > szWindow.x) {
-                resetPosition(szWindow.x);
+                resetPosition(szWindow.x)
             }
-
         }
-
     }
 
     /*  on Floating widget click show expanded view  */
-    private void onFloatingWidgetClick() {
-        if (isViewCollapsed()) {
-            // todo: add number to blocklist
-            Log.d(TAG, "onFloatingWidgetClick: Pressed!");
-
-            ITelephony telephonyService = getTeleService(this);
+    private fun onFloatingWidgetClick() {
+        if (isViewCollapsed) {
+            Log.d(TAG, "onFloatingWidgetClick: Pressed!")
+            val telephonyService = getTeleService(this)
             if (telephonyService != null) {
                 try {
-                    telephonyService.silenceRinger();
-                    telephonyService.endCall();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.i("TAG", "CATCH CALL");
+                    telephonyService.silenceRinger()
+                    telephonyService.endCall()
+                } catch (e: Exception) {
+                    Log.i(
+                        TAG,
+                        "onFloatingWidgetClick: Failed to manage call using ITelephony. Message: ${e.localizedMessage}"
+                    )
                 }
             } else {
                 // handle call disconnect api level 28+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    TelecomManager mgr = (TelecomManager) getSystemService(TELECOM_SERVICE);
-
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
+                    val mgr = getSystemService(TELECOM_SERVICE) as TelecomManager
+                    if (ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.ANSWER_PHONE_CALLS
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // Consider calling
                         //    ActivityCompat#requestPermissions
                         // here to request the missing permissions, and then overriding
                         //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
                         //                                          int[] grantResults)
                         // to handle the case where the user grants the permission. See the documentation
                         // for ActivityCompat#requestPermissions for more details.
-                        return;
+                        return
                     }
-                    if (!mgr.isInCall()) return;
-                    mgr.endCall();
+                    if (!mgr.isInCall) return
+                    mgr.endCall()
+                } else {
+                    Log.i(TAG, "onFloatingWidgetClick: This call can't be handled!")
                 }
+            }
+
+            // add the incoming number into blocked list
+            val repository = (this.application as CobraApplication).repository
+
+            // todo: get the number using another caching mechanism when new call made.
+            val sharedPrefUtil = SharedPrefUtil(this)
+            val number = sharedPrefUtil.getIncomingNumber()
+            Log.d(TAG, "onFloatingWidgetClick: Mobile Number: $number")
+
+            number?.let {
+                val callLogInfo = CallLogInfo(
+                    it,
+                    "Unknown Caller",
+                    CallType.INCOMING,
+                    Date().time,
+                    "0"
+                )
+
+                runBlocking {
+                    val blockedList = repository
+                        .addBlockedNumber(
+                            callLogInfo
+                        )
+
+                    Log.d(TAG, "onFloatingWidgetClick: Blocked Numbers: $blockedList")
+                }
+
+                sharedPrefUtil.clearSharedPrefUtil()
             }
         }
     }
 
-    private ITelephony getTeleService(Context context) {
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    private fun getTeleService(context: Context): ITelephony? {
+        val tm = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
         try {
-            Method telephonyMethod = Class.forName(tm.getClass().getName()).getDeclaredMethod("getITelephony");
-            telephonyMethod.setAccessible(true);
-            return (ITelephony) telephonyMethod.invoke(tm);
-        } catch (Exception e) {
-            e.printStackTrace();
+            val telephonyMethod =
+                Class.forName(tm.javaClass.name).getDeclaredMethod("getITelephony")
+            telephonyMethod.isAccessible = true
+            return telephonyMethod.invoke(tm) as ITelephony
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        return null;
+        return null
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    override fun onDestroy() {
+        super.onDestroy()
 
         /*  on destroy remove both view from window manager */
+        if (mFloatingWidgetView != null) mWindowManager!!.removeView(
+            mFloatingWidgetView
+        )
+        if (removeFloatingWidgetView != null) mWindowManager!!.removeView(removeFloatingWidgetView)
+    }
 
-        if (mFloatingWidgetView != null)
-            mWindowManager.removeView(mFloatingWidgetView);
-
-        if (removeFloatingWidgetView != null)
-            mWindowManager.removeView(removeFloatingWidgetView);
+    companion object {
+        private const val TAG = "FloatingWidgetService"
+        private const val NOTIFICATION_ID = 127
     }
 }

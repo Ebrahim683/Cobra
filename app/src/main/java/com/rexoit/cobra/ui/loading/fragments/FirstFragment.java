@@ -1,4 +1,4 @@
-package com.rexoit.cobra.fragments;
+package com.rexoit.cobra.ui.loading.fragments;
 
 import android.os.Bundle;
 

@@ -1,10 +1,9 @@
-package com.rexoit.cobra
+package com.rexoit.cobra.ui.loading
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.rexoit.cobra.R
-import com.rexoit.cobra.adapters.LiquidPagerAdapter
-import kotlinx.android.synthetic.main.activity_on_board_screen.*
+import com.rexoit.cobra.ui.loading.adapter.LiquidPagerAdapter
 
 class OnBoardScreen : AppCompatActivity() {
 

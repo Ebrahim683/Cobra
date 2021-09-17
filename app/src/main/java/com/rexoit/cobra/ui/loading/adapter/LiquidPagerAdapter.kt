@@ -1,12 +1,12 @@
-package com.rexoit.cobra.adapters
+package com.rexoit.cobra.ui.loading.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.rexoit.cobra.fragments.FirstFragment
-import com.rexoit.cobra.fragments.FourthFragment
-import com.rexoit.cobra.fragments.SecondFragment
-import com.rexoit.cobra.fragments.ThirdFragment
+import com.rexoit.cobra.ui.loading.fragments.FirstFragment
+import com.rexoit.cobra.ui.loading.fragments.FourthFragment
+import com.rexoit.cobra.ui.loading.fragments.SecondFragment
+import com.rexoit.cobra.ui.loading.fragments.ThirdFragment
 
 
 class LiquidPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {

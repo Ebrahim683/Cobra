@@ -1,4 +1,4 @@
-package com.rexoit.cobra.adapters
+package com.rexoit.cobra.ui.numberdetails.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,9 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.data.model.CallType
-import com.rexoit.cobra.utils.toFormattedDateString
 import com.rexoit.cobra.utils.toFormattedElapsedSecondsString
-import com.rexoit.cobra.utils.toFormattedElapsedTimeString
 import com.rexoit.cobra.utils.toFormattedTimeString
 
 class NumberDetailsRecyclerViewAdapter(
@@ -19,16 +17,11 @@ class NumberDetailsRecyclerViewAdapter(
     private val list: List<CallLogInfo>
 ) :
     RecyclerView.Adapter<NumberDetailsRecyclerViewAdapter.NumberDetailsViewHolder>() {
-
-    private lateinit var callTime: String
-    private lateinit var callType: String
-    private lateinit var callDuration: String
-
     //NumberDetails Call List Item Reference
     class NumberDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sample_call_time: TextView = itemView.findViewById(R.id.sample_call_time)
-        val sample_call_type: TextView = itemView.findViewById(R.id.sample_call_type)
-        val sample_call_duration: TextView = itemView.findViewById(R.id.sample_call_duration)
+        val callTime: TextView = itemView.findViewById(R.id.sample_call_time)
+        val callType: TextView = itemView.findViewById(R.id.sample_call_type)
+        val callDuration: TextView = itemView.findViewById(R.id.sample_call_duration)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NumberDetailsViewHolder {
@@ -39,13 +32,12 @@ class NumberDetailsRecyclerViewAdapter(
 
     // Wrapping The Layout Of RecyclerView
     override fun onBindViewHolder(holder: NumberDetailsViewHolder, position: Int) {
-
         //Get The Position Of RecyclerView Item
         val callLogInfo: CallLogInfo = list[position]
 
         //Get the Data
-        callTime = callLogInfo.time?.toFormattedTimeString().toString()
-        callType = when (callLogInfo.callType) {
+        holder.callTime.text = callLogInfo.time?.toFormattedTimeString().toString()
+        holder.callType.text = when (callLogInfo.callType) {
             CallType.INCOMING -> {
                 "Incoming call"
             }
@@ -55,22 +47,17 @@ class NumberDetailsRecyclerViewAdapter(
             CallType.OUTGOING -> {
                 "Outgoing call"
             }
+            CallType.BLOCKED -> {
+                "Blocked"
+            }
             else -> {
-                "Unknown"
+                "Incoming call"
             }
         }
 
-        callDuration = callLogInfo.time?.toFormattedElapsedSecondsString().toString()
-
-        //Binding the item of the recycler view
-        holder.sample_call_time.text = callTime
-        holder.sample_call_type.text = callType
-        holder.sample_call_duration.text = callDuration
-
+        holder.callDuration.text = callLogInfo.time?.toFormattedElapsedSecondsString().toString()
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount() = list.size
 
 }
