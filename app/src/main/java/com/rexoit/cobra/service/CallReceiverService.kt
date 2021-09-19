@@ -49,7 +49,8 @@ class CallReceiver : BroadcastReceiver() {
                     mobileNumber?.let {
                         val repository =
                             (context.applicationContext as CobraApplication).repository
-                        var isBlockedNumber = unknownNumber
+
+                        var isBlockedNumber = false
 
                         runBlocking {
                             val blockedList = repository
@@ -66,14 +67,16 @@ class CallReceiver : BroadcastReceiver() {
                             return
                         }
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            context.startForegroundService(
-                                serviceIntent
-                            )
-                        } else {
-                            context.startService(
-                                serviceIntent
-                            )
+                        if (unknownNumber) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                context.startForegroundService(
+                                    serviceIntent
+                                )
+                            } else {
+                                context.startService(
+                                    serviceIntent
+                                )
+                            }
                         }
                     }
                 }

@@ -414,6 +414,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        try {
+            callLogs = CallLogger.getCallDetails(applicationContext)
+            getCallLogs()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE) {
             Log.d(TAG, "onActivityResult: Result received!")
             dialogInterface?.cancel()

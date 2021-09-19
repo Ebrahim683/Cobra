@@ -269,34 +269,34 @@ class FloatingWidgetService : Service(), View.OnClickListener {
                 }
             }
 
-            // add the incoming number into blocked list
-            val repository = (this.application as CobraApplication).repository
-
-            // todo: get the number using another caching mechanism when new call made.
-            val sharedPrefUtil = SharedPrefUtil(this)
-            val number = sharedPrefUtil.getIncomingNumber()
-            Log.d(TAG, "onFloatingWidgetClick: Mobile Number: $number")
-
-            number?.let {
-                val callLogInfo = CallLogInfo(
-                    it,
-                    "Unknown Caller",
-                    CallType.INCOMING,
-                    Date().time,
-                    "0"
-                )
-
-                runBlocking {
-                    val blockedList = repository
-                        .addBlockedNumber(
-                            callLogInfo
-                        )
-
-                    Log.d(TAG, "onFloatingWidgetClick: Blocked Numbers: $blockedList")
-                }
-
-                sharedPrefUtil.clearSharedPrefUtil()
-            }
+//            // add the incoming number into blocked list
+//            val repository = (this.application as CobraApplication).repository
+//
+//            // todo: get the number using another caching mechanism when new call made.
+//            val sharedPrefUtil = SharedPrefUtil(this)
+//            val number = sharedPrefUtil.getIncomingNumber()
+//            Log.d(TAG, "onFloatingWidgetClick: Mobile Number: $number")
+//
+//            number?.let {
+//                val callLogInfo = CallLogInfo(
+//                    it,
+//                    "Unknown Caller",
+//                    CallType.INCOMING,
+//                    Date().time,
+//                    "0"
+//                )
+//
+//                runBlocking {
+//                    val blockedList = repository
+//                        .addBlockedNumber(
+//                            callLogInfo
+//                        )
+//
+//                    Log.d(TAG, "onFloatingWidgetClick: Blocked Numbers: $blockedList")
+//                }
+//
+//                sharedPrefUtil.clearSharedPrefUtil()
+//            }
         }
     }
 

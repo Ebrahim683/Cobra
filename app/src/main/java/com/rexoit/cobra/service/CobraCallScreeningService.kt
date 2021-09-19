@@ -30,6 +30,8 @@ class CobraCallScreeningService : CallScreeningService() {
             val blockedList = repository
                 .getBlockedNumberFromNumber(call.handle.schemeSpecificPart)
 
+            // todo: add call log to cobra database
+
             blockedList?.let {
                 isBlockedNumber = true
             }
