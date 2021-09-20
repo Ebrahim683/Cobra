@@ -2,6 +2,7 @@ package com.rexoit.cobra.service
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -21,14 +22,9 @@ import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.android.internal.telephony.ITelephony
-import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.R
-import com.rexoit.cobra.data.model.CallLogInfo
-import com.rexoit.cobra.data.model.CallType
-import com.rexoit.cobra.utils.SharedPrefUtil
-import kotlinx.coroutines.runBlocking
-import java.util.*
 import kotlin.math.ceil
+
 
 /**
  * Created by sonu on 28/03/17.
@@ -51,6 +47,7 @@ class FloatingWidgetService : Service(), View.OnClickListener {
         super.onCreate()
         Log.d(TAG, "onCreate: FloatingWidgetService")
         val channel: NotificationChannel
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channel = NotificationChannel(
                 CHANNEL_ID,
@@ -69,13 +66,18 @@ class FloatingWidgetService : Service(), View.OnClickListener {
 
         //init WindowManager
         mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        windowManagerDefaultDisplay
 
+        Log.d(TAG, "onCreate: Notification Created!")
+
+        getWindowManagerDefaultDisplay()
+
+        Log.d(TAG, "onCreate: Creating floating button")
         //Init LayoutInflater
         val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         addFloatingWidgetView(inflater)
         implementTouchListenerToFloatingWidgetView()
+        Log.d(TAG, "onCreate: Floating button showed!")
     }
 
     /*  Add Floating Widget View to Window Manager  */
@@ -94,7 +96,12 @@ class FloatingWidgetService : Service(), View.OnClickListener {
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
             layoutParams,
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         )
 
@@ -109,10 +116,29 @@ class FloatingWidgetService : Service(), View.OnClickListener {
         mWindowManager!!.addView(mFloatingWidgetView, params)
     }
 
-    private val windowManagerDefaultDisplay: Unit
-        get() {
-            mWindowManager!!.defaultDisplay.getSize(szWindow)
-        }
+    private fun getWindowManagerDefaultDisplay() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) { mWindowManager!!.defaultDisplay.getSize(
+//                szWindow
+//            )
+//        } else {
+//            val w = mWindowManager!!.defaultDisplay.width
+//            val h = mWindowManager!!.defaultDisplay.height
+//            szWindow[w] = h
+//        }
+    }
+
+//    fun getScreenWidth(activity: Activity): Int {
+//        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            val windowMetrics = activity.windowManager.currentWindowMetrics
+//            val insets: Insets = windowMetrics.windowInsets
+//                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+//            windowMetrics.bounds.width() - insets.left - insets.right
+//        } else {
+//            val displayMetrics = DisplayMetrics()
+//            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+//            displayMetrics.widthPixels
+//        }
+//    }
 
     /*  Implement Touch Listener to Floating Widget Root View  */
     @SuppressLint("ClickableViewAccessibility")
@@ -212,7 +238,7 @@ class FloatingWidgetService : Service(), View.OnClickListener {
     /*  Update Floating Widget view coordinates on Configuration change  */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        windowManagerDefaultDisplay
+        getWindowManagerDefaultDisplay()
         val layoutParams = mFloatingWidgetView!!.layoutParams as WindowManager.LayoutParams
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (layoutParams.y + (mFloatingWidgetView!!.height + statusBarHeight) > szWindow.y) {

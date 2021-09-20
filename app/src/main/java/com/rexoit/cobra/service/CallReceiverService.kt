@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import com.android.internal.telephony.ITelephony
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.service.FloatingWidgetService
+import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.SharedPrefUtil
 import kotlinx.coroutines.runBlocking
 
@@ -81,6 +82,14 @@ class CallReceiver : BroadcastReceiver() {
                     }
                 }
                 else -> {
+                    try {
+                        var callLogs = CallLogger.getCallDetails(context)
+                        // todo: store call logs to database
+
+                    } catch (e: Exception) {
+                        Log.e(TAG, "onReceive: Failed to read call logs.", e)
+                    }
+
                     // stop the service
                     context.stopService(serviceIntent)
                     sharedPrefUtil.clearSharedPrefUtil()

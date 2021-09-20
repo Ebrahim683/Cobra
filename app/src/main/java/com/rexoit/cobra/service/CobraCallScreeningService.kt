@@ -6,6 +6,8 @@ import android.telecom.CallScreeningService
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.rexoit.cobra.CobraApplication
+import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.data.model.CallType
 import com.rexoit.cobra.utils.SharedPrefUtil
 import kotlinx.coroutines.runBlocking
 
@@ -31,6 +33,7 @@ class CobraCallScreeningService() : CallScreeningService() {
                 .getBlockedNumberFromNumber(call.handle.schemeSpecificPart)
 
             // todo: add call log to cobra database
+//            repository.addBlockedNumber(callLogInfo)
 
             blockedList?.let {
                 isBlockedNumber = true
