@@ -8,6 +8,7 @@ import com.rexoit.cobra.data.model.CallLogInfo
 
 @Dao
 interface CobraDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBlockedNumber(numbers: CallLogInfo)
 

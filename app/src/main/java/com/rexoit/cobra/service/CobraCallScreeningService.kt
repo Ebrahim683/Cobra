@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 private const val TAG = "CobraCallScreening"
 
 @RequiresApi(Build.VERSION_CODES.N)
-class CobraCallScreeningService : CallScreeningService() {
+class CobraCallScreeningService() : CallScreeningService() {
     override fun onScreenCall(call: Call.Details) {
         Log.d(TAG, "onScreenCall: Build")
 
@@ -47,4 +47,6 @@ class CobraCallScreeningService : CallScreeningService() {
 
         respondToCall(call, callResponseBuilder)
     }
+
 }
+

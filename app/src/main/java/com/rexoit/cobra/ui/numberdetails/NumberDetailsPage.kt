@@ -20,7 +20,7 @@ import com.rexoit.cobra.data.model.CallType
 import com.rexoit.cobra.ui.numberdetails.adapter.NumberDetailsRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_number_details_page.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.util.*
 
 private const val TAG = "NumberDetailsPage"
@@ -31,7 +31,6 @@ private const val CALL_BACK_REQUEST_CODE = 2021
 
 class NumberDetailsPage : AppCompatActivity() {
     private lateinit var mobileNumber: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_number_details_page)
@@ -61,6 +60,7 @@ class NumberDetailsPage : AppCompatActivity() {
         block_number_button.setOnClickListener {
             blockNumber()
         }
+
 
         //CallBack
         call_button_id.setOnClickListener {
@@ -104,6 +104,7 @@ class NumberDetailsPage : AppCompatActivity() {
             }
             startActivity(dialIntent)
         }
+
     }
 
     private fun blockNumber() {
