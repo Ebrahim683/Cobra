@@ -8,13 +8,14 @@ import androidx.annotation.RequiresApi
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.data.model.CallType
+import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.SharedPrefUtil
 import kotlinx.coroutines.runBlocking
 
 private const val TAG = "CobraCallScreening"
 
 @RequiresApi(Build.VERSION_CODES.N)
-class CobraCallScreeningService() : CallScreeningService() {
+class CobraCallScreeningService : CallScreeningService() {
     override fun onScreenCall(call: Call.Details) {
         Log.d(TAG, "onScreenCall: Build")
 
@@ -34,6 +35,9 @@ class CobraCallScreeningService() : CallScreeningService() {
 
             // todo: add call log to cobra database
 //            repository.addBlockedNumber(callLogInfo)
+            val type = CallType.BLOCKED
+            val callLogInfo = type as CallLogInfo
+            repository.addBlockedNumber(callLogInfo)
 
             blockedList?.let {
                 isBlockedNumber = true
