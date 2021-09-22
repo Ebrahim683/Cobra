@@ -34,11 +34,8 @@ class CobraCallScreeningService : CallScreeningService() {
                 .getBlockedNumberFromNumber(call.handle.schemeSpecificPart)
 
             // todo: add call log to cobra database
-//            repository.addBlockedNumber(callLogInfo)
-            val type = CallType.BLOCKED
-            val callLogInfo = type as CallLogInfo
-            repository.addBlockedNumber(callLogInfo)
-
+            // repository.addBlockedNumber(callLogInfo)
+            
             blockedList?.let {
                 isBlockedNumber = true
             }

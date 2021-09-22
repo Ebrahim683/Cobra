@@ -9,9 +9,9 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "call_logs")
 data class CallLogInfo(
     @PrimaryKey
-    val mobileNumber: String,
+    var mobileNumber: String,
     val callerName: String?,
-    val callType: CallType?,
+    var callType: CallType?,
     val time: Long?,
     val duration: String?
 ) : Parcelable {

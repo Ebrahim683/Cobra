@@ -15,12 +15,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.R
+import com.rexoit.cobra.api.RetrofitClient
+import com.rexoit.cobra.api.response.BlockedNumberResponse
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.data.model.CallType
 import com.rexoit.cobra.ui.numberdetails.adapter.NumberDetailsRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_number_details_page.*
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 private const val TAG = "NumberDetailsPage"
@@ -56,9 +61,10 @@ class NumberDetailsPage : AppCompatActivity() {
                 adapter = numberAdapter
             }
         }
-
+        //Block Number Button Work
         block_number_button.setOnClickListener {
             blockNumber()
+            sentBlockedNumber()
         }
 
 
@@ -131,6 +137,31 @@ class NumberDetailsPage : AppCompatActivity() {
                 )
             }
         }
+    }
+
+    //sent blocked number to cobra database
+    private fun sentBlockedNumber() {
+        mobileNumber = mobile_number.text.toString()
+
+        val blockNumberRetrofit = RetrofitClient().apiService.setBlockedNumber(mobileNumber)
+
+        blockNumberRetrofit.enqueue(object : Callback<BlockedNumberResponse> {
+            override fun onResponse(
+                call: Call<BlockedNumberResponse>,
+                response: Response<BlockedNumberResponse>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d(TAG, "onResponse: response ok")
+                } else {
+                    Log.d(TAG, "onResponse: response failed")
+                }
+            }
+
+            override fun onFailure(call: Call<BlockedNumberResponse>, t: Throwable) {
+                Log.d(TAG, "onFailure: ${t.message}")
+            }
+
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
