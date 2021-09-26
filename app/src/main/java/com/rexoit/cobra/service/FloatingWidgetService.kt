@@ -2,7 +2,6 @@ package com.rexoit.cobra.service
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -21,8 +20,10 @@ import android.util.Log
 import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.work.*
 import com.android.internal.telephony.ITelephony
 import com.rexoit.cobra.R
+import com.rexoit.cobra.worker.WorkerTask
 import kotlin.math.ceil
 
 
@@ -258,12 +259,27 @@ class FloatingWidgetService : Service(), View.OnClickListener {
     /*  on Floating widget click show expanded view  */
     private fun onFloatingWidgetClick() {
         if (isViewCollapsed) {
+
+            //Worker Task
+            val rejectedNumber = Data.Builder().putString("rejected_number", "0123456").build()
+            val constraint = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val rejectedWorkTask = OneTimeWorkRequestBuilder<WorkerTask>()
+                .setConstraints(constraint)
+                .setInputData(rejectedNumber)
+                .build()
+
+            WorkManager.getInstance(applicationContext).enqueue(rejectedWorkTask)
+
             Log.d(TAG, "onFloatingWidgetClick: Pressed!")
             val telephonyService = getTeleService(this)
             if (telephonyService != null) {
                 try {
                     telephonyService.silenceRinger()
                     telephonyService.endCall()
+
                 } catch (e: Exception) {
                     Log.i(
                         TAG,

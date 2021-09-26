@@ -1,3 +1,3 @@
 package com.rexoit.cobra.api.response
 
-data class BlockedNumberResponse(var message: String)
+data class BlockedNumberResponse(var blockedNumber: String)

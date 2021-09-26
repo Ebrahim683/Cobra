@@ -15,18 +15,12 @@ import android.telecom.TelecomManager
 import android.telephony.TelephonyManager
 import android.telephony.TelephonyManager.*
 import android.util.Log
-import androidx.annotation.RestrictTo
 import androidx.core.app.ActivityCompat
 import com.android.internal.telephony.ITelephony
 import com.rexoit.cobra.CobraApplication
-import com.rexoit.cobra.data.repository.CobraRepo
-import com.rexoit.cobra.data.room.CobraDao
-import com.rexoit.cobra.data.room.CobraDatabase
 import com.rexoit.cobra.service.FloatingWidgetService
 import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.SharedPrefUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 
 
@@ -124,7 +118,7 @@ class CallReceiver : BroadcastReceiver() {
 
         try {
             if (contactLookup != null && contactLookup.count > 0) {
-                contactLookup.moveToNext();
+                contactLookup.moveToNext()
                 name = contactLookup.getString(
                     contactLookup.getColumnIndex(DISPLAY_NAME)
                 )

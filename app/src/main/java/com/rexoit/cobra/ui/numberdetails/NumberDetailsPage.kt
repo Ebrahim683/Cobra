@@ -64,7 +64,7 @@ class NumberDetailsPage : AppCompatActivity() {
         //Block Number Button Work
         block_number_button.setOnClickListener {
             blockNumber()
-            sentBlockedNumber()
+//            sentBlockedNumber()
         }
 
 
@@ -143,7 +143,7 @@ class NumberDetailsPage : AppCompatActivity() {
     private fun sentBlockedNumber() {
         mobileNumber = mobile_number.text.toString()
 
-        val blockNumberRetrofit = RetrofitClient().apiService.setBlockedNumber(mobileNumber)
+        val blockNumberRetrofit = RetrofitClient().apiService.sendBlockedNumber(mobileNumber)
 
         blockNumberRetrofit.enqueue(object : Callback<BlockedNumberResponse> {
             override fun onResponse(
