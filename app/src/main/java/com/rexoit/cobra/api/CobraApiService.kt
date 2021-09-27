@@ -10,13 +10,12 @@ import retrofit2.http.POST
 interface CobraApiService {
 
     companion object {
-        //change url
-        const val BASE_URL = "cobraUrl"
+        const val BASE_URL = "cobra.everestbajar.com/api/"
     }
 
     //sent blocked number to database
     @FormUrlEncoded
-    @POST("DEMO")
+    @POST("END_POINT")
     fun sendBlockedNumber(
         @Field("blockedNumber") blockedNumber: String
     ): Call<BlockedNumberResponse>
@@ -24,7 +23,7 @@ interface CobraApiService {
 
     //sent rejected number to cobra database
     @FormUrlEncoded
-    @POST("DEMO")
+    @POST("END_POINT")
     fun sendRejectedNumber(
         @Field("rejectNumber") rejectNumber:String
     ):Call<RejectNumberSentDatabaseResponse>
