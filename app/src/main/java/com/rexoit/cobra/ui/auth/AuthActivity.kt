@@ -8,6 +8,7 @@ import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
 import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
+import com.rexoit.cobra.utils.Status
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
 
@@ -25,8 +26,23 @@ class AuthActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auth)
 
         runBlocking {
-            authViewModel.login("tauhid8k@example.com", "12345678").collect {
-                Log.d(TAG, "onCreate: Login Response: " + it)
+            authViewModel.login("tauhid8k@example.com", "12345678").collect { resource ->
+                Log.d(TAG, "onCreate: Login Response: " + resource)
+
+                when (resource.status) {
+                    Status.UNAUTHORIZED -> {
+
+                    }
+                    Status.LOADING -> {
+
+                    }
+                    Status.ERROR -> {
+
+                    }
+                    Status.SUCCESS -> {
+
+                    }
+                }
             }
         }
     }

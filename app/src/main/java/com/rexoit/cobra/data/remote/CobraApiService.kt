@@ -1,6 +1,7 @@
 package com.rexoit.cobra.data.remote
 
 import com.rexoit.cobra.data.model.user.LoginResponse
+import com.rexoit.cobra.data.model.user.UserInfo
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -46,7 +47,7 @@ interface CobraApiService {
     suspend fun getBlockedNumbers(): Any
 
     @GET("api/user")
-    suspend fun getUserInfo(): Any
+    suspend fun getUserInfo(): UserInfo
 
     @POST("/logout")
     suspend fun logout(): Any

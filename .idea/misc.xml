@@ -28,6 +28,7 @@
         <entry key="..\:/Cobra/app/src/main/res/menu/number_details_menu.xml" value="0.203125" />
         <entry key="app/src/main/res/drawable/circle_shape.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/drawable/white_circle_shape.xml" value="0.14166666666666666" />
+        <entry key="app/src/main/res/layout/activity_auth.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/activity_block_call.xml" value="0.23177083333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.39366138448707255" />
         <entry key="app/src/main/res/layout/activity_number_details_page.xml" value="0.5" />
