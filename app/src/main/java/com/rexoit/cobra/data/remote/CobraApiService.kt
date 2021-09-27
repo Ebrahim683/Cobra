@@ -26,19 +26,14 @@ interface CobraApiService {
     @FormUrlEncoded
     @POST("api/email-verify")
     suspend fun verifyEmailAddress(
-        @Field("name") name: String,
         @Field("email") email: String,
-        @Field("phone") phone: String,
-        @Field("password") password: String,
+        @Field("verification_code") verificationCode: String,
     ): Any
 
     @FormUrlEncoded
     @POST("api/resend-email-verify")
     suspend fun resendVerificationEmail(
-        @Field("name") name: String,
         @Field("email") email: String,
-        @Field("phone") phone: String,
-        @Field("password") password: String,
     ): Any
 
     @FormUrlEncoded
