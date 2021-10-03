@@ -14,7 +14,7 @@
 <!--        app:layout_constraintEnd_toStartOf="@+id/guideline3"-->
 <!--        app:layout_constraintStart_toStartOf="@+id/guideline4"-->
 <!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:ignore="SpeakableTextPresentCheck" />-->
+<!--         />-->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.rexoit.cobra.R
 import com.rexoit.cobra.ui.loading.adapter.LiquidPagerAdapter
+import kotlinx.android.synthetic.main.activity_on_board_screen.*
 
 class OnBoardScreen : AppCompatActivity() {
 
