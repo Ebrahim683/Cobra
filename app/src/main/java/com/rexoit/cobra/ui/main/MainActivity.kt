@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,13 +24,19 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.rexoit.cobra.CobraApplication
+import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.ui.main.adapter.HomePageRecyclerViewAdapter
+import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
 import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.FilterState
+import com.rexoit.cobra.utils.SharedPrefUtil
 import com.rexoit.cobra.utils.getCurrentDayDiff
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
 
@@ -39,6 +46,11 @@ private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
 private const val REQUEST_ID = 1
 
 class MainActivity : AppCompatActivity() {
+    private val mainViewModel by viewModels<MainViewModel> {
+        CobraViewModelFactory(
+            (application as CobraApplication).repository
+        )
+    }
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var dialogInterface: DialogInterface? = null
@@ -161,6 +173,17 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
+    }
+
+    private fun getUserInfo() {
+        val pref = SharedPrefUtil(this)
+        pref.getUserToken()?.let { token ->
+            runBlocking {
+                mainViewModel.getUserInfo(token).collect {
+
+                }
+            }
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")

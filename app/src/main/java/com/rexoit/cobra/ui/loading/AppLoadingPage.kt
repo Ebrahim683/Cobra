@@ -6,6 +6,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.rexoit.cobra.R
+import com.rexoit.cobra.ui.auth.AuthActivity
 import com.rexoit.cobra.ui.main.MainActivity
 
 class AppLoadingPage : AppCompatActivity() {
@@ -16,7 +17,7 @@ class AppLoadingPage : AppCompatActivity() {
 
         Handler().postDelayed({
             try {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, AuthActivity::class.java)
                 startActivity(intent)
                 finish()
             } catch (e: Exception) {
