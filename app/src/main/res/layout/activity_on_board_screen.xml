@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.loading.OnBoardScreen">
 
-<!--    <com.cuberto.liquid_swipe.LiquidPager-->
-<!--        android:id="@+id/liquid_pager_id"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/guideline3"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/guideline4"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--         />-->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/liquid_pager_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingClass" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
