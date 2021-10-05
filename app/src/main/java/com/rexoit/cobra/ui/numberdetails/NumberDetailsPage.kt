@@ -8,24 +8,24 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.CobraApplication
+import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
-import com.rexoit.cobra.api.RetrofitClient
-import com.rexoit.cobra.api.response.BlockedNumberResponse
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.data.model.CallType
+import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
 import com.rexoit.cobra.ui.numberdetails.adapter.NumberDetailsRecyclerViewAdapter
+import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_number_details_page.*
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.flow.collect
 import java.util.*
 
 private const val TAG = "NumberDetailsPage"
@@ -35,6 +35,11 @@ const val EXTRA_CALL_LOGS = "com.rexoit.cobra.EXTRA_CALL_LOGS"
 private const val CALL_BACK_REQUEST_CODE = 2021
 
 class NumberDetailsPage : AppCompatActivity() {
+    private val viewModel by viewModels<AuthViewModel> {
+        CobraViewModelFactory(
+            (application as CobraApplication).repository
+        )
+    }
     private lateinit var mobileNumber: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +69,7 @@ class NumberDetailsPage : AppCompatActivity() {
         //Block Number Button Work
         block_number_button.setOnClickListener {
             blockNumber()
-//            sentBlockedNumber()
+            sentBlockedNumber()
         }
 
 
@@ -142,26 +147,36 @@ class NumberDetailsPage : AppCompatActivity() {
     //sent blocked number to cobra database
     private fun sentBlockedNumber() {
         mobileNumber = mobile_number.text.toString()
+        runBlocking {
+            viewModel.addBlockedNumber(mobileNumber).collect { resource ->
+                Log.d(TAG, "onCreate: Blocked Number Response: " + resource)
 
-        val blockNumberRetrofit = RetrofitClient().apiService.sendBlockedNumber(mobileNumber)
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        Log.d(TAG, "sentBlockedNumber: ${resource.message}")
+                        Snackbar.make(
+                            number_details_layout_id,
+                            "Number Blocked",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "sentBlockedNumber: ${resource.message}")
+                        Snackbar.make(
+                            number_details_layout_id,
+                            "Number Block Failed",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                    Status.LOADING -> {
+                        Log.d(TAG, "sentBlockedNumber: Loading...")
+                    }
+                    Status.UNAUTHORIZED -> {
 
-        blockNumberRetrofit.enqueue(object : Callback<BlockedNumberResponse> {
-            override fun onResponse(
-                call: Call<BlockedNumberResponse>,
-                response: Response<BlockedNumberResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d(TAG, "onResponse: response ok")
-                } else {
-                    Log.d(TAG, "onResponse: response failed")
+                    }
                 }
             }
-
-            override fun onFailure(call: Call<BlockedNumberResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: ${t.message}")
-            }
-
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

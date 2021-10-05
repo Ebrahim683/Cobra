@@ -8,6 +8,8 @@ import com.rexoit.cobra.utils.Resource
 import kotlinx.coroutines.flow.flow
 
 class AuthViewModel(private val repository: CobraRepo) : ViewModel() {
+
+    //Login
     fun login(email: String, password: String) = flow<Resource<LoginResponse>> {
         emit(Resource.loading(null))
 
@@ -18,4 +20,31 @@ class AuthViewModel(private val repository: CobraRepo) : ViewModel() {
             emit(Resource.error(null, "${e.localizedMessage}"))
         }
     }
+
+    //Registration
+    fun registration(name: String, email: String, phone: String, password: String) =
+        flow<Resource<Any>> {
+            emit(Resource.loading(null))
+
+            try {
+                val retrofit =
+                    RetrofitBuilder.getApiService(null)
+                emit(Resource.success(retrofit.registration(name, email, phone, password)))
+            } catch (e: Exception) {
+                emit(Resource.error(null, "${e.localizedMessage}"))
+            }
+        }
+
+    //Add Blocked Number
+    fun addBlockedNumber(phone: String) = flow<Resource<Any>> {
+        emit(Resource.loading(null))
+
+        try {
+            val retrofit = RetrofitBuilder.getApiService(null)
+            emit(Resource.success(retrofit.addBlockedNumber(phone)))
+        } catch (e: java.lang.Exception) {
+            emit(Resource.error(null, "${e.localizedMessage}"))
+        }
+    }
+
 }

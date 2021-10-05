@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface CobraApiService {
+
     @FormUrlEncoded
     @POST("api/login")
     suspend fun login(
@@ -51,4 +52,5 @@ interface CobraApiService {
 
     @POST("/logout")
     suspend fun logout(): Any
+
 }
