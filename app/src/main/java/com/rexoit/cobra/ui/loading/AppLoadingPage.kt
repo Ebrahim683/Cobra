@@ -6,8 +6,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.rexoit.cobra.R
-import com.rexoit.cobra.ui.auth.AuthActivity
-import com.rexoit.cobra.ui.main.MainActivity
+import com.rexoit.cobra.ui.login.LoginActivity
 
 class AppLoadingPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +16,7 @@ class AppLoadingPage : AppCompatActivity() {
 
         Handler().postDelayed({
             try {
-                val intent = Intent(this, AuthActivity::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             } catch (e: Exception) {
