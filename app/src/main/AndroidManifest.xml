@@ -27,7 +27,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cobra"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".ui.block.BlockListActivity"
+            android:exported="true"
+            android:label=""/>
+        <activity
+            android:name=".ui.userinfo.UserInfoActivity"
+            android:exported="true"
+            android:label="" />
         <activity
             android:name=".ui.auth.AuthActivity"
             android:exported="true" />

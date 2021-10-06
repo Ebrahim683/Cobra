@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".MainActivity">
+    tools:context=".ui.main.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tool_bar_id"
+            android:id="@+id/blocklist_tool_bar_id"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:background="@android:color/transparent"
@@ -47,7 +47,7 @@
             app:layout_constraintEnd_toStartOf="@+id/layout_16"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tool_bar_id">
+            app:layout_constraintTop_toBottomOf="@+id/blocklist_tool_bar_id">
 
             <TextView
                 android:id="@+id/text_id_23"
@@ -98,7 +98,7 @@
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layout_23"
-            app:layout_constraintTop_toBottomOf="@+id/tool_bar_id">
+            app:layout_constraintTop_toBottomOf="@+id/blocklist_tool_bar_id">
 
             <TextView
                 android:id="@+id/text_id_16"
@@ -226,7 +226,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/nev_header" />
+        app:headerLayout="@layout/nev_header"
+        app:menu="@menu/nav_view_menu" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

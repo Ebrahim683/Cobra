@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.rexoit.cobra.R
+import com.rexoit.cobra.ui.login.LoginActivity
 import com.rexoit.cobra.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_fourth.view.*
 
@@ -54,7 +55,7 @@ class FourthFragment : Fragment() {
 
     //start app
     private fun startApp() {
-        val intent = Intent(activity, MainActivity::class.java)
+        val intent = Intent(activity, LoginActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }

@@ -1,4 +1,4 @@
-package com.rexoit.cobra.api
+package com.rexoit.cobra.testapi
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

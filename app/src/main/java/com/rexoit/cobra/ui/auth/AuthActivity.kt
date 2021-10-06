@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
@@ -16,7 +17,10 @@ import com.rexoit.cobra.ui.login.LoginActivity
 import com.rexoit.cobra.utils.SharedPrefUtil
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 private const val TAG = "AuthActivity"
@@ -55,6 +59,7 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private fun alertDialog() {

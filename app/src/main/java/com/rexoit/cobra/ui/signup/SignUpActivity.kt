@@ -15,8 +15,10 @@ import com.rexoit.cobra.ui.login.LoginActivity
 import com.rexoit.cobra.ui.main.MainActivity
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
 private const val TAG = "SignUpActivity"
 
@@ -79,7 +81,7 @@ class SignUpActivity : AppCompatActivity() {
                 val progressDialog = ProgressDialog(this)
                 progressDialog.setCancelable(false)
                 progressDialog.show()
-                runBlocking {
+                CoroutineScope(Dispatchers.IO).launch {
                     viewModel.registration(name, email, phone, password)
                         .collect { resource ->
                             Log.d(TAG, "onCreate: Registration Response: " + resource)
@@ -110,6 +112,7 @@ class SignUpActivity : AppCompatActivity() {
                                 }
                                 Status.UNAUTHORIZED -> {
                                     Log.d(TAG, "signUp: UNAUTHORIZED")
+                                    progressDialog.dismiss()
                                 }
                             }
                         }

@@ -21,15 +21,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
+import com.rexoit.cobra.ui.block.BlockListActivity
 import com.rexoit.cobra.ui.main.adapter.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
+import com.rexoit.cobra.ui.userinfo.UserInfoActivity
 import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.FilterState
 import com.rexoit.cobra.utils.SharedPrefUtil
@@ -95,8 +99,26 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate: Created!")
 
         //NavigationView
-        val toolbar = tool_bar_id
+        val toolbar = blocklist_tool_bar_id
         setSupportActionBar(toolbar)
+
+        nav_id.setNavigationItemSelectedListener(object :
+            NavigationView.OnNavigationItemSelectedListener {
+            override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                when (item.itemId) {
+                    R.id.user_info_menu -> {
+                        startActivity(Intent(this@MainActivity, UserInfoActivity::class.java))
+                    }
+                    R.id.block_list_menu -> {
+                        startActivity(Intent(this@MainActivity, BlockListActivity::class.java))
+                    }
+                }
+                drawer_layout_id.closeDrawer(GravityCompat.START)
+                return true
+
+            }
+
+        })
 
         // request runtime permissions
         phoneCallStatePermission()
@@ -242,7 +264,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val unknownCallLogs = if (queryMobileNumber != null) {
                         callLogs.filter { current ->
-                            current.callerName == "Unknown Caller" && current.mobileNumber!!.contains(
+                            current.callerName == "Unknown Caller" && current.mobileNumber.contains(
                                 queryMobileNumber!!
                             )
                         }
@@ -267,7 +289,7 @@ class MainActivity : AppCompatActivity() {
 
                     val unknownCallLogs = if (queryMobileNumber != null) {
                         callLogs.filter { current ->
-                            current.callerName == "Unknown Caller" && current.mobileNumber!!.contains(
+                            current.callerName == "Unknown Caller" && current.mobileNumber.contains(
                                 queryMobileNumber!!
                             ) && current.time?.getCurrentDayDiff()!! <= 7
                         }
@@ -299,7 +321,7 @@ class MainActivity : AppCompatActivity() {
                             current.callerName == "Unknown Caller" && current.time?.getCurrentDayDiff()!! <= 7
                         }
                         callLogs.filter { current ->
-                            current.callerName == "Unknown Caller" && current.mobileNumber!!.contains(
+                            current.callerName == "Unknown Caller" && current.mobileNumber.contains(
                                 queryMobileNumber!!
                             ) && current.time?.getCurrentDayDiff()!! <= currentMonthLength
                         }

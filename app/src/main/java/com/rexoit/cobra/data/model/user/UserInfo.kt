@@ -1,8 +1,8 @@
 package com.rexoit.cobra.data.model.user
 
 
-import com.google.gson.annotations.SerializedName
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

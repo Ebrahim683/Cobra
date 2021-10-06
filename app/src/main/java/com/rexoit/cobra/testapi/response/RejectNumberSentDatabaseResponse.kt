@@ -1,3 +1,3 @@
-package com.rexoit.cobra.api.response
+package com.rexoit.cobra.testapi.response
 
 class RejectNumberSentDatabaseResponse(val rejectNumber: String)

@@ -1,7 +1,7 @@
-package com.rexoit.cobra.api
+package com.rexoit.cobra.testapi
 
-import com.rexoit.cobra.api.response.BlockedNumberResponse
-import com.rexoit.cobra.api.response.RejectNumberSentDatabaseResponse
+import com.rexoit.cobra.testapi.response.BlockedNumberResponse
+import com.rexoit.cobra.testapi.response.RejectNumberSentDatabaseResponse
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

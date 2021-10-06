@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.rexoit.cobra.api.RetrofitClient
-import com.rexoit.cobra.api.response.RejectNumberSentDatabaseResponse
+import com.rexoit.cobra.testapi.RetrofitClient
+import com.rexoit.cobra.testapi.response.RejectNumberSentDatabaseResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

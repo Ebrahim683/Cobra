@@ -1,5 +1,6 @@
 package com.rexoit.cobra.ui.login
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,10 @@ import com.rexoit.cobra.ui.signup.SignUpActivity
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 private const val TAG = "LoginActivity"
@@ -24,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var email: String
     private lateinit var password: String
-    private val viewmodel by viewModels<AuthViewModel> {
+    private val viewModel by viewModels<AuthViewModel> {
         CobraViewModelFactory(
             (application as CobraApplication).repository
         )
@@ -50,13 +54,20 @@ class LoginActivity : AppCompatActivity() {
             if (password.isEmpty()) {
                 Snackbar.make(login_activity, "Enter Password", Snackbar.LENGTH_SHORT).show()
             } else {
-                runBlocking {
-                    viewmodel.login(email, password).collect { resource ->
+                val progressDialog = ProgressDialog(this)
+                progressDialog.apply {
+                    setCancelable(false)
+                    setMessage("Login in...")
+                }
+                progressDialog.show()
+                CoroutineScope(Dispatchers.Default).launch {
+                    viewModel.login(email, password).collect { resource ->
                         Log.d(TAG, "onCreate: Login Response: " + resource)
 
                         when (resource.status) {
                             Status.SUCCESS -> {
                                 Log.d(TAG, "onCreate: ${resource.message}")
+                                progressDialog.dismiss()
                                 startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                                 finish()
                             }
@@ -67,19 +78,25 @@ class LoginActivity : AppCompatActivity() {
                                     "Something Went Wrong",
                                     Snackbar.LENGTH_SHORT
                                 ).show()
+                                progressDialog.dismiss()
                             }
                             Status.LOADING -> {
 
                             }
                             Status.UNAUTHORIZED -> {
-
+                                Snackbar.make(
+                                    login_activity,
+                                    "Something Went Wrong",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                                progressDialog.dismiss()
                             }
                         }
                     }
                 }
             }
-
         }
+
 
     }
 
