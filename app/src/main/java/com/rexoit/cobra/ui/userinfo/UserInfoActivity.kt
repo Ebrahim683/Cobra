@@ -9,7 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
+import com.rexoit.cobra.data.model.user.BlockedNumber
+import com.rexoit.cobra.data.model.user.User
+import com.rexoit.cobra.data.model.user.UserInfo
 import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
+import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_user_info.*
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +23,7 @@ import kotlinx.coroutines.launch
 private const val TAG = "userInfoActivity"
 
 class UserInfoActivity : AppCompatActivity() {
-    private val viewModel by viewModels<AuthViewModel> {
+    private val viewModel by viewModels<MainViewModel> {
         CobraViewModelFactory(
             (application as CobraApplication).repository
         )
@@ -33,30 +37,28 @@ class UserInfoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        getUserInfo()
-
     }
 
-    private fun getUserInfo() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getUserInfo().collect { response ->
-                when (response.status) {
-                    Status.SUCCESS -> {
-                        Log.d(TAG, "onCreate: ${response.data}")
-                    }
-                    Status.ERROR -> {
-                        Log.d(TAG, "onCreate: ${response.message}")
-                    }
-                    Status.LOADING -> {
-                        Log.d(TAG, "onCreate: Loading")
-                    }
-                    Status.UNAUTHORIZED -> {
-
-                    }
-                }
-            }
-        }
-    }
+//    private fun getUserInfo() {
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            viewModel.getUserInfo().collect { response ->
+//                when (response.status) {
+//                    Status.SUCCESS -> {
+//                        Log.d(TAG, "onCreate: ${response.data}")
+//                    }
+//                    Status.ERROR -> {
+//                        Log.d(TAG, "onCreate: ${response.message}")
+//                    }
+//                    Status.LOADING -> {
+//                        Log.d(TAG, "onCreate: Loading")
+//                    }
+//                    Status.UNAUTHORIZED -> {
+//
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

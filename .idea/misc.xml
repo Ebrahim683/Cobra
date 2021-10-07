@@ -28,10 +28,14 @@
         <entry key="..\:/Cobra/app/src/main/res/layout/call_history_layout.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/custom_toolbar_home_page.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/floating_widget_layout.xml" value="0.25" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/nav_header.xml" value="0.19655797101449277" />
         <entry key="..\:/Cobra/app/src/main/res/layout/neav_header.xml" value="0.203125" />
         <entry key="..\:/Cobra/app/src/main/res/layout/nev_header.xml" value="0.192481884057971" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/show_blocked_number_layout.xml" value="0.21" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/show_blocked_number_single_row.xml" value="0.16983695652173914" />
         <entry key="..\:/Cobra/app/src/main/res/layout/single_row_call_list.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/layout/tool_bar_home_page.xml" value="0.18342391304347827" />
+        <entry key="..\:/Cobra/app/src/main/res/layout/user_info_single_row.xml" value="0.22" />
         <entry key="..\:/Cobra/app/src/main/res/menu/home_page_menu.xml" value="0.203125" />
         <entry key="..\:/Cobra/app/src/main/res/menu/nav_view_menu.xml" value="0.20416666666666666" />
         <entry key="..\:/Cobra/app/src/main/res/menu/number_details_menu.xml" value="0.203125" />

@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/user_info_menu"
-        android:icon="@drawable/ic_userinfo"
-        android:title="Show User Info"
-        app:showAsAction="always" />
+<!--    <item-->
+<!--        android:id="@+id/user_info_menu"-->
+<!--        android:icon="@drawable/ic_userinfo"-->
+<!--        android:title="Show User Info"-->
+<!--        app:showAsAction="always" />-->
 
         <item android:id="@+id/block_list_menu"
             android:title="BLock List"

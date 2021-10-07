@@ -25,4 +25,33 @@ class MainViewModel(repo: CobraRepo) : ViewModel() {
         }
 
     }
+
+    //Add Blocked Number
+    fun addBlockedNumber(phone: String) = flow<Resource<Any>> {
+        emit(Resource.loading(null))
+
+        try {
+            val retrofit = RetrofitBuilder.getApiService(null)
+            emit(Resource.success(retrofit.addBlockedNumber(phone)))
+        } catch (e: java.lang.Exception) {
+            emit(Resource.error(null, "${e.localizedMessage}"))
+        }
+    }
+
+
+    fun getBlockedNumbers() = flow<Resource<Any>> {
+        emit(Resource.loading(null))
+
+        try {
+            val retrofit = RetrofitBuilder.getApiService(null)
+
+//            Test
+//            emit(Resource.success(retrofit.getApi()))
+
+            emit(Resource.success(retrofit.getBlockedNumbers()))
+        } catch (e: java.lang.Exception) {
+            emit(Resource.error(null, "${e.localizedMessage}"))
+        }
+    }
+
 }

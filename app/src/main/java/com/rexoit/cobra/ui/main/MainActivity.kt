@@ -11,9 +11,11 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -33,13 +35,12 @@ import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.ui.block.BlockListActivity
 import com.rexoit.cobra.ui.main.adapter.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
-import com.rexoit.cobra.ui.userinfo.UserInfoActivity
-import com.rexoit.cobra.utils.CallLogger
-import com.rexoit.cobra.utils.FilterState
-import com.rexoit.cobra.utils.SharedPrefUtil
-import com.rexoit.cobra.utils.getCurrentDayDiff
+import com.rexoit.cobra.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
@@ -98,6 +99,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "onCreate: Created!")
 
+
         //NavigationView
         val toolbar = blocklist_tool_bar_id
         setSupportActionBar(toolbar)
@@ -106,19 +108,15 @@ class MainActivity : AppCompatActivity() {
             NavigationView.OnNavigationItemSelectedListener {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when (item.itemId) {
-                    R.id.user_info_menu -> {
-                        startActivity(Intent(this@MainActivity, UserInfoActivity::class.java))
-                    }
                     R.id.block_list_menu -> {
                         startActivity(Intent(this@MainActivity, BlockListActivity::class.java))
                     }
                 }
                 drawer_layout_id.closeDrawer(GravityCompat.START)
                 return true
-
             }
-
         })
+
 
         // request runtime permissions
         phoneCallStatePermission()
@@ -198,15 +196,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getUserInfo() {
+        val navView = nav_id.getHeaderView(0)
+        var navName:TextView = navView.findViewById(R.id.nav_user_name)
+        var navEmail:TextView = navView.findViewById(R.id.nav_user_email)
+        var navPhone:TextView = navView.findViewById(R.id.nav_user_number)
         val pref = SharedPrefUtil(this)
         pref.getUserToken()?.let { token ->
             runBlocking {
-                mainViewModel.getUserInfo(token).collect {
+                mainViewModel.getUserInfo(token).collect {response ->
+                    when(response.status){
+                        Status.SUCCESS -> {
+                            navEmail.text = response.data!!.user!!.name
+                            navName.text = response.data!!.user!!.email
+                            navPhone.text = response.data!!.user!!.phone
+                        }
+                        Status.ERROR -> {
+                            Log.d(TAG, "getUserInfo: ${response.message}")
+                        }
+                        Status.LOADING -> {
+                            Log.d(TAG, "getUserInfo: Loading")
+                        }
+                        Status.UNAUTHORIZED -> {
 
+                        }
+                    }
                 }
             }
         }
     }
+
 
     @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "NewApi")
     fun thisWeek() {

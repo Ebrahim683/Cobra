@@ -6,10 +6,12 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
-import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
+import com.rexoit.cobra.ui.block.adapter.BlockListAdapter
+import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_block_list.*
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +22,8 @@ private const val TAG = "blockListActivity"
 
 class BlockListActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<AuthViewModel> {
+    private lateinit var blockListAdapter: BlockListAdapter
+    private val viewModel by viewModels<MainViewModel> {
         CobraViewModelFactory(
             (application as CobraApplication).repository
         )
@@ -33,8 +36,18 @@ class BlockListActivity : AppCompatActivity() {
         setSupportActionBar(blocklist_tool_bar_id)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        recyclerViewSet()
         getBlockedNumber()
 
+    }
+
+    private fun recyclerViewSet() {
+        blockListAdapter = BlockListAdapter(this, ArrayList())
+        val layout = LinearLayoutManager(this)
+        blocklist_rec_id.apply {
+            setHasFixedSize(true)
+            layoutManager = layout
+        }
     }
 
     private fun getBlockedNumber() {

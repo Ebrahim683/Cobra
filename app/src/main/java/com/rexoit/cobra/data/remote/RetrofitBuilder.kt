@@ -9,9 +9,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object RetrofitBuilder {
     private const val BASE_URL = "http://cobra.everestbajar.com/"
 
-    //Test URL
-//    private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
-
     private fun getRetrofit(client: OkHttpClient?): Retrofit {
         val gson = GsonBuilder()
             .setLenient()

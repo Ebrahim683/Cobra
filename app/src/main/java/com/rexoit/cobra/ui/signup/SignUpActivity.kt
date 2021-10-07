@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-private const val TAG = "SignUpActivity"
+private const val TAG = "signUpActivity"
 
 class SignUpActivity : AppCompatActivity() {
 

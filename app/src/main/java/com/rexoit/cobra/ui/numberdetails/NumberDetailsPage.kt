@@ -20,6 +20,7 @@ import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.data.model.CallType
 import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
+import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
 import com.rexoit.cobra.ui.numberdetails.adapter.NumberDetailsRecyclerViewAdapter
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +36,7 @@ const val EXTRA_CALL_LOGS = "com.rexoit.cobra.EXTRA_CALL_LOGS"
 private const val CALL_BACK_REQUEST_CODE = 2021
 
 class NumberDetailsPage : AppCompatActivity() {
-    private val viewModel by viewModels<AuthViewModel> {
+    private val viewModel by viewModels<MainViewModel> {
         CobraViewModelFactory(
             (application as CobraApplication).repository
         )

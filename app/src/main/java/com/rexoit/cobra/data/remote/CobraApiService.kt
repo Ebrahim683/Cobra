@@ -2,8 +2,6 @@ package com.rexoit.cobra.data.remote
 
 import com.rexoit.cobra.data.model.user.LoginResponse
 import com.rexoit.cobra.data.model.user.UserInfo
-import com.rexoit.cobra.testapi.ApiModel
-import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -55,9 +53,5 @@ interface CobraApiService {
     @POST("/logout")
     suspend fun logout(): Any
 
-
-    //Test Method
-    @GET("posts")
-    suspend fun getApi(): Response<List<ApiModel>>
 
 }
