@@ -2,6 +2,7 @@ package com.rexoit.cobra.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.app.role.RoleManager
 import android.content.DialogInterface
 import android.content.Intent
@@ -11,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
@@ -26,26 +26,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.ui.block.BlockListActivity
+import com.rexoit.cobra.ui.login.LoginActivity
 import com.rexoit.cobra.ui.main.adapter.HomePageRecyclerViewAdapter
 import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
 import com.rexoit.cobra.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.*
 
 
-private const val TAG = "MainActivity"
+private const val TAG = "mainActivity"
 private const val REQUEST_CODE = 8077
 private const val DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 8079
 private const val REQUEST_ID = 1
@@ -56,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             (application as CobraApplication).repository
         )
     }
-
+    private lateinit var sharedPrefUtil: SharedPrefUtil
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var dialogInterface: DialogInterface? = null
     private var systemAlertDialog: AlertDialog? = null
@@ -99,23 +96,67 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "onCreate: Created!")
 
+        sharedPrefUtil = SharedPrefUtil(applicationContext)
 
         //NavigationView
         val toolbar = blocklist_tool_bar_id
         setSupportActionBar(toolbar)
 
-        nav_id.setNavigationItemSelectedListener(object :
-            NavigationView.OnNavigationItemSelectedListener {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when (item.itemId) {
-                    R.id.block_list_menu -> {
-                        startActivity(Intent(this@MainActivity, BlockListActivity::class.java))
+        nav_id.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.block_list_menu -> {
+                    startActivity(Intent(this@MainActivity, BlockListActivity::class.java))
+                }
+                R.id.logout_menu -> {
+                    val progressDialog = ProgressDialog(this@MainActivity)
+                    progressDialog.setMessage("Logging Out")
+                    progressDialog.setCancelable(false)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        mainViewModel.logOut().collect { resources ->
+                            when (resources.status) {
+                                Status.SUCCESS -> {
+                                    Log.d(TAG, "logOut: Log Out")
+                                    sharedPrefUtil.clearSharedPrefUtil()
+                                    withContext(Dispatchers.Main) {
+                                        startActivity(
+                                            Intent(
+                                                this@MainActivity,
+                                                LoginActivity::class.java
+                                            )
+                                        )
+                                        progressDialog.dismiss()
+                                        finishAffinity()
+                                    }
+                                }
+                                Status.LOADING -> {
+                                    Log.d(TAG, "logOut: Logging Out")
+                                    withContext(Dispatchers.Main) {
+                                        progressDialog.show()
+                                    }
+                                }
+                                Status.ERROR -> {
+                                    Log.d(TAG, "logOut: ${resources.message}")
+                                    withContext(Dispatchers.Main) {
+                                        Snackbar.make(
+                                            drawer_layout_id,
+                                            "Please try again",
+                                            Snackbar.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                    progressDialog.dismiss()
+                                }
+                                Status.UNAUTHORIZED -> {
+
+                                }
+                            }
+                        }
                     }
                 }
-                drawer_layout_id.closeDrawer(GravityCompat.START)
-                return true
             }
-        })
+            drawer_layout_id.closeDrawer(GravityCompat.START)
+            true
+        }
 
 
         // request runtime permissions
@@ -197,18 +238,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun getUserInfo() {
         val navView = nav_id.getHeaderView(0)
-        var navName:TextView = navView.findViewById(R.id.nav_user_name)
-        var navEmail:TextView = navView.findViewById(R.id.nav_user_email)
-        var navPhone:TextView = navView.findViewById(R.id.nav_user_number)
+        val navName: TextView = navView.findViewById(R.id.nav_user_name)
+        val navEmail: TextView = navView.findViewById(R.id.nav_user_email)
+        val navPhone: TextView = navView.findViewById(R.id.nav_user_number)
         val pref = SharedPrefUtil(this)
         pref.getUserToken()?.let { token ->
             runBlocking {
-                mainViewModel.getUserInfo(token).collect {response ->
-                    when(response.status){
+                mainViewModel.getUserInfo(token).collect { response ->
+                    when (response.status) {
                         Status.SUCCESS -> {
-                            navEmail.text = response.data!!.user!!.name
-                            navName.text = response.data!!.user!!.email
-                            navPhone.text = response.data!!.user!!.phone
+                            withContext(Dispatchers.Main) {
+                                navEmail.text = response.data!!.user!!.name
+                                navName.text = response.data.user!!.email
+                                navPhone.text = response.data.user.phone
+                            }
                         }
                         Status.ERROR -> {
                             Log.d(TAG, "getUserInfo: ${response.message}")

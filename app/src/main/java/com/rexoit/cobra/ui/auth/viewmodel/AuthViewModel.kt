@@ -36,4 +36,29 @@ class AuthViewModel(private val repository: CobraRepo) : ViewModel() {
         }
 
 
+    //Email Verification
+    fun emailVerification(email: String, verificationCode: String) = flow<Resource<Any>> {
+        emit(Resource.loading(null))
+
+        try {
+            val retrofit = RetrofitBuilder.getApiService(null)
+            emit(Resource.success(retrofit.verifyEmailAddress(email, verificationCode)))
+        } catch (e: java.lang.Exception) {
+            emit(Resource.error(null, "${e.localizedMessage}"))
+        }
+    }
+
+    //Resend Code
+    fun resendCode(email: String) = flow<Resource<Any>> {
+        emit(Resource.loading(null))
+
+        try {
+            val retrofit = RetrofitBuilder.getApiService(null)
+            emit(Resource.success(retrofit.resendVerificationEmail(email)))
+        } catch (e: java.lang.Exception) {
+            emit(Resource.error(null, "${e.localizedMessage}"))
+        }
+    }
+
+
 }

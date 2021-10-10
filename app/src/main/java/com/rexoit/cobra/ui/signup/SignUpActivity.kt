@@ -12,7 +12,7 @@ import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
 import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
 import com.rexoit.cobra.ui.login.LoginActivity
-import com.rexoit.cobra.ui.main.MainActivity
+import com.rexoit.cobra.ui.verification.emailverify.EmailVerificationActivity
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.coroutines.CoroutineScope
@@ -84,7 +84,7 @@ class SignUpActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.registration(name, email, phone, password)
                         .collect { resource ->
-                            Log.d(TAG, "onCreate: Registration Response: " + resource)
+                            Log.d(TAG, "onCreate: Registration Response: $resource")
 
                             when (resource.status) {
                                 Status.SUCCESS -> {
@@ -92,7 +92,7 @@ class SignUpActivity : AppCompatActivity() {
                                     startActivity(
                                         Intent(
                                             this@SignUpActivity,
-                                            MainActivity::class.java
+                                            EmailVerificationActivity::class.java
                                         )
                                     )
                                     finish()

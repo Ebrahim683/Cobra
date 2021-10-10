@@ -6,9 +6,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.rexoit.cobra.R
-import com.rexoit.cobra.ui.block.BlockListActivity
 import com.rexoit.cobra.ui.login.LoginActivity
-import com.rexoit.cobra.ui.main.MainActivity
 
 class AppLoadingPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -28,9 +28,15 @@
         android:theme="@style/Theme.Cobra"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.verification.resendcode.ResendCodeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.verification.emailverify.EmailVerificationActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.block.BlockListActivity"
             android:exported="true"
-            android:label=""/>
+            android:label="" />
         <activity
             android:name=".ui.userinfo.UserInfoActivity"
             android:exported="true"

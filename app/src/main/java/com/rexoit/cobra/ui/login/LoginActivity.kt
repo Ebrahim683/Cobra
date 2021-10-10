@@ -13,19 +13,20 @@ import com.rexoit.cobra.R
 import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
 import com.rexoit.cobra.ui.main.MainActivity
 import com.rexoit.cobra.ui.signup.SignUpActivity
+import com.rexoit.cobra.utils.SharedPrefUtil
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 private const val TAG = "LoginActivity"
 
 class LoginActivity : AppCompatActivity() {
-
+    private lateinit var sharedPrefUtil: SharedPrefUtil
     private lateinit var email: String
     private lateinit var password: String
     private val viewModel by viewModels<AuthViewModel> {
@@ -38,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        sharedPrefUtil = SharedPrefUtil(applicationContext)
 
         go_to_sign_up.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
@@ -67,6 +69,9 @@ class LoginActivity : AppCompatActivity() {
                         when (resource.status) {
                             Status.SUCCESS -> {
                                 Log.d(TAG, "onCreate: ${resource.message}")
+                                val token = resource.data?.token.toString()
+                                Log.d(TAG, "login: $token")
+                                sharedPrefUtil.setUserToken(token)
                                 progressDialog.dismiss()
                                 startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                                 finish()
@@ -96,8 +101,13 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-
-
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (sharedPrefUtil.getUserToken() != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+    }
 }

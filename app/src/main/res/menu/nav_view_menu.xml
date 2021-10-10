@@ -13,4 +13,9 @@
             android:icon="@drawable/ic_blocknumber"
             app:showAsAction="always"/>
 
+        <item android:id="@+id/logout_menu"
+            android:title="Log Out"
+            android:icon="@drawable/ic_logout"
+            app:showAsAction="always"/>
+
 </menu>

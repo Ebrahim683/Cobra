@@ -2,19 +2,44 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    tools:context=".ui.login.LoginActivity">
+    android:id="@+id/email_verify_layout"
+    tools:context=".ui.verification.emailverify.EmailVerificationActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/email_verify_tool_bar_id"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:buttonGravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/blocklist_bar"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/cobra911_logo"
+            tools:ignore="ContentDescription" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_verify_tool_bar_id">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_left"
@@ -73,20 +98,20 @@
                 app:layout_constraintGuide_percent="0.6" />
 
             <TextView
-                android:id="@+id/login_text"
+                android:id="@+id/verify_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:fontFamily="@font/montserrat_medium"
                 android:padding="5dp"
-                android:text="Login Your Account"
+                android:text="Verify Your Account"
                 android:textColor="@color/grey_color"
                 android:textSize="25sp"
                 app:layout_constraintStart_toStartOf="@+id/guideline_left"
                 app:layout_constraintTop_toTopOf="@+id/guideline_top" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/email_layout"
+                android:id="@+id/verify_email_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -103,7 +128,7 @@
                 app:layout_constraintTop_toTopOf="@+id/guideline_email">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/login_email_edit_text"
+                    android:id="@+id/verify_email_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_email"
@@ -119,14 +144,14 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_layout"
+                android:id="@+id/verify_password_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="24dp"
-                android:hint="Password"
+                android:hint="Verification Code"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
@@ -134,11 +159,10 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline_right"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline_left"
-                app:layout_constraintTop_toBottomOf="@id/email_layout"
-                app:passwordToggleEnabled="true">
+                app:layout_constraintTop_toBottomOf="@id/verify_email_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/login_password_edit_text"
+                    android:id="@+id/verify_code_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_lock"
@@ -154,36 +178,36 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_verify"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_account_button"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Login"
+                android:text="Verify"
                 android:textColor="@color/red_color"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="@+id/guideline_button_right"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline_button_left"
-                app:layout_constraintTop_toBottomOf="@+id/password_layout" />
+                app:layout_constraintTop_toBottomOf="@+id/verify_password_layout" />
 
             <TextView
-                android:id="@+id/go_to_sign_up"
+                android:id="@+id/go_to_resend_verification_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Don't have an account? SignUp here"
+                android:text="Resend Verification Code"
                 android:textColor="@color/red_color"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline_button_bottom"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_right"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_login" />
+                app:layout_constraintTop_toBottomOf="@id/btn_verify" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

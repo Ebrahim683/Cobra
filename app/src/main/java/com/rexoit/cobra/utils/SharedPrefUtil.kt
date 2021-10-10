@@ -14,7 +14,7 @@ class SharedPrefUtil(context: Context) {
     fun setUserToken(token: String) {
         // todo: store token
         val editor = sharedPreference.edit()
-        editor.putString(USER_TOKEN,token)
+        editor.putString(USER_TOKEN, token)
         editor.apply()
     }
 
