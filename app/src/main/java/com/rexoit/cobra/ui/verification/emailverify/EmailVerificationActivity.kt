@@ -67,45 +67,58 @@ class EmailVerificationActivity : AppCompatActivity() {
                     .show()
             }
             else -> {
-
                 CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.emailVerification(email, verificationCode).collect { resource ->
-                        Log.d(TAG, "onCreate: Verification Response: $resource")
-                        when (resource.status) {
-                            Status.SUCCESS -> {
-                                Log.d(TAG, "onCreate: Verification Success")
-                                withContext(Dispatchers.Main) {
-                                    startActivity(
-                                        Intent(
-                                            this@EmailVerificationActivity,
-                                            LoginActivity::class.java
-                                        )
-                                    )
+                    viewModel.emailVerification(email, verificationCode)
+                        .collect { resource ->
+                            Log.d(TAG, "onCreate: Verification Response: $resource")
+                            when (resource.status) {
+                                Status.SUCCESS -> {
+                                    if (resource.data?.equals(true)!!) {
+                                        Log.d(TAG, "onCreate: Verification Success")
+                                        withContext(Dispatchers.Main) {
+                                            Log.d(TAG, "verifyEmail: Verification Success")
+                                            startActivity(
+                                                Intent(
+                                                    this@EmailVerificationActivity,
+                                                    LoginActivity::class.java
+                                                )
+                                            )
+                                            finish()
+                                        }
+                                    } else {
+                                        withContext(Dispatchers.Main) {
+                                            Log.d(TAG, "verifyEmail: Verification Fail")
+                                            Snackbar.make(
+                                                email_verify_layout,
+                                                "Verification Fail",
+                                                Snackbar.LENGTH_SHORT
+                                            )
+                                                .show()
+                                        }
+                                    }
                                 }
-                                finish()
-                            }
-                            Status.ERROR -> {
-                                Log.d(TAG, "onCreate: ${resource.message}")
-                                Snackbar.make(
-                                    email_verify_layout,
-                                    "Something Went Wrong",
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                    .show()
-                            }
-                            Status.LOADING -> {
-                                Snackbar.make(
-                                    email_verify_layout,
-                                    "Wait Please...",
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                    .show()
-                            }
-                            Status.UNAUTHORIZED -> {
+                                Status.ERROR -> {
+                                    Log.d(TAG, "onCreate: ${resource.message}")
+                                    Snackbar.make(
+                                        email_verify_layout,
+                                        "Something Went Wrong",
+                                        Snackbar.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                                Status.LOADING -> {
+                                    Snackbar.make(
+                                        email_verify_layout,
+                                        "Wait Please...",
+                                        Snackbar.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                                Status.UNAUTHORIZED -> {
 
+                                }
                             }
                         }
-                    }
                 }
 
             }

@@ -2,7 +2,6 @@ package com.rexoit.cobra.ui.auth
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -36,7 +35,7 @@ class AuthActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
 //            login()
 //            registration()
-//            verifyEmail()
+            verifyEmail()
 //            resendVerificationCode()
         }
 
@@ -108,15 +107,27 @@ class AuthActivity : AppCompatActivity() {
                     Log.d(TAG, "onCreate: Verification Response: $resource")
                     when (resource.status) {
                         Status.SUCCESS -> {
-                            Log.d(TAG, "onCreate: Verification Success")
-                            withContext(Dispatchers.Main) {
-                                Log.d(TAG, "verifyEmail: Verification Success")
-                                Snackbar.make(
-                                    auth_activity,
-                                    "Verification Success",
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                    .show()
+                            if (resource.data?.equals(true)!!) {
+                                Log.d(TAG, "onCreate: Verification Success")
+                                withContext(Dispatchers.Main) {
+                                    Log.d(TAG, "verifyEmail: Verification Success")
+                                    Snackbar.make(
+                                        auth_activity,
+                                        "Verification Success",
+                                        Snackbar.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Log.d(TAG, "verifyEmail:Verification Fail")
+                                    Snackbar.make(
+                                        auth_activity,
+                                        "Verification Fail",
+                                        Snackbar.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
                             }
                         }
                         Status.ERROR -> {
@@ -172,14 +183,6 @@ class AuthActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val sharedPrefUtil = SharedPrefUtil(applicationContext)
-        if (sharedPrefUtil.getUserToken()!=null){
-            Toast.makeText(this, "LoggedIn", Toast.LENGTH_SHORT).show()
         }
     }
 

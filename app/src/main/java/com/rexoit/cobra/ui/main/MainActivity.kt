@@ -104,54 +104,67 @@ class MainActivity : AppCompatActivity() {
 
         nav_id.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                //Show Block List
                 R.id.block_list_menu -> {
                     startActivity(Intent(this@MainActivity, BlockListActivity::class.java))
                 }
+                //User Log Out
                 R.id.logout_menu -> {
                     val progressDialog = ProgressDialog(this@MainActivity)
                     progressDialog.setMessage("Logging Out")
                     progressDialog.setCancelable(false)
 
-                    CoroutineScope(Dispatchers.IO).launch {
-                        mainViewModel.logOut().collect { resources ->
-                            when (resources.status) {
-                                Status.SUCCESS -> {
-                                    Log.d(TAG, "logOut: Log Out")
-                                    sharedPrefUtil.clearSharedPrefUtil()
-                                    withContext(Dispatchers.Main) {
-                                        startActivity(
-                                            Intent(
-                                                this@MainActivity,
-                                                LoginActivity::class.java
-                                            )
-                                        )
-                                        progressDialog.dismiss()
-                                        finishAffinity()
-                                    }
-                                }
-                                Status.LOADING -> {
-                                    Log.d(TAG, "logOut: Logging Out")
-                                    withContext(Dispatchers.Main) {
-                                        progressDialog.show()
-                                    }
-                                }
-                                Status.ERROR -> {
-                                    Log.d(TAG, "logOut: ${resources.message}")
-                                    withContext(Dispatchers.Main) {
-                                        Snackbar.make(
-                                            drawer_layout_id,
-                                            "Please try again",
-                                            Snackbar.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                    progressDialog.dismiss()
-                                }
-                                Status.UNAUTHORIZED -> {
+                    //Log out without using server
+                    sharedPrefUtil.clearSharedPrefUtil()
+                    startActivity(
+                        Intent(
+                            this@MainActivity,
+                            LoginActivity::class.java
+                        )
+                    )
+                    progressDialog.dismiss()
+                    finishAffinity()
 
-                                }
-                            }
-                        }
-                    }
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        mainViewModel.logOut().collect { resources ->
+//                            when (resources.status) {
+//                                Status.SUCCESS -> {
+//                                    Log.d(TAG, "logOut: Log Out")
+//                                    sharedPrefUtil.clearSharedPrefUtil()
+//                                    withContext(Dispatchers.Main) {
+//                                        startActivity(
+//                                            Intent(
+//                                                this@MainActivity,
+//                                                LoginActivity::class.java
+//                                            )
+//                                        )
+//                                        progressDialog.dismiss()
+//                                        finishAffinity()
+//                                    }
+//                                }
+//                                Status.LOADING -> {
+//                                    Log.d(TAG, "logOut: Logging Out")
+//                                    withContext(Dispatchers.Main) {
+//                                        progressDialog.show()
+//                                    }
+//                                }
+//                                Status.ERROR -> {
+//                                    Log.d(TAG, "logOut: ${resources.message}")
+//                                    withContext(Dispatchers.Main) {
+//                                        Snackbar.make(
+//                                            drawer_layout_id,
+//                                            "Please try again",
+//                                            Snackbar.LENGTH_SHORT
+//                                        ).show()
+//                                    }
+//                                    progressDialog.dismiss()
+//                                }
+//                                Status.UNAUTHORIZED -> {
+//
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             }
             drawer_layout_id.closeDrawer(GravityCompat.START)
