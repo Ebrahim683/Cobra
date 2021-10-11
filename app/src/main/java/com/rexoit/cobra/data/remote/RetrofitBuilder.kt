@@ -1,6 +1,7 @@
 package com.rexoit.cobra.data.remote
 
 import com.google.gson.GsonBuilder
+import com.rexoit.cobra.utils.OkHttpClientInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,10 +17,9 @@ object RetrofitBuilder {
 
         val instance = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(client ?: OkHttpClientInterceptor.getCommonOkHttpClient())
             .addConverterFactory(ScalarsConverterFactory.create()) //important
             .addConverterFactory(GsonConverterFactory.create(gson))
-
-        client?.let { instance.client(client) }
 
         return instance.build()
     }

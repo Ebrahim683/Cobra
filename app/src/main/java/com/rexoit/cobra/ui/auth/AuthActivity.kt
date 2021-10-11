@@ -34,7 +34,7 @@ class AuthActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auth)
 
         lifecycleScope.launchWhenStarted {
-            login()
+//            login()
 //            registration()
 //            verifyEmail()
 //            resendVerificationCode()

@@ -19,6 +19,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 
 private const val TAG = "emailVerification"
+const val EXTRA_EMAIL_ADDRESS = "com.rexoit.cobra.ui.verification.emailverify.EXTRA_EMAIL_ADDRESS"
 
 class EmailVerificationActivity : AppCompatActivity() {
 
@@ -53,18 +54,10 @@ class EmailVerificationActivity : AppCompatActivity() {
 
     private suspend fun verifyEmail() {
 
-        val email = verify_email_edit_text.text.toString().trim()
+        val email = intent.getStringExtra(EXTRA_EMAIL_ADDRESS)!!
         val verificationCode = verify_code_edit_text.text.toString().trim()
 
         when {
-            email.isEmpty() -> {
-                Snackbar.make(
-                    email_verify_layout,
-                    "Enter Email",
-                    Snackbar.LENGTH_SHORT
-                )
-                    .show()
-            }
             verificationCode.isEmpty() -> {
                 Snackbar.make(
                     email_verify_layout,

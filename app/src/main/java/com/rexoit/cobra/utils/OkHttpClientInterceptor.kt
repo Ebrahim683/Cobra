@@ -23,4 +23,16 @@ object OkHttpClientInterceptor {
                 chain.proceed(newRequest)
 
             }.build()
+
+    fun getCommonOkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .readTimeout(2, TimeUnit.MINUTES)
+            .addInterceptor { chain: Interceptor.Chain ->
+                val newRequest = chain.request().newBuilder()
+                    .addHeader("Accept", "application/json")
+                    .build()
+
+                chain.proceed(newRequest)
+
+            }.build()
 }

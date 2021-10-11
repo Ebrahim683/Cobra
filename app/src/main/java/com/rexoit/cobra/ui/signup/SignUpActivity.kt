@@ -12,6 +12,7 @@ import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
 import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
 import com.rexoit.cobra.ui.login.LoginActivity
+import com.rexoit.cobra.ui.verification.emailverify.EXTRA_EMAIL_ADDRESS
 import com.rexoit.cobra.ui.verification.emailverify.EmailVerificationActivity
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -89,12 +90,13 @@ class SignUpActivity : AppCompatActivity() {
                             when (resource.status) {
                                 Status.SUCCESS -> {
                                     Log.d(TAG, "signUp: SUCCESS")
-                                    startActivity(
-                                        Intent(
-                                            this@SignUpActivity,
-                                            EmailVerificationActivity::class.java
-                                        )
+                                    val emailVerificationActivity = Intent(
+                                        this@SignUpActivity,
+                                        EmailVerificationActivity::class.java
                                     )
+
+                                    emailVerificationActivity.putExtra(EXTRA_EMAIL_ADDRESS, email)
+                                    startActivity(emailVerificationActivity)
                                     finish()
                                     progressDialog.dismiss()
                                 }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 class AuthViewModel(private val repository: CobraRepo) : ViewModel() {
 
     //Login
-    fun login(email: String, password: String) = flow<Resource<LoginResponse>> {
+    fun login(email: String, password: String) = flow {
         emit(Resource.loading(null))
 
         try {

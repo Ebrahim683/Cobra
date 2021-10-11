@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -23,6 +24,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.android.internal.telephony.ITelephony
 import com.rexoit.cobra.R
+import com.rexoit.cobra.utils.SharedPrefUtil
 import com.rexoit.cobra.worker.WorkerTask
 import kotlin.math.ceil
 
@@ -279,7 +281,6 @@ class FloatingWidgetService : Service(), View.OnClickListener {
                 try {
                     telephonyService.silenceRinger()
                     telephonyService.endCall()
-
                 } catch (e: Exception) {
                     Log.i(
                         TAG,
@@ -311,34 +312,12 @@ class FloatingWidgetService : Service(), View.OnClickListener {
                 }
             }
 
-//            // add the incoming number into blocked list
-//            val repository = (this.application as CobraApplication).repository
-//
-//            // todo: get the number using another caching mechanism when new call made.
-//            val sharedPrefUtil = SharedPrefUtil(this)
-//            val number = sharedPrefUtil.getIncomingNumber()
-//            Log.d(TAG, "onFloatingWidgetClick: Mobile Number: $number")
-//
-//            number?.let {
-//                val callLogInfo = CallLogInfo(
-//                    it,
-//                    "Unknown Caller",
-//                    CallType.INCOMING,
-//                    Date().time,
-//                    "0"
-//                )
-//
-//                runBlocking {
-//                    val blockedList = repository
-//                        .addBlockedNumber(
-//                            callLogInfo
-//                        )
-//
-//                    Log.d(TAG, "onFloatingWidgetClick: Blocked Numbers: $blockedList")
-//                }
-//
-//                sharedPrefUtil.clearSharedPrefUtil()
-//            }
+            val sharedPrefUtil = SharedPrefUtil(this)
+            val number = sharedPrefUtil.getIncomingNumber()
+            Log.d(TAG, "onFloatingWidgetClick: Mobile Number: $number")
+
+            // todo: send this ${number} to cobra admin
+
         }
     }
 

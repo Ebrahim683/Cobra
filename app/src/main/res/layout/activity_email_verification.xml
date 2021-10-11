@@ -28,186 +28,80 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-
-
-    <ScrollView
+    <LinearLayout
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_verify_tool_bar_id">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/verify_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:padding="5dp"
+            android:text="Verify Your Account"
+            android:textColor="@color/grey_color"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/verify_password_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:hint="Verification Code"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
 
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_left"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/verify_code_edit_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.01" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.99" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.1" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.99" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_button_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.3" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_button_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.7" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.3" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_button_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.6" />
-
-            <TextView
-                android:id="@+id/verify_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:drawableStart="@drawable/ic_lock"
+                android:drawablePadding="5dp"
                 android:fontFamily="@font/montserrat_medium"
-                android:padding="5dp"
-                android:text="Verify Your Account"
-                android:textColor="@color/grey_color"
-                android:textSize="25sp"
-                app:layout_constraintStart_toStartOf="@+id/guideline_left"
-                app:layout_constraintTop_toTopOf="@+id/guideline_top" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/verify_email_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:hint="Email"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline_left"
-                app:layout_constraintTop_toTopOf="@+id/guideline_email">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/verify_email_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_email"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/red_color"
-                    android:textColorHint="@color/red_color"
-                    tools:layout_editor_absoluteX="27dp"
-                    tools:layout_editor_absoluteY="229dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/verify_password_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="24dp"
-                android:hint="Verification Code"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline_left"
-                app:layout_constraintTop_toBottomOf="@id/verify_email_layout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/verify_code_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_lock"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:inputType="textPassword"
-                    android:textColor="@color/red_color"
-                    android:textColorHint="@color/red_color"
-                    tools:layout_editor_absoluteX="27dp"
-                    tools:layout_editor_absoluteY="229dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_verify"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_account_button"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Verify"
+                android:inputType="textPassword"
                 android:textColor="@color/red_color"
-                android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="@+id/guideline_button_right"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline_button_left"
-                app:layout_constraintTop_toBottomOf="@+id/verify_password_layout" />
+                android:textColorHint="@color/red_color"
+                tools:layout_editor_absoluteX="27dp"
+                tools:layout_editor_absoluteY="229dp" />
 
-            <TextView
-                android:id="@+id/go_to_resend_verification_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Resend Verification Code"
-                android:textColor="@color/red_color"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline_button_bottom"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_verify" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/bg_account_button"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Verify"
+            android:textColor="@color/red_color"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/go_to_resend_verification_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Resend Verification Code"
+            android:textColor="@color/red_color"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_verify" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
