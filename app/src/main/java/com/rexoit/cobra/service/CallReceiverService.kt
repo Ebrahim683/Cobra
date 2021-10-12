@@ -33,7 +33,9 @@ class CallReceiver : BroadcastReceiver() {
         val isUnknownNumber: Boolean? = isUnknownCaller(context, mobileNumber)
 
         if (context == null) return
+
         val sharedPrefUtil = SharedPrefUtil(context)
+        sharedPrefUtil.clearIncomingNumberPref()
         sharedPrefUtil.setIncomingNumber(mobileNumber)
 
         isUnknownNumber?.let { unknownNumber ->
@@ -78,13 +80,14 @@ class CallReceiver : BroadcastReceiver() {
                                     serviceIntent
                                 )
                             }
+                        } else {
+                            Log.i(TAG, "onReceive: Call from contact list.")
                         }
                     }
                 }
                 else -> {
                     try {
                         val callLogs = CallLogger.getCallDetails(context)
-                        // todo: store call logs to database
                         val repository = (context as CobraApplication).repository
                         runBlocking {
                             repository.addBlockedNumbers(callLogs)
@@ -95,7 +98,6 @@ class CallReceiver : BroadcastReceiver() {
 
                     // stop the service
                     context.stopService(serviceIntent)
-                    sharedPrefUtil.clearSharedPrefUtil()
                 }
             }
         }

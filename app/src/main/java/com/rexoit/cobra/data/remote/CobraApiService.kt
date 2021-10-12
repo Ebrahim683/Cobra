@@ -1,5 +1,6 @@
 package com.rexoit.cobra.data.remote
 
+import com.rexoit.cobra.data.model.registration.RegistrationResponse
 import com.rexoit.cobra.data.model.user.LoginResponse
 import com.rexoit.cobra.data.model.user.UserInfo
 import retrofit2.http.Field
@@ -23,7 +24,7 @@ interface CobraApiService {
         @Field("email") email: String,
         @Field("phone") phone: String,
         @Field("password") password: String,
-    ): Any
+    ): RegistrationResponse
 
     @FormUrlEncoded
     @POST("api/email-verify")

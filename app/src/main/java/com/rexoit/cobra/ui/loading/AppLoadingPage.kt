@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.rexoit.cobra.R
 import com.rexoit.cobra.ui.login.LoginActivity
+import com.rexoit.cobra.ui.main.MainActivity
+import com.rexoit.cobra.utils.SharedPrefUtil
 
 class AppLoadingPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +18,13 @@ class AppLoadingPage : AppCompatActivity() {
 
         Handler().postDelayed({
             try {
-                val intent = Intent(this, LoginActivity::class.java)
+                val sharedPrefUtil = SharedPrefUtil(this)
+                val intent = if (sharedPrefUtil.getUserToken() != null) {
+                    Intent(this, MainActivity::class.java)
+                } else {
+                    Intent(this, LoginActivity::class.java)
+                }
+
                 startActivity(intent)
                 finish()
             } catch (e: Exception) {

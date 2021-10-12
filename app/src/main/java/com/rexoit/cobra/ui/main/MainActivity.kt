@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
                     progressDialog.setCancelable(false)
 
                     //Log out without using server
-                    sharedPrefUtil.clearSharedPrefUtil()
+                    sharedPrefUtil.clearAccessTokenPref()
                     startActivity(
                         Intent(
                             this@MainActivity,

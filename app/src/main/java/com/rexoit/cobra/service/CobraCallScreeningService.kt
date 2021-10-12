@@ -6,9 +6,6 @@ import android.telecom.CallScreeningService
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.rexoit.cobra.CobraApplication
-import com.rexoit.cobra.data.model.CallLogInfo
-import com.rexoit.cobra.data.model.CallType
-import com.rexoit.cobra.utils.CallLogger
 import com.rexoit.cobra.utils.SharedPrefUtil
 import kotlinx.coroutines.runBlocking
 
@@ -27,7 +24,9 @@ class CobraCallScreeningService : CallScreeningService() {
             "onScreenCall: Current Shared Pref Number: ${SharedPrefUtil(this).getIncomingNumber()}"
         )
 
-        SharedPrefUtil(this).setIncomingNumber(call.handle.schemeSpecificPart)
+        val sharedPrefUtil = SharedPrefUtil(this)
+        sharedPrefUtil.clearIncomingNumberPref()
+        sharedPrefUtil.setIncomingNumber(call.handle.schemeSpecificPart)
 
         runBlocking {
             val blockedList = repository
@@ -35,7 +34,7 @@ class CobraCallScreeningService : CallScreeningService() {
 
             // todo: add call log to cobra database
             // repository.addBlockedNumber(callLogInfo)
-            
+
             blockedList?.let {
                 isBlockedNumber = true
             }

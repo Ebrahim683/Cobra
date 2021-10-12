@@ -1,6 +1,7 @@
 package com.rexoit.cobra.ui.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.rexoit.cobra.data.model.registration.RegistrationResponse
 import com.rexoit.cobra.data.model.user.LoginResponse
 import com.rexoit.cobra.data.remote.RetrofitBuilder
 import com.rexoit.cobra.data.repository.CobraRepo
@@ -23,7 +24,7 @@ class AuthViewModel(private val repository: CobraRepo) : ViewModel() {
 
     //Registration
     fun registration(name: String, email: String, phone: String, password: String) =
-        flow<Resource<Any>> {
+        flow{
             emit(Resource.loading(null))
 
             try {

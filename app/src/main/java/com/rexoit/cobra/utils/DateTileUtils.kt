@@ -28,9 +28,6 @@ fun Long.toFormattedTimeString(): String {
 fun Long.getCurrentDayDiff(): Long {
     var different: Long = Date().time - this
 
-    Log.d(TAG, "toFormattedElapsedTimeString: ${this.toFormattedDateTimeString()}")
-    Log.d(TAG, "toFormattedElapsedTimeString: ${Date().time.toFormattedDateTimeString()}")
-
     val secondsInMilli: Long = 1000
     val minutesInMilli = secondsInMilli * 60
     val hoursInMilli = minutesInMilli * 60
@@ -44,9 +41,6 @@ fun Long.getCurrentDayDiff(): Long {
 
 fun Long.toFormattedElapsedTimeString(): String {
     var different: Long = Date().time - this
-
-    Log.d(TAG, "toFormattedElapsedTimeString: ${this.toFormattedDateTimeString()}")
-    Log.d(TAG, "toFormattedElapsedTimeString: ${Date().time.toFormattedDateTimeString()}")
 
     val secondsInMilli: Long = 1000
     val minutesInMilli = secondsInMilli * 60
@@ -66,10 +60,6 @@ fun Long.toFormattedElapsedTimeString(): String {
 
     val stringBuilder = StringBuilder()
 
-    Log.d(
-        TAG,
-        "toFormattedElapsedTimeString: $elapsedDays Days, $elapsedHours Hour, $elapsedMinutes Min, $elapsedSeconds sec"
-    )
 
     if (elapsedDays > 0) {
         return this.toFormattedDateString()
@@ -109,9 +99,6 @@ fun Long.toFormattedElapsedTimeString(): String {
 fun Long.toFormattedElapsedSecondsString(): String {
     var different: Long = Date().time - this
 
-    Log.d(TAG, "toFormattedElapsedTimeString: ${this.toFormattedDateTimeString()}")
-    Log.d(TAG, "toFormattedElapsedTimeString: ${Date().time.toFormattedDateTimeString()}")
-
     val secondsInMilli: Long = 1000
     val minutesInMilli = secondsInMilli * 60
     val hoursInMilli = minutesInMilli * 60
@@ -129,11 +116,6 @@ fun Long.toFormattedElapsedSecondsString(): String {
     val elapsedSeconds = different / secondsInMilli
 
     val stringBuilder = StringBuilder()
-
-    Log.d(
-        TAG,
-        "toFormattedElapsedTimeString: $elapsedDays Days, $elapsedHours Hour, $elapsedMinutes Min, $elapsedSeconds sec"
-    )
 
     if (elapsedHours > 0) {
         stringBuilder.append("$elapsedHours Hour, $elapsedMinutes Min")

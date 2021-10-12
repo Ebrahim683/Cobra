@@ -55,8 +55,6 @@ class HomePageRecyclerViewAdapter() :
         holder.mCallerMobileNumber.text = callLogInfo.mobileNumber
         holder.mCallTime.text = callLogInfo.time?.toFormattedElapsedTimeString()
 
-        Log.d(TAG, "onBindViewHolder: ${callLogInfo.time?.getCurrentDayDiff()}")
-
         //Click Event Handler
         onClickItem(
             holder,

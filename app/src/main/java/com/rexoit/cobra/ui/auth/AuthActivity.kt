@@ -33,70 +33,7 @@ class AuthActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auth)
 
         lifecycleScope.launchWhenStarted {
-//            login()
-//            registration()
             verifyEmail()
-//            resendVerificationCode()
-        }
-
-    }
-
-    suspend fun login() {
-        authViewModel.login("tauhid8k@example.com", "12345678").collect { resource ->
-            Log.d(TAG, "onCreate: Login Response: $resource")
-
-            when (resource.status) {
-                Status.UNAUTHORIZED -> {
-
-                }
-                Status.LOADING -> {
-                    Snackbar.make(auth_activity, "Loading...", Snackbar.LENGTH_SHORT).show()
-                }
-                Status.ERROR -> {
-                    Snackbar.make(auth_activity, "Something Went Wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                    Log.d(TAG, "onCreate: ${resource.message}")
-                }
-                Status.SUCCESS -> {
-                    Log.d(TAG, "login: Login success")
-                    Snackbar.make(auth_activity, "Login success", Snackbar.LENGTH_SHORT)
-                        .show()
-                    val token = resource.data?.token.toString()
-                    Log.d(TAG, "login: $token")
-                    val sharedPrefUtil = SharedPrefUtil(applicationContext)
-                    sharedPrefUtil.setUserToken(token)
-                }
-            }
-        }
-    }
-
-    suspend fun registration() {
-        authViewModel.registration(
-            "ebrahim8k",
-            "ebrahim8k@example.com",
-            "0123456789",
-            "12345678"
-        ).collect { resource ->
-            Log.d(TAG, "onCreate: Registration Response: $resource")
-
-            when (resource.status) {
-                Status.UNAUTHORIZED -> {
-                    withContext(Dispatchers.Main) {
-
-                    }
-                }
-                Status.LOADING -> {
-                    Snackbar.make(auth_activity, "Loading...", Snackbar.LENGTH_SHORT).show()
-                }
-                Status.ERROR -> {
-                    Snackbar.make(auth_activity, "Something Went Wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                    Log.d(TAG, "onCreate: ${resource.message}")
-                }
-                Status.SUCCESS -> {
-                    Log.d(TAG, "onCreate: ${resource.message}")
-                }
-            }
         }
     }
 
