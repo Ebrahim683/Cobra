@@ -8,13 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rexoit.cobra.R
 import com.rexoit.cobra.data.model.blocklist.Number
-import kotlinx.android.synthetic.main.show_blocked_number_single_row.view.*
+import kotlinx.android.synthetic.main.single_row_call_list.view.*
 
 class BlockListAdapter : ListAdapter<Number, BlockListAdapter.BlockListHolder>(DIFF_UTIL_CALLBACK) {
 
     class BlockListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(number: Number) {
-            itemView.blocked_number_list_item.text = number.phoneNumber
+            itemView.sample_number_text.text = number.phoneNumber
+            itemView.sample_name_text.text = "Unknown Caller"
+            itemView.time.text = number.updatedAt
         }
     }
 
@@ -22,7 +24,7 @@ class BlockListAdapter : ListAdapter<Number, BlockListAdapter.BlockListHolder>(D
         return BlockListHolder(
             LayoutInflater.from(parent.context)
                 .inflate(
-                    R.layout.show_blocked_number_single_row, parent,
+                    R.layout.single_row_call_list, parent,
                     false
                 )
         )
