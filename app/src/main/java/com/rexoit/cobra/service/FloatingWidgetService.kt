@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -261,20 +260,6 @@ class FloatingWidgetService : Service(), View.OnClickListener {
     /*  on Floating widget click show expanded view  */
     private fun onFloatingWidgetClick() {
         if (isViewCollapsed) {
-
-            //Worker Task
-            val rejectedNumber = Data.Builder().putString("rejected_number", "0123456").build()
-            val constraint = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-
-            val rejectedWorkTask = OneTimeWorkRequestBuilder<WorkerTask>()
-                .setConstraints(constraint)
-                .setInputData(rejectedNumber)
-                .build()
-
-            WorkManager.getInstance(applicationContext).enqueue(rejectedWorkTask)
-
             Log.d(TAG, "onFloatingWidgetClick: Pressed!")
             val telephonyService = getTeleService(this)
             if (telephonyService != null) {
@@ -314,10 +299,25 @@ class FloatingWidgetService : Service(), View.OnClickListener {
 
             val sharedPrefUtil = SharedPrefUtil(this)
             val number = sharedPrefUtil.getIncomingNumber()
+            val token = sharedPrefUtil.getUserToken()
+
             Log.d(TAG, "onFloatingWidgetClick: Mobile Number: $number")
 
-            // todo: send this ${number} to cobra admin
+            val mDataBuilder = Data.Builder()
+                .putString("rejected_number", "$number")
+                .putString("access_token", "$token")
+                .build()
 
+            val constraint = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val rejectedWorkTask = OneTimeWorkRequestBuilder<WorkerTask>()
+                .setConstraints(constraint)
+                .setInputData(mDataBuilder)
+                .build()
+
+            WorkManager.getInstance(applicationContext).enqueue(rejectedWorkTask)
         }
     }
 

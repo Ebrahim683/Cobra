@@ -9,17 +9,19 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.rexoit.cobra.data.model.CallLogInfo
 import com.rexoit.cobra.data.model.Converter
+import com.rexoit.cobra.data.model.user.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-private const val DATABASE_VERSION = 4
+private const val DATABASE_VERSION = 5
 private const val DATABASE_NAME = "CobraRoomDatabase"
 
 private const val TAG = "CobraDatabase"
 
 @Database(
     entities = [
-        CallLogInfo::class
+        CallLogInfo::class,
+        User::class
     ], version = DATABASE_VERSION, exportSchema = false
 )
 @TypeConverters(Converter::class)

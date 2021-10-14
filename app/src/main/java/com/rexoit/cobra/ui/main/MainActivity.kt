@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -26,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
@@ -102,6 +104,25 @@ class MainActivity : AppCompatActivity() {
         val toolbar = blocklist_tool_bar_id
         setSupportActionBar(toolbar)
 
+        val navigationView = findViewById<View>(R.id.nav_id) as NavigationView
+        val header: View = navigationView.getHeaderView(0)
+
+        val username = header.findViewById<TextView>(R.id.nav_user_name)
+        val email = header.findViewById<TextView>(R.id.nav_user_email)
+        val mobileNumber = header.findViewById<TextView>(R.id.nav_user_number)
+
+        runBlocking {
+            sharedPrefUtil.userEmail?.let {
+                mainViewModel.getUserFromCache(it).collect {
+                    it?.let { user ->
+                        username.text = user.name
+                        email.text = user.email
+                        mobileNumber.text = user.phone
+                    }
+                }
+            }
+        }
+
         nav_id.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 //Show Block List
@@ -124,47 +145,6 @@ class MainActivity : AppCompatActivity() {
                     )
                     progressDialog.dismiss()
                     finishAffinity()
-
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        mainViewModel.logOut().collect { resources ->
-//                            when (resources.status) {
-//                                Status.SUCCESS -> {
-//                                    Log.d(TAG, "logOut: Log Out")
-//                                    sharedPrefUtil.clearSharedPrefUtil()
-//                                    withContext(Dispatchers.Main) {
-//                                        startActivity(
-//                                            Intent(
-//                                                this@MainActivity,
-//                                                LoginActivity::class.java
-//                                            )
-//                                        )
-//                                        progressDialog.dismiss()
-//                                        finishAffinity()
-//                                    }
-//                                }
-//                                Status.LOADING -> {
-//                                    Log.d(TAG, "logOut: Logging Out")
-//                                    withContext(Dispatchers.Main) {
-//                                        progressDialog.show()
-//                                    }
-//                                }
-//                                Status.ERROR -> {
-//                                    Log.d(TAG, "logOut: ${resources.message}")
-//                                    withContext(Dispatchers.Main) {
-//                                        Snackbar.make(
-//                                            drawer_layout_id,
-//                                            "Please try again",
-//                                            Snackbar.LENGTH_SHORT
-//                                        ).show()
-//                                    }
-//                                    progressDialog.dismiss()
-//                                }
-//                                Status.UNAUTHORIZED -> {
-//
-//                                }
-//                            }
-//                        }
-//                    }
                 }
             }
             drawer_layout_id.closeDrawer(GravityCompat.START)

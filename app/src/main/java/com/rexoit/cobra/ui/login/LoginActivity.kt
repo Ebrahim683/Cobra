@@ -18,10 +18,8 @@ import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 private const val TAG = "LoginActivity"
 
@@ -35,11 +33,18 @@ class LoginActivity : AppCompatActivity() {
         )
     }
 
+    private lateinit var progressDialog: ProgressDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         sharedPrefUtil = SharedPrefUtil(applicationContext)
+        progressDialog = ProgressDialog(this)
+        progressDialog.apply {
+            setCancelable(false)
+            setMessage("Logging in...")
+        }
 
         go_to_sign_up.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
@@ -56,47 +61,82 @@ class LoginActivity : AppCompatActivity() {
             if (password.isEmpty()) {
                 Snackbar.make(login_activity, "Enter Password", Snackbar.LENGTH_SHORT).show()
             } else {
-                val progressDialog = ProgressDialog(this)
-                progressDialog.apply {
-                    setCancelable(false)
-                    setMessage("Login in...")
-                }
-                progressDialog.show()
-                CoroutineScope(Dispatchers.Default).launch {
+                runBlocking {
                     viewModel.login(email, password).collect { resource ->
-                        Log.d(TAG, "onCreate: Login Response: " + resource)
+                        Log.d(TAG, "onCreate: Login Response: $resource")
 
                         when (resource.status) {
                             Status.SUCCESS -> {
-                                Log.d(TAG, "onCreate: ${resource.message}")
                                 val token = resource.data?.token.toString()
-                                Log.d(TAG, "login: $token")
+
                                 sharedPrefUtil.setUserToken(token)
-                                progressDialog.dismiss()
-                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                                finish()
+
+                                // login success. get user profile info
+                                getUserInfo(token)
                             }
                             Status.ERROR -> {
                                 Log.d(TAG, "onCreate: ${resource.message}")
                                 Snackbar.make(
                                     login_activity,
-                                    "Something Went Wrong",
+                                    "${resource.message}",
                                     Snackbar.LENGTH_SHORT
                                 ).show()
                                 progressDialog.dismiss()
                             }
                             Status.LOADING -> {
-
+                                progressDialog.show()
                             }
                             Status.UNAUTHORIZED -> {
                                 Snackbar.make(
                                     login_activity,
-                                    "Something Went Wrong",
+                                    "${resource.message}",
                                     Snackbar.LENGTH_SHORT
                                 ).show()
                                 progressDialog.dismiss()
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getUserInfo(token: String) {
+        runBlocking {
+            viewModel.getUserInfo(token).collect { resource ->
+                Log.d(TAG, "onCreate: Login Response: $resource")
+                progressDialog.dismiss()
+
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        resource.data?.user?.email?.let {
+                            sharedPrefUtil.setUserEmail(it)
+                            viewModel.setUserInfo(resource.data.user)
+                        }
+
+                        progressDialog.dismiss()
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "onCreate: ${resource.message}")
+                        Snackbar.make(
+                            login_activity,
+                            "${resource.message}",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        progressDialog.dismiss()
+                    }
+                    Status.LOADING -> {
+                        progressDialog.show()
+                    }
+                    Status.UNAUTHORIZED -> {
+                        Snackbar.make(
+                            login_activity,
+                            "${resource.message}",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        progressDialog.dismiss()
                     }
                 }
             }

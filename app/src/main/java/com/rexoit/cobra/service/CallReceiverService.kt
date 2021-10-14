@@ -88,7 +88,7 @@ class CallReceiver : BroadcastReceiver() {
                 else -> {
                     try {
                         val callLogs = CallLogger.getCallDetails(context)
-                        val repository = (context as CobraApplication).repository
+                        val repository = (context.applicationContext as CobraApplication).repository
                         runBlocking {
                             repository.addBlockedNumbers(callLogs)
                         }

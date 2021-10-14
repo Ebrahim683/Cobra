@@ -1,36 +1,49 @@
 package com.rexoit.cobra.ui.block.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rexoit.cobra.R
-import com.rexoit.cobra.data.model.user.BlockedNumber
+import com.rexoit.cobra.data.model.blocklist.Number
+import kotlinx.android.synthetic.main.show_blocked_number_single_row.view.*
 
-class BlockListAdapter(
-    private val context: Context,
-    private var arrayList: ArrayList<BlockedNumber>
-) :
-    RecyclerView.Adapter<BlockListAdapter.BlockListHolder>() {
+class BlockListAdapter : ListAdapter<Number, BlockListAdapter.BlockListHolder>(DIFF_UTIL_CALLBACK) {
 
     class BlockListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var blocked_number_list_item: TextView =
-            itemView.findViewById(R.id.blocked_number_list_item)
+        fun bindView(number: Number) {
+            itemView.blocked_number_list_item.text = number.phoneNumber
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockListHolder {
-        var view =
-            LayoutInflater.from(context)
-                .inflate(R.layout.show_blocked_number_single_row, parent, false)
-        return BlockListHolder(view)
+        return BlockListHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(
+                    R.layout.show_blocked_number_single_row, parent,
+                    false
+                )
+        )
     }
 
     override fun onBindViewHolder(holder: BlockListHolder, position: Int) {
-        val blockedNumber = arrayList[position]
-        holder.blocked_number_list_item.text = blockedNumber.phoneNumber
+        val blockedNumber = getItem(position)
+        holder.bindView(blockedNumber)
+    }
+}
+
+val DIFF_UTIL_CALLBACK = object : DiffUtil.ItemCallback<Number>() {
+    override fun areItemsTheSame(oldItem: Number, newItem: Number): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun getItemCount() = arrayList.size
+    override fun areContentsTheSame(oldItem: Number, newItem: Number): Boolean {
+        return oldItem.id == newItem.id && oldItem.createdAt == newItem.createdAt
+                && oldItem.phoneNumber == newItem.phoneNumber
+                && oldItem.userId == newItem.userId
+                && oldItem.createdAt == newItem.createdAt
+    }
+
 }

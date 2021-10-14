@@ -1,33 +1,32 @@
 package com.rexoit.cobra.ui.block
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
 import com.rexoit.cobra.ui.block.adapter.BlockListAdapter
 import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
+import com.rexoit.cobra.utils.SharedPrefUtil
 import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_block_list.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 private const val TAG = "blockListActivity"
 
 class BlockListActivity : AppCompatActivity() {
 
-    private lateinit var blockListAdapter: BlockListAdapter
     private val viewModel by viewModels<MainViewModel> {
         CobraViewModelFactory(
             (application as CobraApplication).repository
         )
     }
+
+    private lateinit var blockListAdapter: BlockListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,41 +35,52 @@ class BlockListActivity : AppCompatActivity() {
         setSupportActionBar(blocklist_tool_bar_id)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        recyclerViewSet()
-        getBlockedNumber()
+        val accessToken = SharedPrefUtil(this).getUserToken()
 
-    }
+        blockListAdapter = BlockListAdapter()
 
-    private fun recyclerViewSet() {
-        blockListAdapter = BlockListAdapter(this, ArrayList())
-        val layout = LinearLayoutManager(this)
         blocklist_rec_id.apply {
             setHasFixedSize(true)
-            layoutManager = layout
+            layoutManager = LinearLayoutManager(this@BlockListActivity)
+            adapter = blockListAdapter
+        }
+
+        blocked_list_swipe_to_refresh.setOnRefreshListener {
+            if (accessToken != null) {
+                getBlockedList(accessToken)
+            }
+        }
+
+        if (accessToken != null) {
+            blocked_list_swipe_to_refresh.isRefreshing = true
+            getBlockedList(accessToken)
         }
     }
 
-    private fun getBlockedNumber() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getBlockedNumbers().collect { response ->
+    private fun getBlockedList(token: String) {
+        runBlocking {
+            viewModel.getBlockedNumbers(token).collect { response ->
                 when (response.status) {
                     Status.SUCCESS -> {
-                        Log.d(TAG, "onCreate: ${response.data}")
+                        response.data?.numbers?.let { numbers ->
+                            blockListAdapter.submitList(numbers)
+                            blockListAdapter.notifyDataSetChanged()
+                        }
+                        blocked_list_swipe_to_refresh.isRefreshing = false
                     }
                     Status.ERROR -> {
-                        Log.d(TAG, "onCreate: ${response.message}")
+                        blocked_list_swipe_to_refresh.isRefreshing = false
                     }
                     Status.LOADING -> {
-                        Log.d(TAG, "onCreate: Loading")
+                        blocked_list_swipe_to_refresh.isRefreshing = true
                     }
                     Status.UNAUTHORIZED -> {
-
+                        blocked_list_swipe_to_refresh.isRefreshing = false
                     }
                 }
             }
         }
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

@@ -1,10 +1,10 @@
 package com.rexoit.cobra.ui.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.rexoit.cobra.data.model.registration.RegistrationResponse
-import com.rexoit.cobra.data.model.user.LoginResponse
+import com.rexoit.cobra.data.model.user.User
 import com.rexoit.cobra.data.remote.RetrofitBuilder
 import com.rexoit.cobra.data.repository.CobraRepo
+import com.rexoit.cobra.utils.OkHttpClientInterceptor
 import com.rexoit.cobra.utils.Resource
 import kotlinx.coroutines.flow.flow
 
@@ -24,7 +24,7 @@ class AuthViewModel(private val repository: CobraRepo) : ViewModel() {
 
     //Registration
     fun registration(name: String, email: String, phone: String, password: String) =
-        flow{
+        flow {
             emit(Resource.loading(null))
 
             try {
@@ -61,5 +61,21 @@ class AuthViewModel(private val repository: CobraRepo) : ViewModel() {
         }
     }
 
+    //get user info
+    fun getUserInfo(token: String) = flow {
+        emit(Resource.loading(null))
+
+        try {
+            val retrofit = RetrofitBuilder.getApiService(
+                OkHttpClientInterceptor.getOkHttpClient(token = token)
+            )
+            emit(Resource.success(retrofit.getUserInfo()))
+        } catch (e: java.lang.Exception) {
+            emit(Resource.error(null, "${e.localizedMessage}"))
+        }
+    }
+
+    //set user info
+    suspend fun setUserInfo(user: User) = repository.setUserInfo(user)
 
 }

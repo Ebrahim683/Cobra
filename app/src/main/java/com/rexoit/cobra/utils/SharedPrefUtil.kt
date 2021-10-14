@@ -7,6 +7,7 @@ import android.util.Log
 private const val PREFERENCE_NAME = "cobra_utils_SharedPrefUtil"
 private const val INCOMING_NUMBER = "com.rexoit.cobra.utils.SharedPrefUtil.INCOMING_NUMBER"
 private const val USER_TOKEN = "com.rexoit.cobra.utils.SharedPrefUtil.USER_TOKEN"
+private const val USER_EMAIL = "com.rexoit.cobra.utils.SharedPrefUtil.USER_EMAIL"
 
 private const val TAG = "SharedPrefUtil"
 
@@ -19,6 +20,14 @@ class SharedPrefUtil(context: Context) {
         editor.putString(USER_TOKEN, token)
         editor.apply()
     }
+
+    fun setUserEmail(email: String) {
+        val editor = sharedPreference.edit()
+        editor.putString(USER_EMAIL, email)
+        editor.apply()
+    }
+
+    val userEmail: String? = sharedPreference.getString(USER_EMAIL, null)
 
     fun getUserToken(): String? = sharedPreference.getString(USER_TOKEN, null)
 

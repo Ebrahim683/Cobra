@@ -1,4 +1,4 @@
-package com.rexoit.cobra.data.model.user
+package com.rexoit.cobra.data.model.blocklist
 
 
 import com.google.gson.annotations.SerializedName
@@ -6,7 +6,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class BlockedNumber(
+data class Number(
     @SerializedName("created_at")
     val createdAt: String?, // 2021-09-26T11:32:10.000000Z
     @SerializedName("id")

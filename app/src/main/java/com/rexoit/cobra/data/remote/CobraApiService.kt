@@ -1,5 +1,7 @@
 package com.rexoit.cobra.data.remote
 
+import com.rexoit.cobra.data.model.blocklist.AddToBlockListResponse
+import com.rexoit.cobra.data.model.blocklist.BlockListNumbers
 import com.rexoit.cobra.data.model.registration.RegistrationResponse
 import com.rexoit.cobra.data.model.user.LoginResponse
 import com.rexoit.cobra.data.model.user.UserInfo
@@ -43,16 +45,14 @@ interface CobraApiService {
     @POST("api/blocked-numbers")
     suspend fun addBlockedNumber(
         @Field("phone_number") phone: String,
-    ): Any
+    ): AddToBlockListResponse
 
     @GET("api/blocked-numbers")
-    suspend fun getBlockedNumbers(): Any
+    suspend fun getBlockedNumbers(): BlockListNumbers
 
     @GET("api/user")
     suspend fun getUserInfo(): UserInfo
 
     @POST("/logout")
     suspend fun logout(): Any
-
-
 }

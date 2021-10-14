@@ -1,24 +1,14 @@
 package com.rexoit.cobra.ui.userinfo
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.rexoit.cobra.CobraApplication
 import com.rexoit.cobra.CobraViewModelFactory
 import com.rexoit.cobra.R
-import com.rexoit.cobra.data.model.user.BlockedNumber
-import com.rexoit.cobra.data.model.user.User
-import com.rexoit.cobra.data.model.user.UserInfo
-import com.rexoit.cobra.ui.auth.viewmodel.AuthViewModel
 import com.rexoit.cobra.ui.main.viewmodel.MainViewModel
-import com.rexoit.cobra.utils.Status
 import kotlinx.android.synthetic.main.activity_user_info.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 private const val TAG = "userInfoActivity"
 

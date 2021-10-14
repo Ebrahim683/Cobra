@@ -70,7 +70,7 @@ class NumberDetailsPage : AppCompatActivity() {
         //Block Number Button Work
         block_number_button.setOnClickListener {
             blockNumber()
-            sentBlockedNumber()
+//            sentBlockedNumber()
         }
 
 

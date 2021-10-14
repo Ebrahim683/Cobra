@@ -9,7 +9,11 @@ import com.rexoit.cobra.utils.Resource
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 
-class MainViewModel(repo: CobraRepo) : ViewModel() {
+class MainViewModel(private val repo: CobraRepo) : ViewModel() {
+    fun getUserFromCache(email: String) = flow {
+        emit(repo.getUserInfo(email))
+    }
+
     fun getUserInfo(token: String) = flow<Resource<UserInfo>> {
         val retrofit =
             RetrofitBuilder.getApiService(OkHttpClientInterceptor.getOkHttpClient(token = token))
@@ -38,12 +42,13 @@ class MainViewModel(repo: CobraRepo) : ViewModel() {
         }
     }
 
-        //Get Blocked Numbers
-    fun getBlockedNumbers() = flow<Resource<Any>> {
+    //Get Blocked Numbers
+    fun getBlockedNumbers(token: String) = flow {
         emit(Resource.loading(null))
 
         try {
-            val retrofit = RetrofitBuilder.getApiService(null)
+            val retrofit =
+                RetrofitBuilder.getApiService(OkHttpClientInterceptor.getOkHttpClient(token = token))
 
             emit(Resource.success(retrofit.getBlockedNumbers()))
         } catch (e: java.lang.Exception) {
