@@ -1,9 +1,11 @@
 package com.rexoit.cobra.ui.verification.emailverify
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.rexoit.cobra.CobraApplication
@@ -29,6 +31,7 @@ class EmailVerificationActivity : AppCompatActivity() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_email_verification)
@@ -61,7 +64,7 @@ class EmailVerificationActivity : AppCompatActivity() {
             verificationCode.isEmpty() -> {
                 Snackbar.make(
                     email_verify_layout,
-                    "Enter Password",
+                    "Enter Verification Code",
                     Snackbar.LENGTH_SHORT
                 )
                     .show()
@@ -73,28 +76,16 @@ class EmailVerificationActivity : AppCompatActivity() {
                             Log.d(TAG, "onCreate: Verification Response: $resource")
                             when (resource.status) {
                                 Status.SUCCESS -> {
-                                    if (resource.data?.equals(true)!!) {
-                                        Log.d(TAG, "onCreate: Verification Success")
-                                        withContext(Dispatchers.Main) {
-                                            Log.d(TAG, "verifyEmail: Verification Success")
-                                            startActivity(
-                                                Intent(
-                                                    this@EmailVerificationActivity,
-                                                    LoginActivity::class.java
-                                                )
+                                    Log.d(TAG, "onCreate: Verification Success")
+                                    withContext(Dispatchers.Main) {
+                                        Log.d(TAG, "verifyEmail: Verification Success")
+                                        startActivity(
+                                            Intent(
+                                                this@EmailVerificationActivity,
+                                                LoginActivity::class.java
                                             )
-                                            finish()
-                                        }
-                                    } else {
-                                        withContext(Dispatchers.Main) {
-                                            Log.d(TAG, "verifyEmail: Verification Fail")
-                                            Snackbar.make(
-                                                email_verify_layout,
-                                                "Verification Fail",
-                                                Snackbar.LENGTH_SHORT
-                                            )
-                                                .show()
-                                        }
+                                        )
+                                        finish()
                                     }
                                 }
                                 Status.ERROR -> {

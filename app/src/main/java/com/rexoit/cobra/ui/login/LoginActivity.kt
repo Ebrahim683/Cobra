@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
 
-private const val TAG = "LoginActivity"
+private const val TAG = "loginActivity"
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var sharedPrefUtil: SharedPrefUtil

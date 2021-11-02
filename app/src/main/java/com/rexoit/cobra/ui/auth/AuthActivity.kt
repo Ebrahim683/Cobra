@@ -44,27 +44,15 @@ class AuthActivity : AppCompatActivity() {
                     Log.d(TAG, "onCreate: Verification Response: $resource")
                     when (resource.status) {
                         Status.SUCCESS -> {
-                            if (resource.data?.equals(true)!!) {
-                                Log.d(TAG, "onCreate: Verification Success")
-                                withContext(Dispatchers.Main) {
-                                    Log.d(TAG, "verifyEmail: Verification Success")
-                                    Snackbar.make(
-                                        auth_activity,
-                                        "Verification Success",
-                                        Snackbar.LENGTH_SHORT
-                                    )
-                                        .show()
-                                }
-                            } else {
-                                withContext(Dispatchers.Main) {
-                                    Log.d(TAG, "verifyEmail:Verification Fail")
-                                    Snackbar.make(
-                                        auth_activity,
-                                        "Verification Fail",
-                                        Snackbar.LENGTH_SHORT
-                                    )
-                                        .show()
-                                }
+                            Log.d(TAG, "onCreate: Verification Success")
+                            withContext(Dispatchers.Main) {
+                                Log.d(TAG, "verifyEmail: Verification Success")
+                                Snackbar.make(
+                                    auth_activity,
+                                    "Verification Success",
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                    .show()
                             }
                         }
                         Status.ERROR -> {
